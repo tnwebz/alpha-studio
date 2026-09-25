@@ -1,0 +1,85 @@
+@import "tailwindcss";
+
+@theme {
+  --color-maroon-primary: #681C2B;
+  --color-maroon-dark: #3D111B;
+  --color-beige-main: #F3E9DC;
+  --color-beige-light: #FAF6F0;
+  --color-beige-warm: #DCC9B6;
+  --color-charcoal: #241F20;
+  --color-text-muted: #746A67;
+}
+
+@layer base {
+  :root {
+    --background: #F3E9DC; /* Main Beige */
+    --foreground: #241F20; /* Charcoal */
+    
+    --card: #FAF6F0; /* Light Beige */
+    --card-foreground: #241F20;
+    
+    --popover: #FAF6F0;
+    --popover-foreground: #241F20;
+    
+    --primary: #681C2B; /* Primary Maroon */
+    --primary-foreground: #FFFFFF;
+    
+    --secondary: #DCC9B6; /* Warm Beige */
+    --secondary-foreground: #241F20;
+    
+    --muted: #FAF6F0;
+    --muted-foreground: #746A67; /* Warm Gray */
+    
+    --accent: #681C2B;
+    --accent-foreground: #FFFFFF;
+    
+    --destructive: #991b1b;
+    --destructive-foreground: #FFFFFF;
+
+    --border: #DCC9B6; /* Warm Beige */
+    --input: #DCC9B6;
+    --ring: #681C2B;
+    
+    --radius: 0.5rem;
+  }
+
+  .dark {
+    --background: #3D111B;
+    --foreground: #FAF6F0;
+  }
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    background-color: var(--background);
+    color: var(--foreground);
+    @apply antialiased selection:bg-[#681C2B] selection:text-white overflow-x-hidden;
+    font-family: 'Inter', sans-serif;
+  }
+
+  #root {
+    @apply overflow-x-hidden;
+  }
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Playfair Display', 'Cal Sans', 'Inter', serif;
+  }
+
+  .font-serif {
+    font-family: 'Playfair Display', Georgia, 'Times New Roman', serif;
+  }
+
+  img {
+    -webkit-user-drag: none;
+    -khtml-user-drag: none;
+    -moz-user-drag: none;
+    -o-user-drag: none;
+    user-drag: none;
+    user-select: none;
+    -webkit-user-select: none;
+    -webkit-touch-callout: none;
+  }
+}
