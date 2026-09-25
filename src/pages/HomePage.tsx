@@ -1,3 +1,4 @@
+import { AboutSection } from '@/components/AboutSection';
 import { ContactSection } from '@/components/ContactSection';
 import { EditorialHero } from '@/components/EditorialHero';
 import { GallerySection } from '@/components/GallerySection';
@@ -10,6 +11,7 @@ export function HomePage() {
   return (
     <>
       <EditorialHero />
+      <AboutSection />
       <ServicesSection />
       <ShootSection />
       <GallerySection />
@@ -19,3 +21,4 @@ export function HomePage() {
     </>
   );
 }
+

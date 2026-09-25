@@ -12,6 +12,9 @@
       rel="stylesheet"
     />
     <title>Alpha stories studio | Premier Photography & Cinematic Visuals</title>
+    <!-- GSAP & MotionPathPlugin for Cinematic Animations -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/MotionPathPlugin.min.js"></script>
     <!-- Geo Meta Tags -->
     <meta name="geo.region" content="IN-TN" />
     <meta name="geo.placename" content="Chengalpattu, Tamil Nadu" />
@@ -51,6 +54,29 @@
       ]
     }
     </script>
+
+    <!-- Eliminate 0.2s homepage flash before intro loader mounts -->
+    <script>
+      (function() {
+        try {
+          var seen = sessionStorage.getItem('alpha-stories-intro-seen-v3');
+          var searchParams = new URLSearchParams(window.location.search);
+          var force = searchParams.get('intro') === 'true' || window.location.hash === '#intro';
+          if (!seen || force) {
+            document.documentElement.classList.add('intro-active');
+          }
+        } catch(e) {}
+      })();
+    </script>
+    <style>
+      html.intro-active body {
+        overflow: hidden !important;
+        background-color: #3D111B !important;
+      }
+      html.intro-active #root > *:not([aria-hidden="true"]) {
+        visibility: hidden !important;
+      }
+    </style>
   </head>
   <body>
     <div id="root"></div>

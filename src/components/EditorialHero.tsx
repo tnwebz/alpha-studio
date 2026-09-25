@@ -19,6 +19,7 @@ const SUBTEXT =
   "There is no such thing as a perfect love story or a perfect wedding.  For exactly this reason, we love doing what we do.";
 
 const NAV_LINKS = [
+  { href: "#about", label: "About" },
   { href: "#services", label: "Services" },
   { href: "#gallery", label: "Gallery" },
   { href: "#contact", label: "Contact" },

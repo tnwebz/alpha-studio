@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useInView, AnimatePresence, motion } from 'framer-motion';
 import { AspectRatio } from '@/components/ui/aspect-ratio';
 import { cn } from '@/lib/utils';
-import { Trash2, X, ChevronLeft, ChevronRight, Loader2, Play } from 'lucide-react';
+import { Trash2, X, ChevronLeft, ChevronRight, Loader2, Play, Camera } from 'lucide-react';
 
 type ImageGalleryProps = {
   images: string[];
@@ -57,8 +57,14 @@ export function ImageGallery({ images, loading = false, embedded = false, isAdmi
 
   if (images.length === 0) {
     return (
-      <div className="flex w-full items-center justify-center py-20">
-        <p className="text-sm text-zinc-400">No media uploaded yet for this gallery.</p>
+      <div className="flex flex-col w-full items-center justify-center py-20 px-4 text-center">
+        <div className="flex h-14 w-14 items-center justify-center rounded-full bg-[#E5D7C5]/60 text-[#681C2B] mb-3">
+          <Camera className="h-6 w-6 stroke-[1.5]" />
+        </div>
+        <p className="font-serif text-base font-semibold text-[#241F20]">No Photos in This Collection Yet</p>
+        <p className="mt-1 text-xs sm:text-sm text-[#746A67] max-w-sm">
+          {isAdmin ? 'Use the upload section above to add new photographs.' : 'New photographs for this collection will be added soon.'}
+        </p>
       </div>
     );
   }

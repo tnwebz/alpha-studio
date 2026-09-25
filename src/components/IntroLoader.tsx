@@ -7,7 +7,7 @@ import { motion, AnimatePresence } from 'framer-motion';
  * You can also pass `?intro=true` in the URL or call `window.replayIntro()` in the console.
  */
 const FORCE_INTRO = false;
-const SESSION_STORAGE_KEY = 'alpha-stories-intro-seen-v2';
+const SESSION_STORAGE_KEY = 'alpha-stories-intro-seen-v3';
 
 interface GlitterParticle {
   id: number;
@@ -63,7 +63,19 @@ const GLITTER_PARTICLES: GlitterParticle[] = [
 ];
 
 export function IntroLoader() {
-  const [shouldRender, setShouldRender] = useState(false);
+  // Synchronous initialization prevents the 0.2s glitch where homepage paints before loader renders
+  const [shouldRender, setShouldRender] = useState(() => {
+    if (typeof window === 'undefined') return true;
+    const hasSeen = sessionStorage.getItem(SESSION_STORAGE_KEY);
+    const searchParams = new URLSearchParams(window.location.search);
+    const forceUrl = searchParams.get('intro') === 'true' || window.location.hash === '#intro';
+    const active = !hasSeen || FORCE_INTRO || forceUrl;
+    if (active) {
+      document.documentElement.classList.add('intro-active');
+    }
+    return active;
+  });
+
   const [animationStep, setAnimationStep] = useState<'maroon' | 'transition' | 'beige' | 'exit' | 'done'>('maroon');
 
   // Detect accessibility preference
@@ -76,23 +88,28 @@ export function IntroLoader() {
     // Expose replay function in console for developer convenience
     (window as unknown as { replayIntro?: () => void }).replayIntro = () => {
       sessionStorage.removeItem(SESSION_STORAGE_KEY);
+      document.documentElement.classList.add('intro-active');
       setAnimationStep('maroon');
       setShouldRender(true);
     };
 
-    // Check if intro has already been shown in current browser session
+    // Keep intro-active class synced
     const hasSeen = sessionStorage.getItem(SESSION_STORAGE_KEY);
     const searchParams = new URLSearchParams(window.location.search);
     const forceUrl = searchParams.get('intro') === 'true' || window.location.hash === '#intro';
 
     if (!hasSeen || FORCE_INTRO || forceUrl) {
+      document.documentElement.classList.add('intro-active');
       setShouldRender(true);
     }
   }, []);
 
   // Lock scroll while intro is playing and unlock when completed
   useEffect(() => {
-    if (!shouldRender || animationStep === 'done') return;
+    if (!shouldRender || animationStep === 'done') {
+      document.documentElement.classList.remove('intro-active');
+      return;
+    }
 
     const originalOverflow = document.body.style.overflow;
     const originalPaddingRight = document.body.style.paddingRight;
@@ -107,21 +124,22 @@ export function IntroLoader() {
     return () => {
       document.body.style.overflow = originalOverflow;
       document.body.style.paddingRight = originalPaddingRight;
+      document.documentElement.classList.remove('intro-active');
     };
   }, [shouldRender, animationStep]);
 
-  // Master Orchestration Timeline (Slow, calm, luxury cinematic pace)
+  // Master Orchestration Timeline (Exact 5.5s Total, slow, smooth, calm & steady)
   useEffect(() => {
     if (!shouldRender) return;
 
     if (prefersReducedMotion) {
-      // Streamlined accessible timing for reduced motion
       const t1 = setTimeout(() => setAnimationStep('beige'), 800);
-      const t2 = setTimeout(() => setAnimationStep('exit'), 1800);
+      const t2 = setTimeout(() => setAnimationStep('exit'), 1600);
       const t3 = setTimeout(() => {
         setAnimationStep('done');
         sessionStorage.setItem(SESSION_STORAGE_KEY, 'true');
-      }, 2300);
+        document.documentElement.classList.remove('intro-active');
+      }, 2100);
       return () => {
         clearTimeout(t1);
         clearTimeout(t2);
@@ -129,29 +147,30 @@ export function IntroLoader() {
       };
     }
 
-    // Luxury Cinematic Orchestration (~4.8s - 5.0s Total):
-    // 0.00s – 2.20s : Scene 1 (Deep Maroon Opening, floating silk waves, "EVERY FRAME HAS A STORY" reveal & hold)
-    // 2.20s – 2.90s : Transition (Velvet maroon fabric gracefully slides & parts, unveiling luxury beige)
-    // 2.60s – 4.40s : Scene 2 (Official Logo focus reveal, ALPHA STORIES, STUDIO, with generous hold)
-    // 4.40s – 4.95s : Seamless dissolve exit into the live homepage
-    // 5.00s         : Complete unmount from DOM and scroll restoration
+    // Exact 5.50s Total Luxury Cinematic Orchestration:
+    // 0.00s – 3.00s : Scene 1 (Deep Velvet Maroon Opening, silk waves, "EVERY FRAME HAS A STORY" slow, smooth reveal & steady hold)
+    // 3.00s – 3.45s : Transition (Velvet maroon fabric gracefully dissolves, unveiling luxury warm beige)
+    // 3.45s – 4.70s : Scene 2 (Official Logo focus reveal, ALPHA STORIES, STUDIO, with calm hold)
+    // 4.70s – 5.50s : Ultra-smooth dissolve exit into the live homepage
+    // 5.50s         : Complete unmount from DOM and scroll restoration
 
     const tTransition = setTimeout(() => {
       setAnimationStep('transition');
-    }, 2200);
+    }, 3000);
 
     const tBeige = setTimeout(() => {
       setAnimationStep('beige');
-    }, 2600);
+    }, 3450);
 
     const tExit = setTimeout(() => {
       setAnimationStep('exit');
-    }, 4400);
+    }, 4700);
 
     const tDone = setTimeout(() => {
       setAnimationStep('done');
       sessionStorage.setItem(SESSION_STORAGE_KEY, 'true');
-    }, 5000);
+      document.documentElement.classList.remove('intro-active');
+    }, 5500);
 
     return () => {
       clearTimeout(tTransition);
@@ -182,10 +201,27 @@ export function IntroLoader() {
           scale: animationStep === 'exit' ? 1.015 : 1,
         }}
         transition={{
-          duration: 0.55,
-          ease: [0.22, 1, 0.36, 1],
+          duration: 0.8,
+          ease: [0.16, 1, 0.3, 1],
         }}
       >
+        {/* Discreet Skip Button in top right */}
+        <button
+          type="button"
+          onClick={() => {
+            document.documentElement.classList.remove('intro-active');
+            setAnimationStep('exit');
+            setTimeout(() => {
+              setAnimationStep('done');
+              sessionStorage.setItem(SESSION_STORAGE_KEY, 'true');
+            }, 500);
+          }}
+          className="absolute top-5 right-5 sm:top-7 sm:right-8 z-[100] rounded-full border border-white/20 bg-black/25 px-3.5 py-1.5 text-[10px] sm:text-xs font-semibold uppercase tracking-[0.2em] text-[#F3E9DC]/75 backdrop-blur-md transition-all hover:bg-black/50 hover:text-white hover:border-white/40 active:scale-95 cursor-pointer"
+          aria-label="Skip intro animation"
+        >
+          Skip Intro →
+        </button>
+
         {/* ========================================================= */}
         {/* SCENE 2 BASE LAYER: WARM LUXURY BEIGE ENVIRONMENT         */}
         {/* Sits underneath and is revealed as maroon curtains part   */}
@@ -204,7 +240,7 @@ export function IntroLoader() {
             }}
           />
 
-          {/* Gentle ethereal champagne cloth curve at top right corner (Ref 3) */}
+          {/* Gentle ethereal champagne cloth curve at top right corner */}
           <svg
             className="absolute -top-10 -right-10 w-[320px] sm:w-[480px] h-[220px] pointer-events-none opacity-40"
             viewBox="0 0 500 300"
@@ -223,7 +259,7 @@ export function IntroLoader() {
             </defs>
           </svg>
 
-          {/* Flowing Maroon & Champagne silk waves at bottom (Ref 3) */}
+          {/* Flowing Maroon & Champagne silk waves at bottom */}
           <div className="absolute inset-x-0 bottom-0 w-full h-[36vh] max-h-[380px] pointer-events-none overflow-hidden">
             <motion.svg
               className="absolute bottom-0 left-0 w-full h-full"
@@ -240,19 +276,16 @@ export function IntroLoader() {
                 ease: 'easeInOut',
               }}
             >
-              {/* Back deep maroon silk wave */}
               <path
                 d="M-40,240 C280,180 520,310 820,220 C1100,140 1320,260 1480,210 L1480,360 L-40,360 Z"
                 fill="url(#beigeSceneSilk1)"
                 opacity="0.9"
               />
-              {/* Mid champagne/warm beige highlight ribbon */}
               <path
                 d="M-20,290 C340,230 620,330 940,250 C1220,180 1380,270 1480,240 L1480,360 L-20,360 Z"
                 fill="url(#beigeSceneSilk2)"
                 opacity="0.6"
               />
-              {/* Forefront deep burgundy curve */}
               <path
                 d="M0,320 C380,270 700,340 1060,285 C1280,250 1400,290 1480,280 L1480,360 L0,360 Z"
                 fill="url(#beigeSceneSilk3)"
@@ -278,22 +311,22 @@ export function IntroLoader() {
             </motion.svg>
           </div>
 
-          {/* Centered Brand Presentation (Ref 2 & Ref 3) */}
+          {/* Centered Brand Presentation */}
           <div className="relative z-10 flex flex-col items-center justify-center px-4 text-center">
             {/* Official Logo Mark */}
             <motion.div
               className="relative flex items-center justify-center mb-5 sm:mb-6"
               initial={{
                 opacity: 0,
-                scale: 0.84,
+                scale: 0.85,
                 filter: 'blur(8px)',
-                y: 12,
+                y: 10,
               }}
               animate={{
                 opacity: animationStep === 'beige' || animationStep === 'exit' ? 1 : 0,
-                scale: animationStep === 'beige' || animationStep === 'exit' ? 1 : 0.84,
+                scale: animationStep === 'beige' || animationStep === 'exit' ? 1 : 0.85,
                 filter: animationStep === 'beige' || animationStep === 'exit' ? 'blur(0px)' : 'blur(8px)',
-                y: animationStep === 'beige' || animationStep === 'exit' ? 0 : 12,
+                y: animationStep === 'beige' || animationStep === 'exit' ? 0 : 10,
               }}
               transition={{
                 duration: prefersReducedMotion ? 0.5 : 0.9,
@@ -301,7 +334,6 @@ export function IntroLoader() {
                 delay: prefersReducedMotion ? 0 : 0.1,
               }}
             >
-              {/* Subtle radiant halo behind logo */}
               <div
                 className="absolute inset-0 -m-8 rounded-full blur-2xl pointer-events-none opacity-50"
                 style={{
@@ -309,7 +341,6 @@ export function IntroLoader() {
                 }}
               />
 
-              {/* Exact Official Alpha Stories Logo Asset */}
               <img
                 src="/logo2.png"
                 alt="Alpha Stories Studio Official Logo"
@@ -321,21 +352,21 @@ export function IntroLoader() {
             {/* ALPHA STORIES Wordmark */}
             <motion.h1
               className="font-serif uppercase text-[#681C2B] font-semibold text-2xl sm:text-3xl md:text-4xl tracking-[0.16em] sm:tracking-[0.20em]"
-              initial={{ opacity: 0, y: 10 }}
+              initial={{ opacity: 0, y: 8 }}
               animate={{
                 opacity: animationStep === 'beige' || animationStep === 'exit' ? 1 : 0,
-                y: animationStep === 'beige' || animationStep === 'exit' ? 0 : 10,
+                y: animationStep === 'beige' || animationStep === 'exit' ? 0 : 8,
               }}
               transition={{
                 duration: prefersReducedMotion ? 0.4 : 0.8,
                 ease: [0.22, 1, 0.36, 1],
-                delay: prefersReducedMotion ? 0.1 : 0.35,
+                delay: prefersReducedMotion ? 0.1 : 0.25,
               }}
             >
               Alpha Stories
             </motion.h1>
 
-            {/* STUDIO with subtle flanking divider lines (Ref 3) */}
+            {/* STUDIO with subtle flanking divider lines */}
             <motion.div
               className="flex items-center justify-center gap-3 sm:gap-4 mt-2.5 sm:mt-3"
               initial={{ opacity: 0, y: 6 }}
@@ -346,7 +377,7 @@ export function IntroLoader() {
               transition={{
                 duration: prefersReducedMotion ? 0.4 : 0.7,
                 ease: [0.22, 1, 0.36, 1],
-                delay: prefersReducedMotion ? 0.2 : 0.55,
+                delay: prefersReducedMotion ? 0.2 : 0.4,
               }}
             >
               <span className="w-6 sm:w-10 h-[1px] bg-[#DCC9B6]/80" />
@@ -360,22 +391,22 @@ export function IntroLoader() {
 
         {/* ========================================================= */}
         {/* SCENE 1 TOP LAYER: DEEP MAROON OPENING ENVIRONMENT       */}
-        {/* Slides/parts away fluidly to reveal the beige brand screen*/}
+        {/* Smooth, slow, steady hold on "EVERY FRAME HAS A STORY"   */}
         {/* ========================================================= */}
         <motion.div
           className="absolute inset-0 w-full h-full flex flex-col items-center justify-center overflow-hidden"
           style={{
             background: 'radial-gradient(circle at 50% 45%, #681C2B 0%, #3D111B 65%, #240A10 100%)',
           }}
-          initial={{ opacity: 1, y: 0 }}
+          initial={{ opacity: 1, y: '0%' }}
           animate={{
             opacity: animationStep === 'transition' || animationStep === 'beige' || animationStep === 'exit' ? 0 : 1,
-            y: animationStep === 'transition' || animationStep === 'beige' || animationStep === 'exit' ? '12%' : '0%',
-            filter: animationStep === 'transition' || animationStep === 'beige' || animationStep === 'exit' ? 'blur(6px)' : 'blur(0px)',
+            y: animationStep === 'transition' || animationStep === 'beige' || animationStep === 'exit' ? '8%' : '0%',
+            filter: animationStep === 'transition' || animationStep === 'beige' || animationStep === 'exit' ? 'blur(8px)' : 'blur(0px)',
           }}
           transition={{
-            duration: prefersReducedMotion ? 0.5 : 0.9,
-            ease: [0.22, 1, 0.36, 1],
+            duration: prefersReducedMotion ? 0.5 : 0.8,
+            ease: [0.25, 1, 0.5, 1],
           }}
         >
           {/* Subtle vignette for cinematic depth */}
@@ -394,9 +425,8 @@ export function IntroLoader() {
             }}
           />
 
-          {/* Flowing Maroon Waves & Silky Fabric at Bottom (Ref 1) */}
+          {/* Flowing Maroon Waves & Silky Fabric at Bottom */}
           <div className="absolute inset-x-0 bottom-0 w-full h-[45vh] max-h-[440px] pointer-events-none overflow-hidden">
-            {/* Fabric Wave Layer 1: Slow undulating back drape */}
             <motion.svg
               className="absolute bottom-0 left-0 w-[110%] -left-[5%] h-full"
               viewBox="0 0 1440 400"
@@ -427,7 +457,6 @@ export function IntroLoader() {
               </defs>
             </motion.svg>
 
-            {/* Fabric Wave Layer 2: Translucent silk ribbons with soft blur (Ref 1) */}
             <motion.svg
               className="absolute bottom-0 left-0 w-[115%] -left-[8%] h-full"
               viewBox="0 0 1440 400"
@@ -458,7 +487,6 @@ export function IntroLoader() {
               </defs>
             </motion.svg>
 
-            {/* Fabric Wave Layer 3: Gossamer specular edge line */}
             <motion.svg
               className="absolute bottom-0 left-0 w-[105%] h-full"
               viewBox="0 0 1440 400"
@@ -479,7 +507,6 @@ export function IntroLoader() {
                 fill="url(#maroonSilkFore)"
                 opacity="0.95"
               />
-              {/* Highlight rim trace */}
               <path
                 d="M-20,330 C320,250 680,360 1020,290 C1260,240 1400,310 1500,280"
                 stroke="url(#silkRimGlow)"
@@ -501,25 +528,24 @@ export function IntroLoader() {
             </motion.svg>
           </div>
 
-          {/* Centered Editorial Tagline & Light Trace (Ref 1) */}
+          {/* Centered Editorial Tagline & Smooth Golden Dust Trace */}
           <div className="relative z-10 flex flex-col items-center justify-center px-6 text-center max-w-xl mx-auto">
-            {/* Tagline: EVERY FRAME HAS A STORY */}
+            {/* Tagline: EVERY FRAME HAS A STORY (Slow, steady, calm) */}
             <motion.div
               initial={{
                 opacity: 0,
-                y: 8,
-                filter: 'blur(6px)',
+                y: 10,
+                filter: 'blur(8px)',
               }}
               animate={{
-                opacity: animationStep === 'maroon' ? [0, 1, 1, 0] : 0,
-                y: animationStep === 'maroon' ? [8, 0, 0, -4] : -4,
-                filter: animationStep === 'maroon' ? ['blur(6px)', 'blur(0px)', 'blur(0px)', 'blur(4px)'] : 'blur(4px)',
+                opacity: animationStep === 'maroon' ? 1 : 0,
+                y: animationStep === 'maroon' ? 0 : -6,
+                filter: animationStep === 'maroon' ? 'blur(0px)' : 'blur(6px)',
               }}
               transition={{
-                times: [0, 0.40, 0.78, 1],
-                duration: 2.1,
-                ease: [0.22, 1, 0.36, 1],
-                delay: 0.25,
+                duration: 1.3,
+                ease: [0.16, 1, 0.3, 1],
+                delay: 0.2,
               }}
             >
               <h2 className="font-serif uppercase text-[#F3E9DC] font-normal text-base sm:text-lg md:text-xl lg:text-[22px] tracking-[0.32em] sm:tracking-[0.40em] leading-[1.8] sm:leading-[1.9] drop-shadow-[0_2px_12px_rgba(0,0,0,0.5)]">
@@ -529,13 +555,12 @@ export function IntroLoader() {
               </h2>
             </motion.div>
 
-            {/* Premium Golden Glitter Particle Line directly below "HAS A STORY" */}
+            {/* Premium Golden Dust Particle Line directly below "HAS A STORY" */}
             <div
               className="relative mt-7 sm:mt-8 md:mt-9 flex items-center justify-center h-6 w-[120px] sm:w-[160px] pointer-events-none select-none"
               aria-hidden="true"
             >
               {prefersReducedMotion ? (
-                /* Accessible fallback for reduced motion: clean subtle golden line fade */
                 <motion.div
                   className="h-[1px] w-[90px] sm:w-[130px] rounded-full"
                   style={{
@@ -543,18 +568,16 @@ export function IntroLoader() {
                   }}
                   initial={{ opacity: 0 }}
                   animate={{
-                    opacity: animationStep === 'maroon' ? [0, 0.85, 0.85, 0] : 0,
+                    opacity: animationStep === 'maroon' ? 0.9 : 0,
                   }}
                   transition={{
-                    times: [0, 0.35, 0.75, 1],
-                    duration: 1.8,
+                    duration: 1.2,
                     delay: 0.5,
                   }}
                 />
               ) : (
-                /* Full Cinematic Golden Dust & Glitter Line Sequence */
                 <div className="relative flex items-center justify-center w-full h-full">
-                  {/* Phase 2: Ultra-delicate glowing golden connecting line (forms 300ms–750ms) */}
+                  {/* Glowing golden connecting line */}
                   <motion.div
                     className="h-[1px] w-[90px] sm:w-[135px] max-w-[140px] pointer-events-none rounded-full"
                     style={{
@@ -563,18 +586,17 @@ export function IntroLoader() {
                     }}
                     initial={{ opacity: 0, scaleX: 0.2 }}
                     animate={{
-                      opacity: animationStep === 'maroon' ? [0, 0.8, 0.95, 0] : 0,
-                      scaleX: animationStep === 'maroon' ? [0.2, 1, 1, 0.6] : 0.2,
+                      opacity: animationStep === 'maroon' ? 0.95 : 0,
+                      scaleX: animationStep === 'maroon' ? 1 : 0.2,
                     }}
                     transition={{
-                      times: [0, 0.32, 0.66, 0.86],
-                      duration: 1.05,
+                      duration: 1.4,
                       ease: [0.22, 1, 0.36, 1],
-                      delay: 0.88,
+                      delay: 0.7,
                     }}
                   />
 
-                  {/* Individual Golden Dust Particles gathering inward, forming line, then scattering */}
+                  {/* Individual Golden Dust Particles gathering smoothly into line */}
                   {GLITTER_PARTICLES.map((p) => (
                     <motion.span
                       key={p.id}
@@ -593,36 +615,34 @@ export function IntroLoader() {
                         scale: 0.4,
                       }}
                       animate={{
-                        x: animationStep === 'maroon' ? [p.xStart, p.xLine, p.xLine, p.xScatter] : p.xScatter,
-                        y: animationStep === 'maroon' ? [p.yStart, p.yLine, p.yLine, p.yScatter] : p.yScatter,
-                        opacity: animationStep === 'maroon' ? [0, p.opacityPeak, p.opacityPeak, 0] : 0,
-                        scale: animationStep === 'maroon' ? [0.4, 1, 1, 0.25] : 0.25,
+                        x: animationStep === 'maroon' ? p.xLine : p.xScatter,
+                        y: animationStep === 'maroon' ? p.yLine : p.yScatter,
+                        opacity: animationStep === 'maroon' ? p.opacityPeak : 0,
+                        scale: animationStep === 'maroon' ? 1 : 0.25,
                       }}
                       transition={{
-                        times: [0, 0.34, 0.66, 1],
-                        duration: 1.05,
+                        duration: 1.4,
                         ease: [0.25, 1, 0.5, 1],
-                        delay: 0.88 + p.delay,
+                        delay: 0.6 + p.delay * 1.2,
                       }}
                     />
                   ))}
 
-                  {/* Phase 3: Brief Photographic Glint Center Sparkle (600ms–750ms) */}
+                  {/* Subtle photographic sparkle core in center */}
                   <motion.div
                     className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none flex items-center justify-center z-10"
                     initial={{ opacity: 0, scale: 0.3 }}
                     animate={{
-                      opacity: animationStep === 'maroon' ? [0, 0, 1, 0] : 0,
-                      scale: animationStep === 'maroon' ? [0.3, 0.4, 1, 1.25] : 0.3,
+                      opacity: animationStep === 'maroon' ? [0, 0.9, 0.9, 0] : 0,
+                      scale: animationStep === 'maroon' ? [0.3, 1, 1, 0.3] : 0.3,
                     }}
                     transition={{
-                      times: [0, 0.58, 0.68, 0.80],
-                      duration: 1.05,
+                      times: [0, 0.4, 0.85, 1],
+                      duration: 2.2,
                       ease: [0.22, 1, 0.36, 1],
-                      delay: 0.88,
+                      delay: 0.8,
                     }}
                   >
-                    {/* Soft ambient outer glow: 12-20px */}
                     <div
                       className="w-4 h-4 rounded-full blur-[2px] pointer-events-none"
                       style={{
@@ -630,7 +650,6 @@ export function IntroLoader() {
                         boxShadow: '0 0 16px 2px rgba(232, 208, 154, 0.75)',
                       }}
                     />
-                    {/* Delicate highlight core: 4-6px */}
                     <div
                       className="absolute w-[5px] h-[5px] rounded-full bg-[#FAF6F0]"
                       style={{

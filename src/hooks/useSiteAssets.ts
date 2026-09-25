@@ -8,6 +8,7 @@ export interface SiteAssets {
   contactBackground?: string; // Cloudinary URL for ContactSection
   serviceCovers?: Record<string, string>; // category slug -> Cloudinary URL
   galleryCovers?: Record<string, string>; // category key -> Cloudinary URL
+  aboutPhotos?: Record<string, string>; // 'alwin' | 'x' -> Cloudinary URL
 }
 
 const STORAGE_KEY = 'alpha_site_assets';
@@ -77,6 +78,12 @@ export function useSiteAssets() {
     setAssets((prev) => ({ ...prev, galleryCovers: updated }));
   }, [assets.galleryCovers]);
 
+  const updateAboutPhoto = useCallback(async (key: string, url: string) => {
+    const updated = { ...(assets.aboutPhotos || {}), [key]: url };
+    await setDoc(ASSETS_DOC_REF, { aboutPhotos: updated }, { merge: true });
+    setAssets((prev) => ({ ...prev, aboutPhotos: updated }));
+  }, [assets.aboutPhotos]);
+
   const resetAsset = useCallback(async (field: keyof SiteAssets, key?: string | number) => {
     if (field === 'heroSlides' && typeof key === 'number') {
       const currentSlides = [...(assets.heroSlides || [])];
@@ -93,6 +100,11 @@ export function useSiteAssets() {
       delete updated[key];
       await setDoc(ASSETS_DOC_REF, { galleryCovers: updated }, { merge: true });
       setAssets((prev) => ({ ...prev, galleryCovers: updated }));
+    } else if (field === 'aboutPhotos' && typeof key === 'string') {
+      const updated = { ...(assets.aboutPhotos || {}) };
+      delete updated[key];
+      await setDoc(ASSETS_DOC_REF, { aboutPhotos: updated }, { merge: true });
+      setAssets((prev) => ({ ...prev, aboutPhotos: updated }));
     } else if (field === 'shootBackground') {
       await setDoc(ASSETS_DOC_REF, { shootBackground: '' }, { merge: true });
       setAssets((prev) => ({ ...prev, shootBackground: undefined }));
@@ -110,6 +122,7 @@ export function useSiteAssets() {
     updateContactBackground,
     updateServiceCover,
     updateGalleryCover,
+    updateAboutPhoto,
     resetAsset,
   };
 }
