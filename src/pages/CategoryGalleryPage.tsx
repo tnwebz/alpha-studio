@@ -10,7 +10,7 @@ const SLUGS: ServiceSlug[] = [
   'birthday', 'hindu_wedding', 'christian_wedding', 'naming_ceremony',
   'engagement', 'housewarming', 'puberty', 'aldhi',
   'reception', 'bangle_ceremony', 'salangai_poojai', 'maternity',
-  'model_shoot', 'gift_items', 'outdoor', 'candid', 'events', 'others', 'candid_videos', 'drone_videos'
+  'model_shoot', 'gift_items', 'outdoor', 'candid', 'events', 'others', 'candid_videos', 'drone_videos', 'drone_shorts'
 ];
 
 export function CategoryGalleryPage() {

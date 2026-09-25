@@ -9,6 +9,9 @@ export interface AdminUploadModalProps {
   currentImageUrl?: string;
   onUploadSuccess: (url: string) => Promise<void> | void;
   onResetToDefault?: () => Promise<void> | void;
+  slides?: { index: number; label: string; imageUrl: string }[];
+  currentSlideIndex?: number;
+  onSelectSlide?: (index: number) => void;
 }
 
 export function AdminUploadModal({
@@ -19,6 +22,9 @@ export function AdminUploadModal({
   currentImageUrl,
   onUploadSuccess,
   onResetToDefault,
+  slides,
+  currentSlideIndex,
+  onSelectSlide,
 }: AdminUploadModalProps) {
   if (!isOpen) return null;
 
@@ -63,6 +69,48 @@ export function AdminUploadModal({
             <X className="h-4 w-4" />
           </button>
         </div>
+
+        {/* Slide Selection Pills / Cards */}
+        {slides && slides.length > 0 && onSelectSlide && (
+          <div className="mt-4 rounded-xl border border-white/10 bg-black/25 p-3">
+            <div className="flex items-center justify-between mb-2">
+              <span className="text-[11px] font-semibold uppercase tracking-wider text-[#DCC9B6]">
+                Select Slide Number:
+              </span>
+              <span className="text-[11px] font-medium text-white/70">
+                Active: Slide {(currentSlideIndex ?? 0) + 1}
+              </span>
+            </div>
+            <div className="grid grid-cols-4 gap-2">
+              {slides.map((s) => {
+                const isSelected = s.index === currentSlideIndex;
+                return (
+                  <button
+                    key={s.index}
+                    type="button"
+                    onClick={() => onSelectSlide(s.index)}
+                    className={`group relative flex flex-col items-center gap-1 rounded-xl p-1.5 border transition-all ${
+                      isSelected
+                        ? "border-[#DCC9B6] bg-[#681C2B] text-white shadow-lg ring-2 ring-[#DCC9B6]/60 scale-[1.03]"
+                        : "border-white/10 bg-black/40 text-zinc-300 hover:border-white/30 hover:bg-black/60"
+                    }`}
+                  >
+                    <div className="h-12 w-full overflow-hidden rounded-lg bg-black/50 border border-white/10">
+                      <img
+                        src={s.imageUrl}
+                        alt={s.label}
+                        className="h-full w-full object-cover transition-transform group-hover:scale-105"
+                      />
+                    </div>
+                    <span className="text-[11px] font-bold tracking-tight">
+                      {s.label}
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        )}
 
         {/* Current image preview */}
         {currentImageUrl && (

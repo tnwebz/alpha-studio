@@ -1,6 +1,6 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { useEffect, useState, useRef, useCallback } from "react";
-import { Shield, Menu, X, ChevronLeft, ChevronRight, Camera } from "lucide-react";
+import { Shield, Menu, X, ChevronLeft, ChevronRight, Camera, Play, Pause } from "lucide-react";
 import { useAdmin } from "@/hooks/useAdmin";
 import { useSiteAssets } from "@/hooks/useSiteAssets";
 import { AdminUploadModal } from "./AdminUploadModal";
@@ -236,17 +236,22 @@ function ShieldAdminButton({ className }: { className?: string }) {
 export function EditorialHero() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [currentSlide, setCurrentSlide] = useState(0);
+  const [editSlideIndex, setEditSlideIndex] = useState(0);
   const [slideModalOpen, setSlideModalOpen] = useState(false);
+  const [isPaused, setIsPaused] = useState(false);
   const { isAdmin } = useAdmin();
   const { assets, updateHeroSlide, resetAsset } = useSiteAssets();
 
-  // Auto-advance slideshow
+  // Auto-advance slideshow (freezes completely when modal is open or admin pauses)
   useEffect(() => {
+    if (slideModalOpen || isPaused) return;
+
     const timer = window.setInterval(() => {
       setCurrentSlide((prev) => (prev + 1) % HERO_SLIDES.length);
     }, SLIDE_DURATION);
+
     return () => window.clearInterval(timer);
-  }, []);
+  }, [slideModalOpen, isPaused]);
 
   const handlePrevSlide = () => {
     setCurrentSlide((prev) => (prev - 1 + HERO_SLIDES.length) % HERO_SLIDES.length);
@@ -254,6 +259,18 @@ export function EditorialHero() {
 
   const handleNextSlide = () => {
     setCurrentSlide((prev) => (prev + 1) % HERO_SLIDES.length);
+  };
+
+  const handleOpenSlideModal = (slideIndex?: number) => {
+    const target = slideIndex !== undefined ? slideIndex : currentSlide;
+    setEditSlideIndex(target);
+    setCurrentSlide(target);
+    setSlideModalOpen(true);
+  };
+
+  const handleSelectSlideInModal = (index: number) => {
+    setEditSlideIndex(index);
+    setCurrentSlide(index);
   };
 
   const today = new Date().toLocaleDateString("en-GB", {
@@ -264,6 +281,15 @@ export function EditorialHero() {
 
   const activeDesktopSrc = assets.heroSlides?.[currentSlide] || HERO_SLIDES[currentSlide]?.desktopSrc;
   const activeMobileSrc = assets.heroSlides?.[currentSlide] || HERO_SLIDES[currentSlide]?.mobileSrc;
+
+  // Prepare slides list with current images for the selection modal
+  const heroSlideItems = HERO_SLIDES.map((slide, idx) => ({
+    index: idx,
+    label: `Slide ${idx + 1}`,
+    imageUrl: assets.heroSlides?.[idx] || slide.desktopSrc,
+  }));
+
+  const editingSlideImg = assets.heroSlides?.[editSlideIndex] || HERO_SLIDES[editSlideIndex]?.desktopSrc;
 
   return (
     <section className="relative min-h-[100dvh] overflow-hidden">
@@ -292,30 +318,57 @@ export function EditorialHero() {
         </motion.div>
       </AnimatePresence>
 
-      {/* Admin Change Hero Slide Trigger */}
-      {/* Admin Change Hero Slide Trigger */}
+      {/* Admin Change Hero Slide Toolbar with Direct Slide Selector & Pause Button */}
       {isAdmin && (
-        <div className="absolute top-20 right-4 sm:right-8 z-40">
+        <div className="absolute top-20 right-3 sm:right-8 z-40 flex flex-wrap items-center gap-1.5 rounded-2xl border border-[#681C2B]/60 bg-[#3D111B]/95 p-1.5 sm:p-2 text-white shadow-2xl backdrop-blur-md">
+          {/* Pause / Play Toggle */}
           <button
             type="button"
-            onClick={() => setSlideModalOpen(true)}
-            className="flex items-center gap-2 rounded-full border border-[#681C2B]/60 bg-[#3D111B]/90 px-4 py-2 text-xs font-semibold text-white shadow-xl backdrop-blur-md transition-all hover:bg-[#681C2B]"
+            onClick={() => setIsPaused((prev) => !prev)}
+            className="flex h-8 w-8 items-center justify-center rounded-xl bg-white/10 text-[#DCC9B6] hover:bg-white/20 hover:text-white transition-colors"
+            title={isPaused ? "Resume auto slideshow" : "Pause slideshow to edit"}
           >
-            <Camera className="h-3.5 w-3.5 text-[#DCC9B6]" />
-            <span>Admin: Change Slide {currentSlide + 1} (Cloudinary)</span>
+            {isPaused ? (
+              <Play className="h-3.5 w-3.5 fill-current" />
+            ) : (
+              <Pause className="h-3.5 w-3.5 fill-current" />
+            )}
           </button>
+
+          {/* Slide Selector Buttons */}
+          <div className="flex items-center gap-1">
+            {HERO_SLIDES.map((_, idx) => (
+              <button
+                key={idx}
+                type="button"
+                onClick={() => handleOpenSlideModal(idx)}
+                className={`flex items-center gap-1 rounded-lg px-2.5 py-1 text-[11px] font-semibold transition-all ${
+                  currentSlide === idx
+                    ? "bg-[#681C2B] text-white shadow-md border border-[#DCC9B6]/40 ring-1 ring-[#DCC9B6]/50"
+                    : "bg-white/5 text-zinc-300 hover:bg-white/15 hover:text-white"
+                }`}
+                title={`Select and Change Slide ${idx + 1} Image`}
+              >
+                <span>Slide {idx + 1}</span>
+                <Camera className="h-2.5 w-2.5 text-[#DCC9B6]" />
+              </button>
+            ))}
+          </div>
         </div>
       )}
 
-      {/* Admin Upload Modal for Hero */}
+      {/* Admin Upload Modal for Hero with Slide Selection */}
       <AdminUploadModal
         isOpen={slideModalOpen}
         onClose={() => setSlideModalOpen(false)}
-        title={`Change Hero Slide ${currentSlide + 1} Image`}
-        subtitle="Upload a new high-resolution hero photo via Cloudinary"
-        currentImageUrl={activeDesktopSrc}
-        onUploadSuccess={(url) => updateHeroSlide(currentSlide, url)}
-        onResetToDefault={() => resetAsset('heroSlides', currentSlide)}
+        title={`Change Hero Slide ${editSlideIndex + 1} Image`}
+        subtitle="Select any slide number below and upload a replacement photo via Cloudinary"
+        currentImageUrl={editingSlideImg}
+        slides={heroSlideItems}
+        currentSlideIndex={editSlideIndex}
+        onSelectSlide={handleSelectSlideInModal}
+        onUploadSuccess={(url) => updateHeroSlide(editSlideIndex, url)}
+        onResetToDefault={() => resetAsset('heroSlides', editSlideIndex)}
       />
 
       {/* Light subtle overlay for maximum image clarity & text contrast */}

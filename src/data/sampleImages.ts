@@ -142,6 +142,7 @@ const SAMPLE_IMAGES_MAP: Record<string, string[]> = {
     "/m1.png",
   ],
   model_shoot: [
+    "/mod.JPG",
     "/SAMPLE PICS/SAMPLE PICS/015 MODEL SHOOT/DSC04595 (website).JPG",
     "/SAMPLE PICS/SAMPLE PICS/015 MODEL SHOOT/DSC04596 (website).JPG",
     "/SAMPLE PICS/SAMPLE PICS/015 MODEL SHOOT/DSC04634 (website).JPG",
@@ -198,17 +199,9 @@ const SAMPLE_IMAGES_MAP: Record<string, string[]> = {
   candid: [],
   events: [],
   others: [],
-  candid_videos: [
-    "/candidvideo (1).mp4",
-    "/candidvideo (2).mp4",
-    "/candidvideo (3).mp4",
-    "/candidvideo (4).mp4",
-    "/candidvideo (5).mp4",
-    "/drone (1).mp4",
-  ],
-  drone_videos: [
-    "/drone (2).mp4",
-  ],
+  candid_videos: [],
+  drone_videos: [],
+  drone_shorts: [],
 };
 
 /**
