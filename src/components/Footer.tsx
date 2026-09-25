@@ -2,54 +2,72 @@ import { Mail, MapPin, MessageSquare } from "lucide-react";
 
 export function Footer() {
   return (
-    <footer className="bg-[#3D111B] py-10 sm:py-16 px-4 sm:px-8 text-[#FAF6F0] border-t border-[#681C2B]/50">
-      <div className="mx-auto max-w-7xl grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-10 text-sm">
+    <footer className="bg-[#3D111B] py-12 sm:py-16 px-4 sm:px-8 text-[#FAF6F0] border-t border-[#681C2B]/50">
+      <div className="mx-auto max-w-7xl grid grid-cols-1 md:grid-cols-2 lg:grid-cols-[1.3fr_1.1fr_1fr_1fr] gap-8 lg:gap-10">
         
         {/* Brand & Contact Person */}
-        <div className="flex flex-col gap-3">
-          <div>
-            <h2 className="font-serif text-2xl font-bold tracking-wider text-[#FAF6F0]">Alpha stories studio</h2>
-            <p className="text-[#DCC9B6] text-xs italic mt-1 font-medium">"Turning Moments Into Timeless Art"</p>
+        <div className="flex flex-col gap-4">
+          <div className="flex items-center gap-3.5">
+            <img
+              src="/logo2.png"
+              alt="Alpha stories studio Logo"
+              className="h-12 w-12 sm:h-14 sm:w-14 object-contain shrink-0 drop-shadow-md"
+              draggable={false}
+            />
+            <div>
+              <h2 className="font-serif text-2xl sm:text-[26px] font-bold tracking-wider text-[#FAF6F0] leading-tight">
+                Alpha stories studio
+              </h2>
+              <p className="text-[#DCC9B6] text-sm italic mt-1 font-medium">
+                "Turning Moments Into Timeless Art"
+              </p>
+            </div>
           </div>
-          <div className="mt-2 text-xs text-[#DCC9B6]/80">
-            <p className="font-semibold text-[#FAF6F0]">Contact Person:</p>
-            <p className="mt-0.5 text-[#DCC9B6]">Alwin.E</p>
+          <div className="mt-2 text-sm text-[#DCC9B6]/90">
+            <p className="font-semibold text-[#FAF6F0] text-[15px]">Contact Person:</p>
+            <p className="mt-0.5 text-[#DCC9B6] text-sm font-medium">Alwin.E</p>
           </div>
         </div>
 
         {/* Addresses */}
-        <div className="flex flex-col gap-3">
-          <h3 className="text-xs uppercase font-bold tracking-widest text-[#DCC9B6]">Our Studio Location</h3>
-          <div className="flex items-start gap-2.5 text-[#FAF6F0]/90 text-xs leading-relaxed">
-            <MapPin className="h-4 w-4 shrink-0 text-[#FAF6F0] mt-0.5" />
-            <div>
+        <div className="flex flex-col gap-3.5">
+          <h3 className="text-sm sm:text-[15px] uppercase font-bold tracking-widest text-[#DCC9B6]">
+            Our Studio Location
+          </h3>
+          <div className="flex items-start gap-3 text-[#FAF6F0]/95 text-sm sm:text-[15px] leading-relaxed">
+            <MapPin className="h-5 w-5 shrink-0 text-[#FAF6F0] mt-0.5" />
+            <div className="space-y-0.5">
               <p className="font-semibold text-white">Name: Alwin.E</p>
               <p>NO: 45/1108/D Thimmavaram,</p>
               <p>Kanchipuram high road,</p>
               <p className="text-white font-medium">Chengalpattu - 603 001</p>
-              <p className="text-[#DCC9B6] mt-1 font-medium">Landmark: Near VAO office thimmavaram</p>
+              <p className="text-[#DCC9B6] mt-1.5 text-xs sm:text-sm font-medium">
+                Landmark: Near VAO office thimmavaram
+              </p>
             </div>
           </div>
         </div>
 
         {/* Contact Info */}
-        <div className="flex flex-col gap-3">
-          <h3 className="text-xs uppercase font-bold tracking-widest text-[#DCC9B6]">Contact Us</h3>
+        <div className="flex flex-col gap-3.5">
+          <h3 className="text-sm sm:text-[15px] uppercase font-bold tracking-widest text-[#DCC9B6]">
+            Contact Us
+          </h3>
           
-          <div className="flex items-center gap-2 text-[#FAF6F0]/90 text-xs">
-            <Mail className="h-4 w-4 shrink-0 text-[#FAF6F0]" />
+          <div className="flex items-center gap-3 text-[#FAF6F0]/95 text-sm sm:text-[15px]">
+            <Mail className="h-5 w-5 shrink-0 text-[#FAF6F0]" />
             <a href="mailto:alphastoriesstudio@gmail.com" className="hover:text-white transition-colors">
               alphastoriesstudio@gmail.com
             </a>
           </div>
 
-          <div className="flex items-center gap-2 text-[#FAF6F0]/90 text-xs">
-            <MessageSquare className="h-4 w-4 shrink-0 text-emerald-400" />
+          <div className="flex items-center gap-3 text-[#FAF6F0]/95 text-sm sm:text-[15px]">
+            <MessageSquare className="h-5 w-5 shrink-0 text-emerald-400" />
             <a 
               href="https://wa.me/919629238744" 
               target="_blank" 
               rel="noreferrer"
-              className="text-emerald-400 hover:underline transition-colors"
+              className="text-emerald-400 hover:underline transition-colors font-medium"
             >
               WhatsApp: +91 96292 38744
             </a>
@@ -57,15 +75,17 @@ export function Footer() {
         </div>
 
         {/* Social Media & Directories */}
-        <div className="flex flex-col gap-3">
-          <h3 className="text-xs uppercase font-bold tracking-widest text-[#DCC9B6]">Connect With Us</h3>
+        <div className="flex flex-col gap-3.5">
+          <h3 className="text-sm sm:text-[15px] uppercase font-bold tracking-widest text-[#DCC9B6]">
+            Connect With Us
+          </h3>
           
           {/* Instagram */}
           <a 
             href="https://www.instagram.com/stories_by_alpha?stkn=MW0zMGY5eXUweDYwYg%3D%3D&utm_source=qr" 
             target="_blank" 
             rel="noreferrer"
-            className="flex items-center gap-2 text-xs text-[#FAF6F0]/90 hover:text-white transition-colors"
+            className="flex items-center gap-3 text-sm sm:text-[15px] text-[#FAF6F0]/95 hover:text-white transition-colors"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -77,7 +97,7 @@ export function Footer() {
               strokeWidth="2"
               strokeLinecap="round"
               strokeLinejoin="round"
-              className="h-4 w-4 text-pink-400"
+              className="h-5 w-5 text-pink-400 shrink-0"
             >
               <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
               <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
@@ -91,9 +111,9 @@ export function Footer() {
             href="https://wa.me/919629238744"
             target="_blank"
             rel="noreferrer"
-            className="flex items-center gap-2 text-xs text-[#FAF6F0]/90 hover:text-emerald-400 transition-colors"
+            className="flex items-center gap-3 text-sm sm:text-[15px] text-[#FAF6F0]/95 hover:text-emerald-400 transition-colors"
           >
-            <MessageSquare className="h-4 w-4 text-emerald-400" />
+            <MessageSquare className="h-5 w-5 text-emerald-400 shrink-0" />
             <span>Chat on WhatsApp</span>
           </a>
 
@@ -102,15 +122,15 @@ export function Footer() {
             href="https://g.page/r/CaKfehPxRGXTEBM/review"
             target="_blank"
             rel="noreferrer"
-            className="flex items-center gap-2 text-xs text-[#FAF6F0]/90 hover:text-[#DCC9B6] transition-colors"
+            className="flex items-center gap-3 text-sm sm:text-[15px] text-[#FAF6F0]/95 hover:text-[#DCC9B6] transition-colors"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              width="16"
-              height="16"
+              width="20"
+              height="20"
               viewBox="0 0 24 24"
               fill="currentColor"
-              className="h-4 w-4 text-[#DCC9B6] shrink-0"
+              className="h-5 w-5 text-[#DCC9B6] shrink-0"
             >
               <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
             </svg>
@@ -121,7 +141,7 @@ export function Footer() {
       </div>
 
       <div className="mt-12 border-t border-[#681C2B]/40 pt-6 flex flex-col items-center gap-2 text-center">
-        <div className="text-xs text-[#DCC9B6]/70">
+        <div className="text-sm text-[#DCC9B6]/80 font-medium">
           &copy; {new Date().getFullYear()} Alpha stories studio. All rights reserved.
         </div>
         <a 
@@ -130,7 +150,7 @@ export function Footer() {
           aria-label="Web Design in Arcot by TNWebz"
           target="_blank" 
           rel="noopener" 
-          className="text-[10px] text-[#DCC9B6]/60 hover:text-white transition-colors"
+          className="text-xs text-[#DCC9B6]/70 hover:text-white transition-colors"
         >
           Designed by TNWebz
         </a>

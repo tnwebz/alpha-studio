@@ -2,10 +2,12 @@ import { BrowserRouter, Route, Routes, Navigate } from 'react-router-dom';
 import { HomePage } from '@/pages/HomePage';
 import { CategoryGalleryPage } from '@/pages/CategoryGalleryPage';
 import { FloatingWhatsApp } from '@/components/FloatingWhatsApp';
+import { IntroLoader } from '@/components/IntroLoader';
 
 function App() {
   return (
     <BrowserRouter>
+      <IntroLoader />
       <FloatingWhatsApp />
       <Routes>
         <Route path="/" element={<HomePage />} />

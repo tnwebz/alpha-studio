@@ -4,6 +4,7 @@ import { Shield, Menu, X, ChevronLeft, ChevronRight, Camera } from "lucide-react
 import { useAdmin } from "@/hooks/useAdmin";
 import { useSiteAssets } from "@/hooks/useSiteAssets";
 import { AdminUploadModal } from "./AdminUploadModal";
+import { GoldenNavOrnament } from "./GoldenNavOrnament";
 
 const HERO_SLIDES = [
   { desktopSrc: "/her1.jpg", mobileSrc: "/mer1.jpg", alt: "Photography showcase 1" },
@@ -340,23 +341,27 @@ export function EditorialHero() {
 
       <div className="relative z-10 flex min-h-[100dvh] flex-col">
         {/* ── Sticky Dark Maroon (#3D111B) Navbar ── */}
-        <header className="sticky top-0 z-50 border-b border-[#681C2B]/30 bg-[#3D111B]/95 shadow-md backdrop-blur-lg">
-          <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-1 sm:px-8 sm:py-1.5 lg:px-14">
+        <header className="sticky top-0 z-50 border-b border-[#681C2B]/30 bg-[#3D111B]/95 shadow-md backdrop-blur-lg overflow-visible">
+          <div className="relative mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-1 sm:px-8 sm:py-1.5 lg:px-14 overflow-visible">
+            {/* Golden Hanging Knot Ornaments (Framing extreme left & right) */}
+            <GoldenNavOrnament side="left" />
+            <GoldenNavOrnament side="right" />
+
             <div className="flex items-center gap-3">
               {/* Shield — left corner, desktop only */}
               <div className="hidden md:block">
                 <ShieldAdminButton />
               </div>
               {/* Brand: Logo & Text */}
-              <a href="/" className="flex items-center shrink-0">
+              <a href="/" className="flex items-center gap-2.5 sm:gap-3 shrink-0 group">
                 <img
-                  src="/logo.png"
+                  src="/logo2.png"
                   alt="Alpha stories studio Logo"
-                  className="h-10 sm:h-12 lg:h-14 w-auto object-contain"
+                  className="h-9 w-9 sm:h-11 sm:w-11 lg:h-12 lg:w-12 object-contain shrink-0 transition-transform duration-300 group-hover:scale-105"
                   draggable={false}
                 />
-                {/* Styled warm beige text */}
-                <span className="ml-3 font-serif text-sm sm:text-base font-extrabold tracking-wider text-[#FAF6F0] drop-shadow-sm uppercase">
+                {/* Styled warm beige text to the right of the logo */}
+                <span className="font-serif text-xs sm:text-sm lg:text-base font-extrabold tracking-wider text-[#FAF6F0] drop-shadow-sm uppercase whitespace-nowrap">
                   Alpha stories studio
                 </span>
               </a>
