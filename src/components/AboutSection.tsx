@@ -1,44 +1,46 @@
 "use client";
 
-import React, { useState, useEffect, useCallback, useMemo } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { ArrowLeft, ArrowRight, Camera, Sparkles } from 'lucide-react';
-import { useAdmin } from '@/hooks/useAdmin';
-import { useSiteAssets } from '@/hooks/useSiteAssets';
-import { AdminUploadModal } from './AdminUploadModal';
-
-export type Testimonial = {
-  quote: string;
-  name: string;
-  designation: string;
-  src: string;
-};
+import React, { useState, useEffect, useCallback, useMemo } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { ArrowLeft, ArrowRight, Camera, Edit3, Plus, Trash2 } from "lucide-react";
+import { useAdmin } from "@/hooks/useAdmin";
+import {
+  useSiteAssets,
+  type AboutCardData,
+  DEFAULT_ABOUT_CARDS,
+} from "@/hooks/useSiteAssets";
+import { getOptimizedCloudinaryUrl } from "@/lib/cloudinary";
+import { AboutEditModal } from "./AboutEditModal";
 
 interface AnimatedTestimonialsProps {
-  testimonials: Testimonial[];
+  cards: AboutCardData[];
   autoplay?: boolean;
   isAdmin?: boolean;
-  onAdminChangePhoto?: () => void;
+  onEditBox: () => void;
+  onAddBox: () => void;
+  onDeleteBox: () => void;
   active: number;
   setActive: React.Dispatch<React.SetStateAction<number>>;
 }
 
 // --- Main Animated Cards / Testimonials Component ---
 export const AnimatedTestimonials = ({
-  testimonials,
-  autoplay = true,
+  cards,
+  autoplay = false,
   isAdmin = false,
-  onAdminChangePhoto,
+  onEditBox,
+  onAddBox,
+  onDeleteBox,
   active,
   setActive,
 }: AnimatedTestimonialsProps) => {
   const handleNext = useCallback(() => {
-    setActive((prev) => (prev + 1) % testimonials.length);
-  }, [testimonials.length, setActive]);
+    setActive((prev) => (prev + 1) % cards.length);
+  }, [cards.length, setActive]);
 
   const handlePrev = useCallback(() => {
-    setActive((prev) => (prev - 1 + testimonials.length) % testimonials.length);
-  }, [testimonials.length, setActive]);
+    setActive((prev) => (prev - 1 + cards.length) % cards.length);
+  }, [cards.length, setActive]);
 
   useEffect(() => {
     if (!autoplay) return;
@@ -48,9 +50,20 @@ export const AnimatedTestimonials = ({
 
   const isActive = (index: number) => index === active;
 
-  // Stable natural tilt angles for the stacked cards (prevents jitter on re-renders)
-  const rotations = useMemo(() => ["-6deg", "6deg"], []);
+  // Natural tilt angles for the stacked cards (stable across re-renders to prevent jitter)
+  const rotations = useMemo(
+    () => ["-7deg", "6deg", "-5deg", "7deg", "-4deg"],
+    [],
+  );
   const getRotation = (index: number) => rotations[index % rotations.length];
+
+  const activeCard = cards[active] || cards[0] || {
+    id: 'empty',
+    name: 'Alpha Stories',
+    designation: 'Creative Team',
+    quote: '',
+    src: '',
+  };
 
   return (
     <div className="mx-auto max-w-sm px-4 py-8 font-sans antialiased md:max-w-4xl md:px-8 lg:px-12">
@@ -59,52 +72,96 @@ export const AnimatedTestimonials = ({
         <div className="flex flex-col items-center justify-center">
           <div className="relative h-80 sm:h-96 w-full max-w-xs sm:max-w-sm">
             <AnimatePresence>
-              {testimonials.map((testimonial, index) => (
+              {cards.map((card, index) => (
                 <motion.div
-                  key={testimonial.src}
-                  initial={{ opacity: 0, scale: 0.9, y: 50, rotate: getRotation(index) }}
+                  key={card.id || `box-card-${index}`}
+                  initial={{
+                    opacity: 0,
+                    scale: 0.9,
+                    y: 50,
+                    rotate: getRotation(index),
+                  }}
                   animate={{
                     opacity: isActive(index) ? 1 : 0.6,
                     scale: isActive(index) ? 1 : 0.92,
                     y: isActive(index) ? 0 : 20,
                     zIndex: isActive(index)
-                      ? testimonials.length
-                      : testimonials.length - Math.abs(index - active),
-                    rotate: isActive(index) ? '0deg' : getRotation(index),
+                      ? cards.length
+                      : cards.length - Math.abs(index - active),
+                    rotate: isActive(index) ? "0deg" : getRotation(index),
                   }}
                   exit={{ opacity: 0, scale: 0.9, y: -50 }}
                   transition={{ duration: 0.5, ease: "easeInOut" }}
                   className="absolute inset-0 origin-bottom"
-                  style={{ perspective: '1000px' }}
+                  style={{ perspective: "1000px" }}
                 >
-                  <img
-                    src={testimonial.src}
-                    alt={testimonial.name}
-                    width={500}
-                    height={500}
-                    draggable={false}
-                    className="h-full w-full rounded-3xl object-cover shadow-2xl border-2 border-white/60"
-                    onError={(e) => {
-                      e.currentTarget.src = `https://placehold.co/500x500/e2e8f0/64748b?text=${testimonial.name.charAt(0)}`;
-                      e.currentTarget.onerror = null;
-                    }}
-                  />
+                  {card.src ? (
+                    <img
+                      src={getOptimizedCloudinaryUrl(card.src, 'CARD')}
+                      alt={card.name || `Box ${index + 1}`}
+                      width={500}
+                      height={500}
+                      loading="lazy"
+                      decoding="async"
+                      draggable={false}
+                      className="h-full w-full rounded-3xl object-cover shadow-2xl border-2 border-white/60 bg-black/10"
+                      onError={(e) => {
+                        e.currentTarget.src = `https://placehold.co/500x500/e2e8f0/64748b?text=${(card.name || "A").charAt(0)}`;
+                        e.currentTarget.onerror = null;
+                      }}
+                    />
+                  ) : (
+                    <div className="flex h-full w-full flex-col items-center justify-center rounded-3xl border-2 border-dashed border-[#DCC9B6] bg-[#FAF6F0] p-6 shadow-2xl transition-all">
+                      <div className="flex h-16 w-16 items-center justify-center rounded-full bg-[#E5D7C5]/70 text-[#681C2B] mb-3 shadow-inner">
+                        <Camera className="h-7 w-7 stroke-[1.5]" />
+                      </div>
+                      <span className="font-serif text-base font-bold text-[#241F20]">
+                        {card.name || `Box ${index + 1}`}
+                      </span>
+                      <span className="mt-1 text-xs text-[#746A67] text-center font-medium">
+                        {isAdmin
+                          ? "Click 'Edit Box' below to add photo"
+                          : "Story Coming Soon"}
+                      </span>
+                    </div>
+                  )}
                 </motion.div>
               ))}
             </AnimatePresence>
           </div>
 
-          {/* Admin Change Photo Button */}
-          {isAdmin && onAdminChangePhoto && (
-            <div className="mt-6 flex justify-center">
+          {/* Admin Action Toolbar below the cards */}
+          {isAdmin && (
+            <div className="mt-6 flex flex-wrap items-center justify-center gap-2">
               <button
                 type="button"
-                onClick={onAdminChangePhoto}
-                className="flex items-center gap-2 rounded-full border border-[#681C2B]/40 bg-white/95 px-4 py-2 text-xs font-semibold text-[#681C2B] shadow-md transition-all hover:bg-[#681C2B] hover:text-white cursor-pointer"
+                onClick={onEditBox}
+                className="flex items-center gap-1.5 rounded-full border border-[#681C2B]/40 bg-white/95 px-3.5 py-2 text-xs font-semibold text-[#681C2B] shadow-sm transition-all hover:bg-[#681C2B] hover:text-white cursor-pointer"
               >
-                <Camera className="h-3.5 w-3.5" />
-                <span>Admin: Change {testimonials[active].name} Photo</span>
+                <Edit3 className="h-3.5 w-3.5" />
+                <span>Admin: Edit Box {active + 1} Content & Photo</span>
               </button>
+
+              <button
+                type="button"
+                onClick={onAddBox}
+                className="flex items-center gap-1.5 rounded-full border border-emerald-600/40 bg-white/95 px-3.5 py-2 text-xs font-semibold text-emerald-800 shadow-sm transition-all hover:bg-emerald-700 hover:text-white cursor-pointer"
+              >
+                <Plus className="h-3.5 w-3.5" />
+                <span>+ Add New Box</span>
+              </button>
+
+              {cards.length > 1 && (
+                <button
+                  type="button"
+                  onClick={onDeleteBox}
+                  className="flex items-center gap-1.5 rounded-full border border-red-400/40 bg-white/95 px-3 py-2 text-xs font-semibold text-red-600 shadow-sm transition-all hover:bg-red-600 hover:text-white cursor-pointer"
+                  title={`Delete Box ${active + 1}`}
+                >
+                  <Trash2 className="h-3.5 w-3.5" />
+                  <span>Delete Box {active + 1}</span>
+                </button>
+              )}
             </div>
           )}
         </div>
@@ -122,38 +179,46 @@ export const AnimatedTestimonials = ({
             >
               <div>
                 <h3 className="font-serif text-3xl font-bold tracking-tight text-[#241F20] sm:text-4xl">
-                  {testimonials[active].name}
+                  {activeCard.name ||
+                    (isAdmin ? `Box ${active + 1} (Empty)` : "Coming Soon")}
                 </h3>
                 <p className="mt-2 text-xs sm:text-sm font-semibold uppercase tracking-[0.2em] text-[#681C2B]">
-                  {testimonials[active].designation}
+                  {activeCard.designation ||
+                    (isAdmin ? "No Designation Set" : "Alpha Stories")}
                 </p>
                 <motion.p className="mt-6 text-base sm:text-lg leading-relaxed sm:leading-loose text-[#52525b] italic">
-                  "{testimonials[active].quote}"
+                  {activeCard.quote
+                    ? `"${activeCard.quote}"`
+                    : isAdmin
+                      ? "This box is currently empty. Click 'Edit Box Content' below to add a photo, name, designation, and story."
+                      : "New team member profile and story will be added here soon."}
                 </motion.p>
               </div>
             </motion.div>
           </AnimatePresence>
 
-          {/* Navigation Arrows & Pagination Dots */}
-          <div className="flex items-center gap-4 pt-10">
-            <button
-              onClick={handlePrev}
-              aria-label="Previous proprietor"
-              className="group flex h-11 w-11 items-center justify-center rounded-full border border-[#DCC9B6] bg-white text-[#241F20] shadow-sm transition-all duration-300 hover:bg-[#681C2B] hover:border-[#681C2B] hover:text-white focus:outline-none cursor-pointer"
-            >
-              <ArrowLeft className="h-5 w-5 transition-transform duration-300 group-hover:-translate-x-1" />
-            </button>
-            <button
-              onClick={handleNext}
-              aria-label="Next proprietor"
-              className="group flex h-11 w-11 items-center justify-center rounded-full border border-[#DCC9B6] bg-white text-[#241F20] shadow-sm transition-all duration-300 hover:bg-[#681C2B] hover:border-[#681C2B] hover:text-white focus:outline-none cursor-pointer"
-            >
-              <ArrowRight className="h-5 w-5 transition-transform duration-300 group-hover:translate-x-1" />
-            </button>
+          {/* Navigation Arrows, Pagination Dots & Admin Actions */}
+          <div className="flex flex-wrap items-center gap-4 pt-10">
+            <div className="flex items-center gap-3">
+              <button
+                onClick={handlePrev}
+                aria-label="Previous box"
+                className="group flex h-11 w-11 items-center justify-center rounded-full border border-[#DCC9B6] bg-white text-[#241F20] shadow-sm transition-all duration-300 hover:bg-[#681C2B] hover:border-[#681C2B] hover:text-white focus:outline-none cursor-pointer"
+              >
+                <ArrowLeft className="h-5 w-5 transition-transform duration-300 group-hover:-translate-x-1" />
+              </button>
+              <button
+                onClick={handleNext}
+                aria-label="Next box"
+                className="group flex h-11 w-11 items-center justify-center rounded-full border border-[#DCC9B6] bg-white text-[#241F20] shadow-sm transition-all duration-300 hover:bg-[#681C2B] hover:border-[#681C2B] hover:text-white focus:outline-none cursor-pointer"
+              >
+                <ArrowRight className="h-5 w-5 transition-transform duration-300 group-hover:translate-x-1" />
+              </button>
+            </div>
 
-            {/* Slide Indicators */}
-            <div className="flex items-center gap-2 ml-3">
-              {testimonials.map((_, i) => (
+            {/* Slide Indicators for all cards */}
+            <div className="flex items-center gap-2">
+              {cards.map((_, i) => (
                 <button
                   key={i}
                   type="button"
@@ -167,6 +232,40 @@ export const AnimatedTestimonials = ({
                 />
               ))}
             </div>
+
+            {/* Admin Shortcuts for Edit, Add & Delete */}
+            {isAdmin && (
+              <div className="flex items-center gap-2">
+                <button
+                  type="button"
+                  onClick={onEditBox}
+                  className="flex items-center gap-1.5 rounded-full border border-[#681C2B]/30 bg-white/80 px-3.5 py-1.5 text-xs font-semibold text-[#681C2B] shadow-sm transition-all hover:bg-[#681C2B] hover:text-white cursor-pointer"
+                >
+                  <Edit3 className="h-3 w-3" />
+                  <span>Edit Content</span>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={onAddBox}
+                  className="flex items-center gap-1.5 rounded-full border border-emerald-600/30 bg-emerald-50/80 px-3 py-1.5 text-xs font-semibold text-emerald-800 shadow-sm transition-all hover:bg-emerald-700 hover:text-white cursor-pointer"
+                >
+                  <Plus className="h-3 w-3" />
+                  <span>Add Box</span>
+                </button>
+
+                {cards.length > 1 && (
+                  <button
+                    type="button"
+                    onClick={onDeleteBox}
+                    className="flex items-center gap-1 rounded-full border border-red-300/60 bg-red-50/80 px-2.5 py-1.5 text-xs font-semibold text-red-600 shadow-sm transition-all hover:bg-red-600 hover:text-white cursor-pointer"
+                    title={`Delete Box ${active + 1}`}
+                  >
+                    <Trash2 className="h-3 w-3" />
+                  </button>
+                )}
+              </div>
+            )}
           </div>
         </div>
       </div>
@@ -177,31 +276,63 @@ export const AnimatedTestimonials = ({
 // --- About Section Exported Component ---
 export function AboutSection() {
   const [active, setActive] = useState(0);
-  const [adminModalOpen, setAdminModalOpen] = useState(false);
+  const [editModalOpen, setEditModalOpen] = useState(false);
+  const [modalTab, setModalTab] = useState<'edit' | 'add'>('edit');
 
   const { isAdmin } = useAdmin();
-  const { assets, updateAboutPhoto, resetAsset } = useSiteAssets();
+  const { assets, updateAboutCard, addAboutCard, deleteAboutCard, resetAsset } = useSiteAssets();
 
-  // ONLY photo1.png and photo2.png used as requested
-  const photo1 = assets.aboutPhotos?.alwin || "/photo1.png";
-  const photo2 = assets.aboutPhotos?.x || "/photo2.png";
+  // Combine defaults with real-time assets from Firestore / LocalStorage
+  const cards: AboutCardData[] = useMemo(() => {
+    const rawList =
+      assets.aboutCards && assets.aboutCards.length > 0
+        ? assets.aboutCards
+        : DEFAULT_ABOUT_CARDS;
 
-  const testimonials: Testimonial[] = [
-    {
-      name: "Mr. Alwin",
-      designation: "Proprietor & Lead Storyteller",
-      quote:
-        "With an eye for emotion and a passion for storytelling, I capture authentic moments and transform them into timeless cinematic memories. Every frame is crafted with care, preserving genuine emotions, beautiful details, and fleeting moments so you can relive your most cherished memories for years to come.",
-      src: photo1,
-    },
-    {
-      name: "Mr. X",
-      designation: "Proprietor & Creative Director",
-      quote:
-        "Behind every great photograph lies an unspoken narrative. Our dedication is to craft visual legacies that transcend time—blending editorial elegance with heartfelt candid moments to celebrate life's most meaningful chapters.",
-      src: photo2,
-    },
-  ];
+    return rawList.map((card, idx) => {
+      const fallbackSrc =
+        idx === 0
+          ? assets.aboutPhotos?.alwin || "/photo1.png"
+          : idx === 1
+            ? assets.aboutPhotos?.x || "/photo2.png"
+            : "";
+
+      return {
+        id: card.id || `card_${idx + 1}`,
+        name: card.name ?? "",
+        designation: card.designation ?? "",
+        quote: card.quote ?? "",
+        src: card.src || (idx < 2 ? fallbackSrc : ""),
+      };
+    });
+  }, [assets.aboutCards, assets.aboutPhotos]);
+
+  // Keep active index in bounds if cards change
+  useEffect(() => {
+    if (active >= cards.length && cards.length > 0) {
+      setActive(Math.max(0, cards.length - 1));
+    }
+  }, [cards.length, active]);
+
+  const handleDeleteActiveBox = async () => {
+    if (cards.length <= 1) {
+      alert("At least one profile box must remain in the About section.");
+      return;
+    }
+    const currentName = cards[active]?.name || `Box ${active + 1}`;
+    const confirmed = window.confirm(
+      `Are you sure you want to permanently delete "${currentName}" (Box ${active + 1})?`
+    );
+    if (!confirmed) return;
+
+    try {
+      await deleteAboutCard(active);
+      setActive((prev) => (prev >= cards.length - 1 ? Math.max(0, cards.length - 2) : prev));
+    } catch (err) {
+      console.error("Failed to delete card:", err);
+      alert("Failed to delete box. Please try again.");
+    }
+  };
 
   return (
     <section
@@ -241,45 +372,54 @@ export function AboutSection() {
       <div className="relative mx-auto max-w-7xl">
         {/* Section Header */}
         <div className="mb-8 sm:mb-12 text-center">
-          <div className="inline-flex items-center gap-2 rounded-full border border-[#681C2B]/20 bg-[#681C2B]/5 px-3.5 py-1 text-xs font-semibold uppercase tracking-[0.25em] text-[#681C2B]">
-            <Sparkles className="h-3 w-3 text-[#681C2B]" />
-            <span>About Us</span>
-          </div>
           <h2 className="mt-3 font-serif text-3xl font-bold tracking-tight text-[#241F20] sm:text-4xl lg:text-5xl">
             The Visionaries Behind Alpha Stories
           </h2>
           <p className="mt-2.5 max-w-2xl mx-auto text-sm sm:text-base text-[#746A67]">
-            Meet our proprietors who bring artistic mastery, emotional depth, and
-            unparalleled visual craftsmanship to every story we capture.
+            Meet our proprietors and creative artists who bring artistic
+            mastery, emotional depth, and unparalleled visual craftsmanship to
+            every story we capture.
           </p>
         </div>
 
         {/* Core Animated Testimonials Card Deck */}
         <AnimatedTestimonials
-          testimonials={testimonials}
+          cards={cards}
           autoplay={false}
           isAdmin={isAdmin}
-          onAdminChangePhoto={() => setAdminModalOpen(true)}
+          onEditBox={() => {
+            setModalTab('edit');
+            setEditModalOpen(true);
+          }}
+          onAddBox={() => {
+            setModalTab('add');
+            setEditModalOpen(true);
+          }}
+          onDeleteBox={handleDeleteActiveBox}
           active={active}
           setActive={setActive}
         />
       </div>
 
-      {/* Cloudinary Upload Modal for Proprietor Photo */}
+      {/* Admin About Edit Modal */}
       {isAdmin && (
-        <AdminUploadModal
-          isOpen={adminModalOpen}
-          onClose={() => setAdminModalOpen(false)}
-          title={`Change ${testimonials[active].name} Photo`}
-          subtitle={`Upload a high-resolution portrait for ${testimonials[active].name} (${testimonials[active].designation}) via Cloudinary`}
-          currentImageUrl={testimonials[active].src}
-          onUploadSuccess={async (url) => {
-            const activeKey = active === 0 ? "alwin" : "x";
-            await updateAboutPhoto(activeKey, url);
+        <AboutEditModal
+          isOpen={editModalOpen}
+          onClose={() => setEditModalOpen(false)}
+          cards={cards}
+          initialActiveIndex={active}
+          initialTab={modalTab}
+          onSaveCard={async (idx, updatedCard) => {
+            await updateAboutCard(idx, updatedCard);
           }}
-          onResetToDefault={async () => {
-            const activeKey = active === 0 ? "alwin" : "x";
-            await resetAsset("aboutPhotos", activeKey);
+          onAddCard={async (newCard) => {
+            await addAboutCard(newCard);
+          }}
+          onDeleteCard={async (idx) => {
+            await deleteAboutCard(idx);
+          }}
+          onResetCard={async (idx) => {
+            await resetAsset("aboutCards", idx);
           }}
         />
       )}

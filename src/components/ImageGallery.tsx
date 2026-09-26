@@ -1,8 +1,15 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useInView, AnimatePresence, motion } from 'framer-motion';
 import { AspectRatio } from '@/components/ui/aspect-ratio';
 import { cn } from '@/lib/utils';
 import { Trash2, X, ChevronLeft, ChevronRight, Loader2, Play, Camera } from 'lucide-react';
+import {
+  getOptimizedCloudinaryUrl,
+  getCloudinarySrcSet,
+  isVideoUrl,
+  deleteCloudinaryAsset,
+} from '@/lib/cloudinary';
+import { LAZY_LOAD_CONFIG } from '@/config/imageConfig';
 
 type ImageGalleryProps = {
   images: string[];
@@ -14,16 +21,23 @@ type ImageGalleryProps = {
 
 const BATCH_SIZE = 12;
 
-const isVideoUrl = (url: string) => /\.(mp4|webm|ogg|mov|m4v)$/i.test(url);
-
 export function ImageGallery({ images, loading = false, embedded = false, isAdmin, onDelete }: ImageGalleryProps) {
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
   const [visibleCount, setVisibleCount] = useState<number>(BATCH_SIZE);
+  const sentinelRef = useRef<HTMLDivElement>(null);
+  const isSentinelInView = useInView(sentinelRef, { margin: LAZY_LOAD_CONFIG.rootMargin });
 
   useEffect(() => {
     // Reset visible count when category images change
     setVisibleCount(BATCH_SIZE);
   }, [images]);
+
+  // Progressive batching on scroll
+  useEffect(() => {
+    if (isSentinelInView && visibleCount < images.length) {
+      setVisibleCount((prev) => Math.min(prev + BATCH_SIZE, images.length));
+    }
+  }, [isSentinelInView, visibleCount, images.length]);
 
   // Keyboard navigation for full screen lightbox
   useEffect(() => {
@@ -113,11 +127,13 @@ export function ImageGallery({ images, loading = false, embedded = false, isAdmi
                 {isAdmin && onDelete && (
                   <button
                     onClick={() => {
-                      if (window.confirm('Are you sure you want to delete this file?')) {
+                      if (window.confirm('Are you sure you want to permanently delete this file?')) {
+                        deleteCloudinaryAsset(src);
                         onDelete(src);
                       }
                     }}
-                    className="absolute right-2 top-2 z-20 rounded-full bg-black/60 p-2 text-white hover:bg-red-500 transition-colors"
+                    className="absolute right-2 top-2 z-20 rounded-full bg-black/60 p-2 text-white hover:bg-red-500 transition-colors cursor-pointer"
+                    title="Delete photo"
                   >
                     <Trash2 className="h-4 w-4" />
                   </button>
@@ -127,12 +143,15 @@ export function ImageGallery({ images, loading = false, embedded = false, isAdmi
           })}
         </div>
 
-        {/* Lazy load more photos button */}
+        {/* Sentinel for progressive infinite loading */}
+        {hasMore && <div ref={sentinelRef} className="h-10 w-full" aria-hidden="true" />}
+
+        {/* Manual load more button fallback */}
         {hasMore && (
-          <div className="mt-10 flex justify-center pb-8">
+          <div className="mt-8 flex justify-center pb-8">
             <button
               onClick={handleLoadMore}
-              className="flex items-center gap-2 rounded-full border border-[#681C2B] bg-[#681C2B] px-6 py-3 text-xs font-semibold uppercase tracking-wider text-white shadow-md transition-all hover:bg-[#3D111B] hover:border-[#3D111B]"
+              className="flex items-center gap-2 rounded-full border border-[#681C2B] bg-[#681C2B] px-6 py-3 text-xs font-semibold uppercase tracking-wider text-white shadow-md transition-all hover:bg-[#3D111B] hover:border-[#3D111B] cursor-pointer"
             >
               <span>Load More ({visibleCount} of {images.length})</span>
             </button>
@@ -157,7 +176,7 @@ export function ImageGallery({ images, loading = false, embedded = false, isAdmi
                 {isVideoUrl(currentMediaSrc) ? 'Video' : 'Photo'} {selectedIndex + 1} of {images.length}
               </span>
               <button
-                className="rounded-full bg-white/10 p-2.5 text-white backdrop-blur-md transition-colors hover:bg-white/20"
+                className="rounded-full bg-white/10 p-2.5 text-white backdrop-blur-md transition-colors hover:bg-white/20 cursor-pointer"
                 onClick={() => setSelectedIndex(null)}
                 aria-label="Close view"
               >
@@ -169,13 +188,13 @@ export function ImageGallery({ images, loading = false, embedded = false, isAdmi
             <button
               type="button"
               onClick={handlePrevPhoto}
-              className="absolute left-3 sm:left-6 top-1/2 -translate-y-1/2 z-50 flex h-11 w-11 sm:h-14 sm:w-14 items-center justify-center rounded-full border border-white/20 bg-black/50 text-white backdrop-blur-md transition-all hover:bg-white hover:text-black hover:scale-110 active:scale-95 shadow-2xl"
+              className="absolute left-3 sm:left-6 top-1/2 -translate-y-1/2 z-50 flex h-11 w-11 sm:h-14 sm:w-14 items-center justify-center rounded-full border border-white/20 bg-black/50 text-white backdrop-blur-md transition-all hover:bg-white hover:text-black hover:scale-110 active:scale-95 shadow-2xl cursor-pointer"
               aria-label="Previous item"
             >
               <ChevronLeft className="h-6 w-6 sm:h-8 sm:w-8" />
             </button>
 
-            {/* Main Lightbox Media Display */}
+            {/* Main Lightbox Media Display - Loads high-res FULLSCREEN preset only when clicked */}
             <motion.div
               key={selectedIndex}
               initial={{ scale: 0.96, opacity: 0 }}
@@ -200,10 +219,12 @@ export function ImageGallery({ images, loading = false, embedded = false, isAdmi
               ) : (
                 <>
                   <img
-                    src={currentMediaSrc}
+                    src={getOptimizedCloudinaryUrl(currentMediaSrc, 'FULLSCREEN')}
                     alt={`Photo ${selectedIndex + 1}`}
                     className="h-full w-full object-contain select-none pointer-events-none"
                     draggable={false}
+                    loading="eager"
+                    decoding="async"
                   />
                   {/* Anti-download transparent overlay for images */}
                   <div className="absolute inset-0 z-10 bg-transparent" />
@@ -215,7 +236,7 @@ export function ImageGallery({ images, loading = false, embedded = false, isAdmi
             <button
               type="button"
               onClick={handleNextPhoto}
-              className="absolute right-3 sm:right-6 top-1/2 -translate-y-1/2 z-50 flex h-11 w-11 sm:h-14 sm:w-14 items-center justify-center rounded-full border border-white/20 bg-black/50 text-white backdrop-blur-md transition-all hover:bg-white hover:text-black hover:scale-110 active:scale-95 shadow-2xl"
+              className="absolute right-3 sm:right-6 top-1/2 -translate-y-1/2 z-50 flex h-11 w-11 sm:h-14 sm:w-14 items-center justify-center rounded-full border border-white/20 bg-black/50 text-white backdrop-blur-md transition-all hover:bg-white hover:text-black hover:scale-110 active:scale-95 shadow-2xl cursor-pointer"
               aria-label="Next item"
             >
               <ChevronRight className="h-6 w-6 sm:h-8 sm:w-8" />
@@ -237,7 +258,7 @@ type AnimatedImageProps = {
 
 function AnimatedImage({ alt, src, ratio, onClick, priority }: AnimatedImageProps) {
   const ref = React.useRef<HTMLDivElement>(null);
-  const isInView = useInView(ref, { once: true, margin: '200px 0px' });
+  const isInView = useInView(ref, { once: true, margin: LAZY_LOAD_CONFIG.rootMargin });
   const [isLoading, setIsLoading] = React.useState(true);
   const [mediaSrc, setMediaSrc] = React.useState(src);
   const isVideo = isVideoUrl(src);
@@ -245,6 +266,10 @@ function AnimatedImage({ alt, src, ratio, onClick, priority }: AnimatedImageProp
   useEffect(() => {
     setMediaSrc(src);
   }, [src]);
+
+  // Optimize grid card thumbnail using THUMBNAIL preset (600px width limit) + responsive srcset
+  const optimizedThumb = isVideo ? mediaSrc : getOptimizedCloudinaryUrl(mediaSrc, 'THUMBNAIL');
+  const srcSet = isVideo ? undefined : getCloudinarySrcSet(mediaSrc, [320, 480, 640]);
 
   return (
     <div 
@@ -274,7 +299,9 @@ function AnimatedImage({ alt, src, ratio, onClick, priority }: AnimatedImageProp
           ) : (
             <img
               alt={alt}
-              src={mediaSrc}
+              src={optimizedThumb}
+              srcSet={srcSet}
+              sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 400px"
               className={cn(
                 'size-full rounded-lg object-cover opacity-0 transition-all duration-700 ease-in-out group-hover:scale-105 pointer-events-none select-none',
                 !isLoading && 'opacity-100',

@@ -7,6 +7,7 @@ import { useAdmin } from "@/hooks/useAdmin";
 import { useSiteAssets } from "@/hooks/useSiteAssets";
 import { AdminUploadModal } from "./AdminUploadModal";
 import { CloudinaryUpload } from "./CloudinaryUpload";
+import { getOptimizedCloudinaryUrl } from "@/lib/cloudinary";
 import {
   UploadCloud,
   CheckCircle2,
@@ -139,7 +140,8 @@ export function GallerySection() {
   const galleryItems: GalleryItem[] = CATEGORIES.map((cat) => {
     const customCover = assets.galleryCovers?.[cat.key];
     const liveThumb = cloudinaryThumbs[cat.key];
-    const displayImage = customCover || liveThumb || cat.defaultImage;
+    const rawImage = customCover || liveThumb || cat.defaultImage;
+    const displayImage = getOptimizedCloudinaryUrl(rawImage, 'CARD');
 
     return {
       key: cat.key,

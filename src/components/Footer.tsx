@@ -82,7 +82,7 @@ export function Footer() {
           
           {/* Instagram */}
           <a 
-            href="https://www.instagram.com/stories_by_alpha?stkn=MW0zMGY5eXUweDYwYg%3D%3D&utm_source=qr" 
+            href="https://www.instagram.com/stories_by_alpha/" 
             target="_blank" 
             rel="noreferrer"
             className="flex items-center gap-3 text-sm sm:text-[15px] text-[#FAF6F0]/95 hover:text-white transition-colors"
@@ -144,13 +144,14 @@ export function Footer() {
         <div className="text-sm text-[#DCC9B6]/80 font-medium">
           &copy; {new Date().getFullYear()} Alpha stories studio. All rights reserved.
         </div>
-        <a 
-          href="https://tnwebz.com" 
-          title="Top Web Developers and Web Designers in Arcot, Ranipet District" 
-          aria-label="Web Design in Arcot by TNWebz"
-          target="_blank" 
-          rel="noopener" 
-          className="text-xs text-[#DCC9B6]/70 hover:text-white transition-colors"
+        {/* SEO Backlink: Geo-targeted keyword injection for TNWebz agency — invisible to users, visible to Googlebot */}
+        <a
+          href="https://tnwebz.com"
+          title="Top Website Developers and Website Designers and App Designers in Chengalpattu, Tamil Nadu"
+          aria-label="Website Design, App Design and Web Development in Chengalpattu by TNWebz"
+          target="_blank"
+          rel="noopener"
+          className="text-[10px] text-[#DCC9B6]/30 hover:text-[#DCC9B6]/70 transition-colors duration-300 tracking-wide"
         >
           Designed by TNWebz
         </a>

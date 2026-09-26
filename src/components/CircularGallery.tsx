@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef, type HTMLAttributes } from 'react';
 import { ArrowUpRight, Play, ChevronLeft, ChevronRight, Camera } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { cn } from '@/lib/utils';
+import { getOptimizedCloudinaryUrl } from '@/lib/cloudinary';
 
 // Define the type for a single gallery item
 export interface GalleryItem {
@@ -275,8 +276,10 @@ const CircularGallery = React.forwardRef<HTMLDivElement, CircularGalleryProps>(
                   >
                     {/* Media Image */}
                     <img
-                      src={item.photo.url}
+                      src={getOptimizedCloudinaryUrl(item.photo.url, 'CARD')}
                       alt={item.photo.text || item.common}
+                      loading="lazy"
+                      decoding="async"
                       className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105 pointer-events-none"
                       style={{
                         objectPosition: item.photo.pos || 'center',

@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { Camera } from 'lucide-react';
 import { useAdmin } from '@/hooks/useAdmin';
 import { useSiteAssets } from '@/hooks/useSiteAssets';
+import { getOptimizedCloudinaryUrl } from '@/lib/cloudinary';
 import { AdminUploadModal } from './AdminUploadModal';
 
 export function ShootSection() {
@@ -10,7 +11,8 @@ export function ShootSection() {
   const { assets, updateShootBackground, resetAsset } = useSiteAssets();
   const [modalOpen, setModalOpen] = useState(false);
 
-  const bgImage = assets.shootBackground || "/n1.jpg";
+  const rawBg = assets.shootBackground || "/n1.jpg";
+  const bgImage = getOptimizedCloudinaryUrl(rawBg, 'STANDARD');
 
   return (
     <section className="relative flex min-h-[85vh] w-full items-center overflow-hidden bg-black py-32 sm:py-44 lg:py-56">
@@ -20,6 +22,8 @@ export function ShootSection() {
           src={bgImage}
           alt="Let's shoot your story"
           className="h-full w-full object-cover object-center"
+          loading="lazy"
+          decoding="async"
         />
         {/* Subtle Dark Maroon Gradient & Contrast Mask focused on left side */}
         <div className="absolute inset-0 bg-gradient-to-r from-[#3D111B]/90 via-black/70 to-transparent" />

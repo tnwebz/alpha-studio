@@ -3,6 +3,7 @@ import { useEffect, useState, useRef, useCallback } from "react";
 import { Shield, Menu, X, ChevronLeft, ChevronRight, Camera, Play, Pause } from "lucide-react";
 import { useAdmin } from "@/hooks/useAdmin";
 import { useSiteAssets } from "@/hooks/useSiteAssets";
+import { getOptimizedCloudinaryUrl } from "@/lib/cloudinary";
 import { AdminUploadModal } from "./AdminUploadModal";
 import { GoldenNavOrnament } from "./GoldenNavOrnament";
 
@@ -280,14 +281,17 @@ export function EditorialHero() {
     year: "numeric",
   });
 
-  const activeDesktopSrc = assets.heroSlides?.[currentSlide] || HERO_SLIDES[currentSlide]?.desktopSrc;
-  const activeMobileSrc = assets.heroSlides?.[currentSlide] || HERO_SLIDES[currentSlide]?.mobileSrc;
+  const rawDesktopSrc = assets.heroSlides?.[currentSlide] || HERO_SLIDES[currentSlide]?.desktopSrc;
+  const rawMobileSrc = assets.heroSlides?.[currentSlide] || HERO_SLIDES[currentSlide]?.mobileSrc;
+  const activeDesktopSrc = getOptimizedCloudinaryUrl(rawDesktopSrc, 'FULLSCREEN');
+  const activeMobileSrc = getOptimizedCloudinaryUrl(rawMobileSrc, { width: 768 });
 
   // Prepare slides list with current images for the selection modal
   const heroSlideItems = HERO_SLIDES.map((slide, idx) => ({
     index: idx,
+    slug: `slide_${idx + 1}`,
     label: `Slide ${idx + 1}`,
-    imageUrl: assets.heroSlides?.[idx] || slide.desktopSrc,
+    imageUrl: getOptimizedCloudinaryUrl(assets.heroSlides?.[idx] || slide.desktopSrc, 'THUMBNAIL'),
   }));
 
   const editingSlideImg = assets.heroSlides?.[editSlideIndex] || HERO_SLIDES[editSlideIndex]?.desktopSrc;
@@ -314,6 +318,9 @@ export function EditorialHero() {
               alt={HERO_SLIDES[currentSlide]?.alt ?? "Photography showcase"}
               className="h-full w-full object-cover object-center"
               draggable={false}
+              loading="eager"
+              fetchPriority="high"
+              decoding="async"
             />
           </picture>
         </motion.div>

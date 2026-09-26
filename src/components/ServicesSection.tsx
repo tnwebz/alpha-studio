@@ -1,149 +1,553 @@
-import { useRef, useState, useEffect, useCallback } from 'react';
-import { Baby, Camera, Heart, Gift, Home, Star, Sparkles, Music, ChevronLeft, ChevronRight, type LucideIcon } from 'lucide-react';
-import { Link } from 'react-router-dom';
-import { motion, useMotionValue, animate } from 'framer-motion';
-import { SERVICE_META, type ServiceSlug } from '@/data/gallery';
-import { useAdmin } from '@/hooks/useAdmin';
-import { useSiteAssets } from '@/hooks/useSiteAssets';
-import { AdminUploadModal } from './AdminUploadModal';
+"use client";
 
-const SERVICES: Array<{
-  slug: ServiceSlug;
-  icon: LucideIcon;
-}> = [
-  { slug: 'birthday', icon: Gift },
-  { slug: 'hindu_wedding', icon: Camera },
-  { slug: 'christian_wedding', icon: Heart },
-  { slug: 'naming_ceremony', icon: Baby },
-  { slug: 'engagement', icon: Heart },
-  { slug: 'housewarming', icon: Home },
-  { slug: 'puberty', icon: Star },
-  { slug: 'aldhi', icon: Sparkles },
-  { slug: 'reception', icon: Heart },
-  { slug: 'bangle_ceremony', icon: Sparkles },
-  { slug: 'salangai_poojai', icon: Music },
-  { slug: 'maternity', icon: Baby },
-  { slug: 'model_shoot', icon: Camera },
-  { slug: 'gift_items', icon: Gift },
+import { useRef, useState, useMemo, useCallback } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import {
+  ChevronLeft,
+  ChevronRight,
+  Camera,
+  ArrowRight,
+} from "lucide-react";
+import { motion } from "framer-motion";
+import { SERVICE_META, type ServiceSlug } from "@/data/gallery";
+import { useAdmin } from "@/hooks/useAdmin";
+import { useSiteAssets, type CustomService } from "@/hooks/useSiteAssets";
+import { AdminUploadModal } from "./AdminUploadModal";
+import { HaloReel, type HaloReelItem } from "@/components/ui/halo-reel";
+import { cn } from "@/lib/utils";
+import { getOptimizedCloudinaryUrl } from "@/lib/cloudinary";
+
+// Base (built-in) service slugs — always available
+const BASE_SERVICES: ServiceSlug[] = [
+  "birthday",
+  "hindu_wedding",
+  "christian_wedding",
+  "naming_ceremony",
+  "engagement",
+  "housewarming",
+  "puberty",
+  "aldhi",
+  "reception",
+  "bangle_ceremony",
+  "salangai_poojai",
+  "maternity",
+  "model_shoot",
+  "gift_items",
 ];
 
-const GAP = 24;
-
 export function ServicesSection() {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const [cardWidth, setCardWidth] = useState(340);
-  const [visibleCards, setVisibleCards] = useState(3);
-  const x = useMotionValue(0);
-
+  const navigate = useNavigate();
   const { isAdmin } = useAdmin();
-  const { assets, updateServiceCover, resetAsset } = useSiteAssets();
-  const [editingService, setEditingService] = useState<{
-    slug: ServiceSlug;
-    title: string;
-    currentImage: string;
-  } | null>(null);
+  const {
+    assets,
+    updateServiceCover,
+    resetAsset,
+    updateServiceOrder,
+    addCustomService,
+    removeCustomService,
+    updateServiceDescription,
+    removeServiceFromOrder,
+  } = useSiteAssets();
 
-  const totalCards = SERVICES.length;
-  const maxIndex = Math.max(0, totalCards - visibleCards);
-
-  // Responsive: measure container and compute card width + visible count reliably across devices
-  useEffect(() => {
-    if (!containerRef.current) return;
-
-    const calculate = (w: number) => {
-      if (w <= 0) return;
-      let cols: number;
-      if (w >= 1024) cols = 3;
-      else if (w >= 640) cols = 2;
-      else cols = 1;
-
-      const computedCard = Math.max(260, (w - GAP * (cols - 1)) / cols);
-      setVisibleCards(cols);
-      setCardWidth(computedCard);
-    };
-
-    const observer = new ResizeObserver((entries) => {
-      for (const entry of entries) {
-        calculate(entry.contentRect.width);
-      }
-    });
-
-    observer.observe(containerRef.current);
-    calculate(containerRef.current.offsetWidth);
-
-    return () => observer.disconnect();
+  // Desktop active index & spin controller (100% untouched)
+  const [desktopActiveIndex, setDesktopActiveIndex] = useState(0);
+  const spinRef = useRef<((direction: number) => void) | null>(null);
+  // Stable callback so HaloReel's onSpinReady effect does not thrash every render
+  const handleSpinReady = useCallback((fn: (direction: number) => void) => {
+    spinRef.current = fn;
   }, []);
 
-  const getOffset = useCallback(
-    (index: number) => -(index * (cardWidth + GAP)),
-    [cardWidth],
+  // Mobile dedicated active index (completely separate from desktop)
+  const [mobileIndex, setMobileIndex] = useState(0);
+
+  // Admin editing state
+  const [editingServiceIndex, setEditingServiceIndex] = useState<number | null>(
+    null,
   );
 
-  const animateTo = useCallback(
-    (index: number) => {
-      const clamped = Math.max(0, Math.min(index, maxIndex));
-      setCurrentIndex(clamped);
-      animate(x, getOffset(clamped), {
-        type: 'spring',
-        stiffness: 300,
-        damping: 35,
-      });
-    },
-    [maxIndex, x, getOffset],
-  );
+  // ── Build effective service list (order + custom services from Firestore) ──
+  const customServices = assets.customServices || [];
+  const customSlugs = customServices.map((s) => s.slug);
 
-  // Re-snap when cardWidth changes (e.g. on resize)
-  useEffect(() => {
-    const clamped = Math.max(0, Math.min(currentIndex, maxIndex));
-    if (clamped !== currentIndex) setCurrentIndex(clamped);
-    x.set(getOffset(clamped));
-  }, [cardWidth, maxIndex, currentIndex, getOffset, x]);
+  // Merge custom services + Firestore description overrides into a single lookup
+  const allServiceMeta = useMemo(() => {
+    const merged: Record<string, { title: string; description: string; image: string }> = {
+      ...SERVICE_META,
+    };
+    // Apply custom catalog entries
+    for (const cs of customServices) {
+      merged[cs.slug] = { title: cs.title, description: cs.description, image: cs.image };
+    }
+    // Apply admin-saved title/description overrides (wins over defaults)
+    const overrides = assets.serviceDescriptions || {};
+    for (const [slug, ov] of Object.entries(overrides)) {
+      if (merged[slug]) {
+        merged[slug] = { ...merged[slug], title: ov.title || merged[slug].title, description: ov.description || merged[slug].description };
+      }
+    }
+    return merged;
+  }, [customServices, assets.serviceDescriptions]);
 
-  const handlePrev = () => animateTo(currentIndex - 1);
-  const handleNext = () => animateTo(currentIndex + 1);
+  // All slugs combined (base + custom)
+  const allSlugs = useMemo(() => {
+    const base = [...BASE_SERVICES] as string[];
+    for (const cs of customServices) {
+      if (!base.includes(cs.slug)) base.push(cs.slug);
+    }
+    return base;
+  }, [customServices]);
 
-  const handleDragEnd = (_: unknown, info: { offset: { x: number }; velocity: { x: number } }) => {
-    const step = cardWidth + GAP;
-    const currentOffset = x.get();
-    const projected = currentOffset + info.velocity.x * 0.3;
-    const rawIndex = Math.round(-projected / step);
-    animateTo(rawIndex);
+  // Apply saved order (from Firestore) — unknown slugs fall to the end
+  const SERVICES: string[] = useMemo(() => {
+    const savedOrder = assets.serviceOrder || [];
+    if (!savedOrder.length) return allSlugs;
+    const known = new Set(allSlugs);
+    const ordered: string[] = savedOrder.filter((s) => known.has(s));
+    // Append any new slugs not yet in the saved order
+    for (const s of allSlugs) {
+      if (!ordered.includes(s)) ordered.push(s);
+    }
+    return ordered;
+  }, [allSlugs, assets.serviceOrder]);
+
+  // Generate slides metadata for AdminUploadModal
+  const serviceSlides = useMemo(() => {
+    return SERVICES.map((slug, index) => {
+      const meta = allServiceMeta[slug];
+      const rawImage = assets.serviceCovers?.[slug] || meta?.image || "";
+      return {
+        index,
+        slug,
+        label: meta?.title || slug,
+        imageUrl: getOptimizedCloudinaryUrl(rawImage, 'THUMBNAIL'),
+      };
+    });
+  }, [SERVICES, allServiceMeta, assets.serviceCovers]);
+
+  // Desktop items for HaloReel (100% preserved)
+  const desktopCurrentSlug = SERVICES[desktopActiveIndex] || SERVICES[0];
+  const desktopCurrentMeta = allServiceMeta[desktopCurrentSlug] || {
+    title: desktopCurrentSlug,
+    description: "",
+    image: "",
   };
 
-  const stripWidth = totalCards * cardWidth + (totalCards - 1) * GAP;
-  const containerW = containerRef.current?.offsetWidth ?? 0;
-  const dragLeft = -(stripWidth - containerW);
+  const reelItems: HaloReelItem[] = useMemo(() => {
+    return SERVICES.map((slug) => {
+      const meta = allServiceMeta[slug];
+      const rawImage = assets.serviceCovers?.[slug] || meta?.image || "";
+
+      return {
+        slug,
+        title: meta?.title || slug,
+        subtitle: "View Collection",
+        description: meta?.description || "",
+        src: getOptimizedCloudinaryUrl(rawImage, 'CARD'),
+        alt: meta?.title || slug,
+        onClick: () => {
+          navigate(`/collections/${slug}`);
+        },
+      };
+    });
+  }, [SERVICES, allServiceMeta, assets.serviceCovers, navigate]);
+
+  // Helper to compute shortest circular distance on the wheel
+  const getSlotDiff = (
+    index: number,
+    activeIndex: number,
+    total: number,
+  ): number => {
+    let diff = (index - activeIndex) % total;
+    if (diff < -total / 2) diff += total;
+    if (diff > total / 2) diff -= total;
+    return diff;
+  };
+
+  // Circular coordinate mapping for mobile cards (forms a continuous smooth circle)
+  const getCardStyle = (diff: number) => {
+    switch (diff) {
+      case 0:
+        // Active Hero: Center-Right (apex of the wheel)
+        return {
+          x: 58,
+          y: -10,
+          scale: 1,
+          rotate: 0,
+          opacity: 1,
+          zIndex: 30,
+          pointerEvents: "auto" as const,
+        };
+      case -1:
+        // Previous: Top-Left
+        return {
+          x: -72,
+          y: -115,
+          scale: 0.76,
+          rotate: -3,
+          opacity: 0.82,
+          zIndex: 10,
+          pointerEvents: "auto" as const,
+        };
+      case 1:
+        // Next: Bottom-Left
+        return {
+          x: -72,
+          y: 110,
+          scale: 0.76,
+          rotate: 3,
+          opacity: 0.82,
+          zIndex: 10,
+          pointerEvents: "auto" as const,
+        };
+      case -2:
+        // Exiting behind top-left
+        return {
+          x: -140,
+          y: -40,
+          scale: 0.55,
+          rotate: -8,
+          opacity: 0,
+          zIndex: 1,
+          pointerEvents: "none" as const,
+        };
+      case 2:
+        // Entering behind bottom-left
+        return {
+          x: -140,
+          y: 40,
+          scale: 0.55,
+          rotate: 8,
+          opacity: 0,
+          zIndex: 1,
+          pointerEvents: "none" as const,
+        };
+      default:
+        // Hidden on the opposite side of the wheel
+        return {
+          x: -150,
+          y: 0,
+          scale: 0.5,
+          rotate: 0,
+          opacity: 0,
+          zIndex: 0,
+          pointerEvents: "none" as const,
+        };
+    }
+  };
+
+  const handleCardClick = (diff: number, slug: string) => {
+    if (diff === 0) {
+      navigate(`/collections/${slug}`);
+    } else if (diff === -1) {
+      handleMobilePrev();
+    } else if (diff === 1) {
+      handleMobileNext();
+    }
+  };
+
+  // Mobile 3-Box Carousel logic (Top-Left, Center-Right, Bottom-Left)
+  const handleMobileNext = () => {
+    setMobileIndex((prev) => (prev + 1) % SERVICES.length);
+  };
+
+  const handleMobilePrev = () => {
+    setMobileIndex((prev) => (prev - 1 + SERVICES.length) % SERVICES.length);
+  };
+
+  // Touch swipe support for mobile (horizontal swipes only to avoid interfering with scrolling)
+  const [touchStartX, setTouchStartX] = useState<number | null>(null);
+  const [touchStartY, setTouchStartY] = useState<number | null>(null);
+
+  const handleTouchStart = (e: React.TouchEvent) => {
+    setTouchStartX(e.touches[0].clientX);
+    setTouchStartY(e.touches[0].clientY);
+  };
+
+  const handleTouchEnd = (e: React.TouchEvent) => {
+    if (touchStartX === null || touchStartY === null) return;
+    const diffX = touchStartX - e.changedTouches[0].clientX;
+    const diffY = touchStartY - e.changedTouches[0].clientY;
+    if (Math.abs(diffX) > 40 && Math.abs(diffX) > Math.abs(diffY) * 1.3) {
+      if (diffX > 0) handleMobileNext();
+      else handleMobilePrev();
+    }
+    setTouchStartX(null);
+    setTouchStartY(null);
+  };
+
+  const activeServiceForAdmin =
+    editingServiceIndex !== null ? serviceSlides[editingServiceIndex] : null;
 
   return (
-    <section id="services" className="bg-[#F3E9DC] py-16 sm:py-20">
-      <div className="mx-auto max-w-7xl px-4 sm:px-8 lg:px-14">
-        {/* Header with nav arrows */}
-        <div className="flex items-end justify-between gap-4">
-          <div className="min-w-0">
-            <h2 className="font-serif text-3xl font-bold text-[#241F20] sm:text-4xl lg:text-5xl">
-              Our Services
+    <section
+      id="services"
+      className="relative z-20 overflow-hidden bg-[#F3E9DC] py-14 sm:py-20 lg:py-24 border-t border-[#DCC9B6]/40"
+    >
+      {/* Background ambient lighting */}
+      <div
+        className="pointer-events-none absolute inset-0"
+        style={{
+          background:
+            "radial-gradient(ellipse at 65% 30%, rgba(104,28,43,0.04) 0%, transparent 70%)",
+        }}
+        aria-hidden="true"
+      />
+
+      <div className="relative mx-auto max-w-7xl px-4 sm:px-8 lg:px-14">
+        {/* Section Top Header */}
+        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-6">
+          <div className="min-w-0 max-w-2xl">
+            <div className="inline-flex items-center gap-2 rounded-full border border-[#681C2B]/20 bg-[#681C2B]/5 px-3.5 py-1 text-xs font-semibold uppercase tracking-[0.25em] text-[#681C2B]">
+              <span>Our Services</span>
+            </div>
+            <h2 className="mt-3 font-serif text-3xl font-bold tracking-tight text-[#241F20] sm:text-4xl lg:text-5xl">
+              Crafted For Every Chapter
             </h2>
-            <p className="mt-4 max-w-xl text-sm sm:text-base text-[#746A67]">
-              Timeless photography crafted with care for every chapter of your story.
+            <p className="mt-3 max-w-xl text-sm sm:text-base text-[#746A67] leading-relaxed">
+              Timeless photography crafted with care. Explore our 14 signature
+              services and tap any card to view its photo collection.
             </p>
           </div>
 
-          {/* Navigation arrows */}
-          <div className="flex shrink-0 items-center gap-3">
+          {/* Header Controls: Admin Button */}
+          <div className="flex flex-wrap items-center gap-3">
+            {isAdmin && (
+              <button
+                type="button"
+                onClick={() =>
+                  setEditingServiceIndex(
+                    typeof window !== "undefined" && window.innerWidth < 1024
+                      ? mobileIndex
+                      : desktopActiveIndex,
+                  )
+                }
+                className="flex items-center gap-1.5 rounded-full border border-[#681C2B]/40 bg-[#3D111B] px-4 py-2 text-xs font-semibold text-white shadow-md transition-all hover:bg-[#681C2B] hover:scale-105 cursor-pointer"
+              >
+                <Camera className="h-3.5 w-3.5 text-[#DCC9B6]" />
+                <span>Admin: Change Covers</span>
+              </button>
+            )}
+          </div>
+        </div>
+      </div>
+
+      {/* ────────────────────────────────────────────────────────── */}
+      {/* ── 1. DESKTOP VIEW (100% UNCHANGED & SEPARATE) ───────── */}
+      {/* ────────────────────────────────────────────────────────── */}
+      <div className="hidden lg:block relative mt-12 w-full overflow-hidden">
+        <HaloReel
+          items={reelItems}
+          cardWidth={285}
+          cardHeight={390}
+          minScale={0.42}
+          radiusXRatio={0.34}
+          centerXRatio={0.08}
+          radiusYRatio={0.30}
+          visibleCutoff={-0.05}
+          autoPlay={true}
+          holdDuration={3500}
+          stepDuration={800}
+          pauseOnHover={true}
+          draggable={true}
+          showCenterLabel={true}
+          onActiveIndexChange={(idx) => setDesktopActiveIndex(idx)}
+          onSpinReady={handleSpinReady}
+          centerLabel={
+            /* Desktop Active Service Showcase */
+            <div className="pointer-events-auto flex flex-col items-start justify-center max-w-md text-left px-4 sm:px-8 py-6">
+              {/* Category Title & Description with smooth instantaneous sync */}
+              <div className="mt-3 min-h-[130px] flex flex-col justify-start">
+                <motion.div
+                  key={desktopCurrentSlug}
+                  initial={{ opacity: 0.25, y: 5 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.2, ease: "easeOut" }}
+                  className="flex flex-col items-start"
+                >
+                  <h3 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-[#241F20]">
+                    {desktopCurrentMeta.title}
+                  </h3>
+
+                  <p className="mt-3.5 text-sm sm:text-base leading-relaxed text-[#746A67]">
+                    {desktopCurrentMeta.description}
+                  </p>
+                </motion.div>
+              </div>
+
+              {/* PERMANENT Action Controls (NEVER Unmounts on Category Change) */}
+              <div className="mt-6 flex flex-wrap items-center gap-3.5">
+                <Link
+                  to={`/collections/${desktopCurrentSlug}`}
+                  className="group inline-flex items-center gap-2.5 rounded-full bg-[#681C2B] px-6 py-3.5 text-xs sm:text-sm font-bold uppercase tracking-wider text-white shadow-lg transition-all duration-300 hover:bg-[#3D111B] hover:scale-105 hover:shadow-xl cursor-pointer"
+                >
+                  <span>View Collection</span>
+                  <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
+                </Link>
+
+                {/* Desktop Navigation Arrows (Moved from top header) */}
+                <div
+                  className="flex items-center gap-2"
+                  data-no-drag
+                  onPointerDown={(e) => e.stopPropagation()}
+                >
+                  <button
+                    type="button"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      spinRef.current?.(-1);
+                    }}
+                    className="flex h-11 w-11 items-center justify-center rounded-full border border-[#681C2B] bg-[#681C2B] text-white transition-all hover:bg-[#3D111B] hover:border-[#3D111B] shadow-sm cursor-pointer active:scale-95"
+                    aria-label="Previous service"
+                  >
+                    <ChevronLeft className="h-5 w-5" />
+                  </button>
+                  <button
+                    type="button"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      spinRef.current?.(1);
+                    }}
+                    className="flex h-11 w-11 items-center justify-center rounded-full border border-[#681C2B] bg-[#681C2B] text-white transition-all hover:bg-[#3D111B] hover:border-[#3D111B] shadow-sm cursor-pointer active:scale-95"
+                    aria-label="Next service"
+                  >
+                    <ChevronRight className="h-5 w-5" />
+                  </button>
+                </div>
+
+                {isAdmin && (
+                  <button
+                    type="button"
+                    onClick={() => setEditingServiceIndex(desktopActiveIndex)}
+                    className="inline-flex items-center gap-2 rounded-full border border-[#681C2B]/40 bg-white/95 px-4 py-3 text-xs font-semibold text-[#681C2B] shadow-md transition-all hover:bg-[#681C2B] hover:text-white cursor-pointer"
+                  >
+                    <Camera className="h-3.5 w-3.5" />
+                    <span>Change Cover</span>
+                  </button>
+                )}
+              </div>
+            </div>
+          }
+          className="h-[620px] lg:h-[720px]"
+        />
+      </div>
+
+      {/* ────────────────────────────────────────────────────────── */}
+      {/* ────────────────────────────────────────────────────────── */}
+      {/* ── 2. MOBILE VIEW (SMOOTH CIRCULAR ORBITAL 3-BOX REEL) ─ */}
+      {/* ────────────────────────────────────────────────────────── */}
+      <div
+        className="block lg:hidden relative mt-8 w-full select-none"
+        onTouchStart={handleTouchStart}
+        onTouchEnd={handleTouchEnd}
+      >
+        <div className="relative h-[530px] sm:h-[560px] w-full max-w-sm sm:max-w-md mx-auto overflow-hidden">
+          {/* Persistent Circular Cards - All cards smoothly orbit without remounting or lag */}
+          {SERVICES.map((slug, index) => {
+            const diff = getSlotDiff(index, mobileIndex, SERVICES.length);
+            const isActive = diff === 0;
+            const meta = allServiceMeta[slug];
+            const coverImage =
+              assets.serviceCovers?.[slug] || meta?.image || "";
+
+            const animStyle = getCardStyle(diff);
+
+            return (
+              <motion.div
+                key={`mobile-card-${slug}`}
+                initial={false}
+                animate={animStyle}
+                transition={{
+                  duration: 0.5,
+                  ease: [0.16, 1, 0.3, 1],
+                }}
+                onClick={() => handleCardClick(diff, slug)}
+                className={cn(
+                  "absolute top-1/2 left-1/2 w-[215px] sm:w-[230px] h-[285px] sm:h-[305px] -ml-[107.5px] sm:-ml-[115px] -mt-[142.5px] sm:-mt-[152.5px] overflow-hidden rounded-3xl cursor-pointer select-none transition-shadow",
+                  isActive
+                    ? "border-2 border-white/70 shadow-[0_20px_45px_rgba(0,0,0,0.45)] group active:scale-[0.98]"
+                    : "border border-white/50 shadow-lg active:scale-95",
+                )}
+              >
+                <img
+                  src={getOptimizedCloudinaryUrl(coverImage, 'CARD')}
+                  alt={meta?.title || slug}
+                  loading="eager"
+                  decoding="async"
+                  className="pointer-events-none h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                  draggable={false}
+                />
+                <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-[#1A0B10]/95 via-[#1A0B10]/40 to-transparent p-4 sm:p-5 flex flex-col justify-end text-left">
+                  {/* Signature Service badge for active card */}
+                  <motion.span
+                    animate={{ opacity: isActive ? 1 : 0, y: isActive ? 0 : 4 }}
+                    transition={{ duration: 0.25 }}
+                    className="text-[9px] uppercase tracking-[0.2em] font-semibold text-[#DCC9B6] mb-1"
+                  >
+                    Signature Service
+                  </motion.span>
+
+                  {/* Title */}
+                  <h4
+                    className={cn(
+                      "font-serif font-bold text-[#FAF6F0] leading-tight drop-shadow-md transition-all duration-300",
+                      isActive
+                        ? "text-base sm:text-lg line-clamp-2"
+                        : "text-xs line-clamp-1",
+                    )}
+                  >
+                    {meta?.title || slug}
+                  </h4>
+
+                  {/* View Collection button on active card */}
+                  {isActive && (
+                    <motion.div
+                      initial={{ opacity: 0, y: 6 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.3, delay: 0.08 }}
+                      className="mt-2.5 inline-flex items-center gap-1.5 rounded-full bg-[#681C2B] border border-[#DCC9B6]/40 px-3.5 py-1.5 text-[11px] font-bold uppercase tracking-wider text-white shadow-lg w-fit backdrop-blur-sm group-hover:bg-[#3D111B] transition-colors"
+                    >
+                      <span>View Collection</span>
+                      <span>→</span>
+                    </motion.div>
+                  )}
+
+                  {/* Tap to select hint for inactive cards */}
+                  {!isActive && (
+                    <span className="text-[9px] uppercase tracking-wider text-[#DCC9B6] opacity-80 mt-1">
+                      Tap to select
+                    </span>
+                  )}
+                </div>
+              </motion.div>
+            );
+          })}
+
+          {/* Bottom-Right Corner Navigation Controls */}
+          <div className="absolute bottom-3 right-3 sm:bottom-5 sm:right-6 z-40 flex items-center gap-2">
+            <div className="flex items-center gap-1 rounded-full bg-[#FAF6F0]/95 px-2.5 py-1.5 shadow-md border border-[#DCC9B6]/60 backdrop-blur-sm">
+              <span className="text-[11px] font-bold text-[#681C2B]">
+                {mobileIndex + 1}
+              </span>
+              <span className="text-[10px] text-[#746A67]">/</span>
+              <span className="text-[11px] font-semibold text-[#746A67]">
+                {SERVICES.length}
+              </span>
+            </div>
+
             <button
-              onClick={handlePrev}
-              disabled={currentIndex === 0}
-              className="flex h-10 w-10 items-center justify-center rounded-full border border-[#681C2B] bg-[#681C2B] text-white transition-all hover:bg-[#3D111B] hover:border-[#3D111B] disabled:pointer-events-none disabled:opacity-30 sm:h-12 sm:w-12 shadow-sm"
-              aria-label="Previous services"
+              type="button"
+              onClick={handleMobilePrev}
+              className="flex h-10 w-10 sm:h-11 sm:w-11 items-center justify-center rounded-full bg-[#681C2B] text-white shadow-lg border border-[#DCC9B6]/30 active:scale-90 transition-transform cursor-pointer"
+              aria-label="Previous service"
             >
               <ChevronLeft className="h-5 w-5" />
             </button>
+
             <button
-              onClick={handleNext}
-              disabled={currentIndex >= maxIndex}
-              className="flex h-10 w-10 items-center justify-center rounded-full border border-[#681C2B] bg-[#681C2B] text-white transition-all hover:bg-[#3D111B] hover:border-[#3D111B] disabled:pointer-events-none disabled:opacity-30 sm:h-12 sm:w-12 shadow-sm"
-              aria-label="Next services"
+              type="button"
+              onClick={handleMobileNext}
+              className="flex h-10 w-10 sm:h-11 sm:w-11 items-center justify-center rounded-full bg-[#681C2B] text-white shadow-lg border border-[#DCC9B6]/30 active:scale-90 transition-transform cursor-pointer"
+              aria-label="Next service"
             >
               <ChevronRight className="h-5 w-5" />
             </button>
@@ -151,106 +555,47 @@ export function ServicesSection() {
         </div>
       </div>
 
-      {/* Carousel track — full bleed so cards sit edge-to-edge */}
-      <div className="mx-auto max-w-7xl px-4 sm:px-8 lg:px-14">
-        <div ref={containerRef} className="relative mt-14 overflow-hidden">
-          <motion.div
-            className="flex cursor-grab active:cursor-grabbing"
-            style={{ x, gap: GAP }}
-            drag="x"
-            dragConstraints={{ left: dragLeft, right: 0 }}
-            dragElastic={0.08}
-            onDragEnd={handleDragEnd}
-          >
-            {SERVICES.map(({ slug, icon: Icon }) => {
-              const meta = SERVICE_META[slug];
-              if (!meta) return null;
-              const coverImage = assets.serviceCovers?.[slug] || meta.image;
-
-              return (
-                <motion.div
-                  key={slug}
-                  className="shrink-0"
-                  style={{ width: cardWidth }}
-                >
-                  <Link
-                    to={`/collections/${slug}`}
-                    className="group relative block overflow-hidden rounded-2xl bg-[#FAF6F0] border border-[#DCC9B6] shadow-md transition-all duration-300 hover:-translate-y-1.5 hover:shadow-xl"
-                    draggable={false}
-                  >
-                    {/* Admin Change Cover Button */}
-                    {isAdmin && (
-                      <button
-                        type="button"
-                        onClick={(e) => {
-                          e.preventDefault();
-                          e.stopPropagation();
-                          setEditingService({ slug, title: meta.title, currentImage: coverImage });
-                        }}
-                        className="absolute top-3 left-3 z-30 flex items-center gap-1.5 rounded-full bg-[#3D111B]/90 px-3 py-1.5 text-[11px] font-semibold text-white shadow-xl backdrop-blur-md border border-[#681C2B]/40 transition-all hover:bg-[#681C2B] hover:scale-105"
-                      >
-                        <Camera className="h-3 w-3 text-[#DCC9B6]" />
-                        <span>Change Cover</span>
-                      </button>
-                    )}
-
-                    <div className="h-56 overflow-hidden rounded-t-2xl sm:h-64 lg:h-72">
-                      <img
-                        src={coverImage}
-                        alt={meta.title}
-                        className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
-                        draggable={false}
-                      />
-                    </div>
-
-                    <div
-                      className="relative -mt-8 bg-[#FAF6F0] px-5 pb-6 pt-10 rounded-b-2xl sm:px-6 sm:pb-8"
-                      style={{ clipPath: 'polygon(0 14%, 100% 0, 100% 100%, 0 100%)' }}
-                    >
-                      <div className="absolute -top-6 right-5 flex h-11 w-11 items-center justify-center rounded-xl bg-[#681C2B] shadow-lg sm:right-6 sm:h-12 sm:w-12">
-                        <Icon className="h-5 w-5 text-white" />
-                      </div>
-                      <h3 className="pr-14 text-lg font-bold text-[#241F20] sm:text-xl">{meta.title}</h3>
-                      <p className="mt-2 line-clamp-3 text-sm leading-relaxed text-[#746A67] sm:mt-3">{meta.description}</p>
-                      <span className="mt-3 inline-block text-xs font-semibold uppercase tracking-wider text-[#681C2B] group-hover:text-[#3D111B] sm:mt-4 transition-colors">
-                        View collection →
-                      </span>
-                    </div>
-                  </Link>
-                </motion.div>
-              );
-            })}
-          </motion.div>
-        </div>
-
-        {/* Dot indicators */}
-        <div className="mt-8 flex items-center justify-center gap-2">
-          {Array.from({ length: maxIndex + 1 }).map((_, i) => (
-            <button
-              key={i}
-              onClick={() => animateTo(i)}
-              className={`h-2 rounded-full transition-all duration-300 ${
-                i === currentIndex
-                  ? 'w-8 bg-[#681C2B]'
-                  : 'w-2 bg-[#DCC9B6] hover:bg-[#746A67]'
-              }`}
-              aria-label={`Go to slide ${i + 1}`}
-            />
-          ))}
-        </div>
-      </div>
-
-      {/* Admin Upload Modal for Service Box Cover */}
-      {editingService && (
+      {/* Admin Upload Modal for Service Covers */}
+      {activeServiceForAdmin && (
         <AdminUploadModal
-          isOpen={Boolean(editingService)}
-          onClose={() => setEditingService(null)}
-          title={`Change "${editingService.title}" Box Cover`}
-          subtitle="Upload a replacement cover image for this service box via Cloudinary"
-          currentImageUrl={editingService.currentImage}
-          onUploadSuccess={(url) => updateServiceCover(editingService.slug, url)}
-          onResetToDefault={() => resetAsset('serviceCovers', editingService.slug)}
+          isOpen={editingServiceIndex !== null}
+          onClose={() => setEditingServiceIndex(null)}
+          title={`Change "${activeServiceForAdmin.label}" Cover`}
+          subtitle="Upload a replacement cover image for this service category via Cloudinary"
+          currentImageUrl={activeServiceForAdmin.imageUrl}
+          currentTitle={allServiceMeta[activeServiceForAdmin.slug]?.title || activeServiceForAdmin.label}
+          currentDescription={allServiceMeta[activeServiceForAdmin.slug]?.description || ""}
+          slides={serviceSlides}
+          currentSlideIndex={editingServiceIndex ?? 0}
+          onSelectSlide={(idx) => setEditingServiceIndex(idx)}
+          onUploadSuccess={(url) =>
+            updateServiceCover(activeServiceForAdmin.slug, url)
+          }
+          onResetToDefault={() =>
+            resetAsset("serviceCovers", activeServiceForAdmin.slug)
+          }
+          onReorderSlides={updateServiceOrder}
+          onCreateCatalog={async (service: CustomService) => {
+            await addCustomService(service);
+          }}
+          onDeleteCatalog={async (slug: string) => {
+            await removeCustomService(slug);
+          }}
+          customSlugs={customSlugs}
+          onUpdateDescription={async (t, d) => {
+            await updateServiceDescription(activeServiceForAdmin.slug, t, d);
+          }}
+          onDeleteCurrentCatalog={async () => {
+            if (customSlugs.includes(activeServiceForAdmin.slug)) {
+              await removeCustomService(activeServiceForAdmin.slug);
+            } else {
+              await removeServiceFromOrder(activeServiceForAdmin.slug);
+            }
+            setEditingServiceIndex(null);
+          }}
+          isCurrentCustom={customSlugs.includes(activeServiceForAdmin.slug)}
         />
+
       )}
     </section>
   );
