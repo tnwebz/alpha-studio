@@ -1,8 +1,8 @@
 @import "tailwindcss";
 
 @theme {
-  --color-maroon-primary: #681C2B;
-  --color-maroon-dark: #3D111B;
+  --color-maroon-primary: #770000;
+  --color-maroon-dark: #770000;
   --color-beige-main: #F3E9DC;
   --color-beige-light: #FAF6F0;
   --color-beige-warm: #DCC9B6;
@@ -21,7 +21,7 @@
     --popover: #FAF6F0;
     --popover-foreground: #241F20;
     
-    --primary: #681C2B; /* Primary Maroon */
+    --primary: #770000; /* Primary Maroon */
     --primary-foreground: #FFFFFF;
     
     --secondary: #DCC9B6; /* Warm Beige */
@@ -30,7 +30,7 @@
     --muted: #FAF6F0;
     --muted-foreground: #746A67; /* Warm Gray */
     
-    --accent: #681C2B;
+    --accent: #770000;
     --accent-foreground: #FFFFFF;
     
     --destructive: #991b1b;
@@ -38,13 +38,13 @@
 
     --border: #DCC9B6; /* Warm Beige */
     --input: #DCC9B6;
-    --ring: #681C2B;
+    --ring: #770000;
     
     --radius: 0.5rem;
   }
 
   .dark {
-    --background: #3D111B;
+    --background: #770000;
     --foreground: #FAF6F0;
   }
 }
@@ -57,7 +57,7 @@
   body {
     background-color: var(--background);
     color: var(--foreground);
-    @apply antialiased selection:bg-[#681C2B] selection:text-white overflow-x-hidden;
+    @apply antialiased selection:bg-[#770000] selection:text-white overflow-x-hidden;
     font-family: 'Inter', sans-serif;
   }
 

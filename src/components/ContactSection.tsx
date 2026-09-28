@@ -73,7 +73,7 @@ export function ContactSection() {
         className="absolute inset-0 bg-cover bg-center transition-all duration-700"
         style={{ backgroundImage: `url('${bgImage}')` }}
       >
-        <div className="absolute inset-0 bg-gradient-to-br from-[#3D111B]/85 via-black/75 to-black/85" />
+        <div className="absolute inset-0 bg-gradient-to-br from-[#770000]/85 via-black/75 to-black/85" />
 
       {/* Admin Change Background Button */}
       {isAdmin && (
@@ -81,7 +81,7 @@ export function ContactSection() {
           <button
             type="button"
             onClick={() => setModalOpen(true)}
-            className="flex items-center gap-2 rounded-full border border-[#681C2B]/60 bg-[#3D111B]/90 px-4 py-2 text-xs font-semibold text-white shadow-xl backdrop-blur-md transition-all hover:bg-[#681C2B] hover:scale-105"
+            className="flex items-center gap-2 rounded-full border border-[#770000]/60 bg-[#770000]/90 px-4 py-2 text-xs font-semibold text-white shadow-xl backdrop-blur-md transition-all hover:bg-[#770000] hover:scale-105"
           >
             <Camera className="h-3.5 w-3.5 text-[#DCC9B6]" />
             <span>Admin: Change Background (Cloudinary)</span>
@@ -116,7 +116,7 @@ export function ContactSection() {
             <p className="mt-2 text-sm text-[#DCC9B6]">Contact: <strong className="text-white">Alwin.E</strong></p>
           </div>
 
-          <div className="space-y-4 rounded-2xl bg-[#3D111B]/60 backdrop-blur-md p-5 sm:p-6 border border-[#DCC9B6]/30 text-sm shadow-xl">
+          <div className="space-y-4 rounded-2xl bg-[#770000]/60 backdrop-blur-md p-5 sm:p-6 border border-[#DCC9B6]/30 text-sm shadow-xl">
             <div>
               <p className="text-xs uppercase font-semibold text-[#DCC9B6] tracking-wider">Studio Address</p>
               <p className="text-[#FAF6F0] mt-1 font-medium">Name: Alwin.E</p>
@@ -148,14 +148,14 @@ export function ContactSection() {
             <p className="mb-1 text-sm text-[#746A67]">Mail us at</p>
             <a
               href="mailto:alphastoriesstudio@gmail.com"
-              className="font-medium text-[#681C2B] hover:text-[#3D111B] hover:underline"
+              className="font-medium text-[#770000] hover:text-[#770000] hover:underline"
             >
               alphastoriesstudio@gmail.com
             </a>
             <div className="mt-4 flex flex-wrap items-center gap-2 sm:gap-3">
               <span className="text-sm text-[#746A67]">OR</span>
               {defaultSocialLinks.map((link) => (
-                <Button key={link.id} variant="outline" size="default" className="border-[#DCC9B6] bg-white text-[#241F20] hover:bg-[#DCC9B6]/30 hover:text-[#681C2B]" asChild>
+                <Button key={link.id} variant="outline" size="default" className="border-[#DCC9B6] bg-white text-[#241F20] hover:bg-[#DCC9B6]/30 hover:text-[#770000]" asChild>
                   <a href={link.href} target="_blank" rel="noreferrer">
                     {link.name}
                   </a>
@@ -177,7 +177,7 @@ export function ContactSection() {
                   value={formData.name}
                   onChange={handleChange}
                   required
-                  className="border-[#DCC9B6] bg-white text-[#241F20] focus:ring-[#681C2B] focus:border-[#681C2B]"
+                  className="border-[#DCC9B6] bg-white text-[#241F20] focus:ring-[#770000] focus:border-[#770000]"
                 />
               </div>
               <div className="space-y-2">
@@ -189,7 +189,7 @@ export function ContactSection() {
                   value={formData.email}
                   onChange={handleChange}
                   required
-                  className="border-[#DCC9B6] bg-white text-[#241F20] focus:ring-[#681C2B] focus:border-[#681C2B]"
+                  className="border-[#DCC9B6] bg-white text-[#241F20] focus:ring-[#770000] focus:border-[#770000]"
                 />
               </div>
             </div>
@@ -199,7 +199,7 @@ export function ContactSection() {
               <Textarea
                 id="message"
                 name="message"
-                className="min-h-[100px] border-[#DCC9B6] bg-white text-[#241F20] focus:ring-[#681C2B] focus:border-[#681C2B]"
+                className="min-h-[100px] border-[#DCC9B6] bg-white text-[#241F20] focus:ring-[#770000] focus:border-[#770000]"
                 value={formData.message}
                 onChange={handleChange}
                 required
@@ -217,7 +217,7 @@ export function ContactSection() {
                       onCheckedChange={(checked) =>
                         handleCheckboxChange(option, checked)
                       }
-                      className="border-[#DCC9B6] data-[state=checked]:bg-[#681C2B] data-[state=checked]:border-[#681C2B]"
+                      className="border-[#DCC9B6] data-[state=checked]:bg-[#770000] data-[state=checked]:border-[#770000]"
                     />
                     <Label htmlFor={option} className="text-xs font-normal text-[#241F20]">
                       {option}
@@ -227,7 +227,7 @@ export function ContactSection() {
               </div>
             </div>
 
-            <Button type="submit" className="w-full bg-[#681C2B] hover:bg-[#3D111B] text-white shadow-lg shadow-[#681C2B]/20 py-2.5 font-semibold uppercase tracking-wider">
+            <Button type="submit" className="w-full bg-[#770000] hover:bg-[#770000] text-white shadow-lg shadow-[#770000]/20 py-2.5 font-semibold uppercase tracking-wider">
               Send a message
             </Button>
           </form>

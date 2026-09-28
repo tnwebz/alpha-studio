@@ -510,7 +510,7 @@ function WheelCard({
             <h4 className="font-serif text-sm sm:text-lg font-bold text-[#FAF6F0] line-clamp-2 drop-shadow-md leading-tight">
               {item.title}
             </h4>
-            <div className="mt-1.5 inline-flex items-center gap-1.5 rounded-full bg-[#681C2B] border border-[#DCC9B6]/40 px-3 py-1 text-[10px] sm:text-[11px] font-bold uppercase tracking-wider text-white shadow-md w-fit backdrop-blur-sm group-hover:bg-[#3D111B] transition-colors">
+            <div className="mt-1.5 inline-flex items-center gap-1.5 rounded-full bg-[#770000] border border-[#DCC9B6]/40 px-3 py-1 text-[10px] sm:text-[11px] font-bold uppercase tracking-wider text-white shadow-md w-fit backdrop-blur-sm group-hover:bg-[#770000] transition-colors">
               <span>View Collection</span>
               <span className="transition-transform duration-300 group-hover:translate-x-1">→</span>
             </div>

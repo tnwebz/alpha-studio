@@ -124,7 +124,7 @@ export function CloudinaryUpload({
           multiple={maxFiles > 1}
           ref={fileInputRef}
           disabled={uploading}
-          className="w-full rounded border border-[#DCC9B6] bg-white px-3 py-1.5 text-xs sm:text-sm text-[#241F20] focus:border-[#681C2B] focus:outline-none file:mr-2 file:rounded-md file:border-0 file:bg-[#681C2B]/10 file:px-2.5 file:py-1 file:text-xs file:font-semibold file:text-[#681C2B] hover:file:bg-[#681C2B]/20 cursor-pointer disabled:opacity-50"
+          className="w-full rounded border border-[#DCC9B6] bg-white px-3 py-1.5 text-xs sm:text-sm text-[#241F20] focus:border-[#770000] focus:outline-none file:mr-2 file:rounded-md file:border-0 file:bg-[#770000]/10 file:px-2.5 file:py-1 file:text-xs file:font-semibold file:text-[#770000] hover:file:bg-[#770000]/20 cursor-pointer disabled:opacity-50"
         />
 
         {/* Informative compression badge */}
@@ -143,7 +143,7 @@ export function CloudinaryUpload({
 
       {/* Progress Status Message */}
       {uploading && statusMessage && (
-        <div className="flex items-center gap-2 text-xs font-semibold text-[#681C2B] animate-pulse">
+        <div className="flex items-center gap-2 text-xs font-semibold text-[#770000] animate-pulse">
           <Loader2 className="h-3.5 w-3.5 animate-spin" />
           <span>{statusMessage}</span>
         </div>
@@ -161,7 +161,7 @@ export function CloudinaryUpload({
         type="button"
         onClick={handleUpload}
         disabled={uploading}
-        className="flex items-center justify-center gap-2 rounded-lg bg-[#681C2B] px-5 py-2 text-xs sm:text-sm font-semibold text-white transition-all hover:bg-[#3D111B] disabled:opacity-50 shadow-sm cursor-pointer hover:scale-[1.02] active:scale-[0.98]"
+        className="flex items-center justify-center gap-2 rounded-lg bg-[#770000] px-5 py-2 text-xs sm:text-sm font-semibold text-white transition-all hover:bg-[#770000] disabled:opacity-50 shadow-sm cursor-pointer hover:scale-[1.02] active:scale-[0.98]"
       >
         {uploading && <Loader2 className="h-3.5 w-3.5 animate-spin" />}
         <span>{displayButtonText}</span>

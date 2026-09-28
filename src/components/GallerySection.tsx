@@ -168,7 +168,7 @@ export function GallerySection() {
         {/* Section Header */}
         <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4">
           <div>
-            <p className="text-xs font-semibold uppercase tracking-[0.25em] text-[#681C2B]">
+            <p className="text-xs font-semibold uppercase tracking-[0.25em] text-[#770000]">
               Portfolio
             </p>
             <h2 className="mt-2 font-serif text-3xl font-bold tracking-tight text-[#241F20] sm:text-4xl lg:text-5xl">
@@ -186,9 +186,9 @@ export function GallerySection() {
             <button
               type="button"
               onClick={() => setShowAdminPanel((prev) => !prev)}
-              className="flex items-center gap-2 self-start sm:self-auto rounded-full border border-[#DCC9B6] bg-white px-4 py-2 text-xs font-semibold text-[#681C2B] shadow-sm transition-all hover:bg-[#FAF6F0] hover:border-[#681C2B]/50"
+              className="flex items-center gap-2 self-start sm:self-auto rounded-full border border-[#DCC9B6] bg-white px-4 py-2 text-xs font-semibold text-[#770000] shadow-sm transition-all hover:bg-[#FAF6F0] hover:border-[#770000]/50"
             >
-              <UploadCloud className="h-4 w-4 text-[#681C2B]" />
+              <UploadCloud className="h-4 w-4 text-[#770000]" />
               <span>Admin: Cloudinary Upload</span>
               {showAdminPanel ? (
                 <ChevronUp className="h-3.5 w-3.5" />
@@ -211,7 +211,7 @@ export function GallerySection() {
                   Upload new photos or video directly into any collection
                 </p>
               </div>
-              <span className="rounded-full bg-[#681C2B]/10 px-2.5 py-1 text-[11px] font-semibold text-[#681C2B]">
+              <span className="rounded-full bg-[#770000]/10 px-2.5 py-1 text-[11px] font-semibold text-[#770000]">
                 Admin Mode
               </span>
             </div>
@@ -238,7 +238,7 @@ export function GallerySection() {
                     onClick={() => setAdminUploadCategory(cat.key)}
                     className={`rounded-lg px-3 py-2 text-xs font-medium transition-all ${
                       adminUploadCategory === cat.key
-                        ? "bg-[#681C2B] text-white shadow-sm"
+                        ? "bg-[#770000] text-white shadow-sm"
                         : "bg-[#FAF6F0] text-[#241F20] border border-[#DCC9B6]/60 hover:bg-[#DCC9B6]/30"
                     }`}
                   >
@@ -270,9 +270,9 @@ export function GallerySection() {
                     });
                   }
                 }}
-                className="flex items-center gap-1.5 rounded-lg border border-[#681C2B]/40 bg-[#FAF6F0] px-3 py-1.5 text-xs font-semibold text-[#681C2B] hover:bg-[#681C2B]/10 transition-colors"
+                className="flex items-center gap-1.5 rounded-lg border border-[#770000]/40 bg-[#FAF6F0] px-3 py-1.5 text-xs font-semibold text-[#770000] hover:bg-[#770000]/10 transition-colors"
               >
-                <Camera className="h-3.5 w-3.5 text-[#681C2B]" />
+                <Camera className="h-3.5 w-3.5 text-[#770000]" />
                 <span>
                   Change "
                   {CATEGORIES.find((c) => c.key === adminUploadCategory)?.label}

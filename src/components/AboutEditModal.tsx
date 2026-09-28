@@ -173,13 +173,13 @@ export function AboutEditModal({
   return (
     <div className="fixed inset-0 z-[10000] flex items-center justify-center bg-black/80 p-3 sm:p-4 backdrop-blur-md animate-fade-in">
       <div
-        className="relative flex flex-col w-full max-w-2xl max-h-[92vh] overflow-hidden rounded-2xl border border-[#681C2B]/50 bg-[#241318] text-[#FAF6F0] shadow-2xl"
+        className="relative flex flex-col w-full max-w-2xl max-h-[92vh] overflow-hidden rounded-2xl border border-[#770000]/50 bg-[#241318] text-[#FAF6F0] shadow-2xl"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
-        <div className="flex items-start justify-between gap-3 border-b border-[#681C2B]/40 bg-[#1D0F13] px-5 py-4 sm:px-6">
+        <div className="flex items-start justify-between gap-3 border-b border-[#770000]/40 bg-[#1D0F13] px-5 py-4 sm:px-6">
           <div>
-            <div className="inline-flex items-center gap-1.5 rounded-full bg-[#681C2B]/60 px-2.5 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-[#DCC9B6]">
+            <div className="inline-flex items-center gap-1.5 rounded-full bg-[#770000]/60 px-2.5 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-[#DCC9B6]">
               <Sparkles className="h-3 w-3 text-[#DCC9B6]" />
               <span>Admin About Us Manager</span>
             </div>
@@ -202,7 +202,7 @@ export function AboutEditModal({
         </div>
 
         {/* Mode Switcher Tabs */}
-        <div className="flex items-center border-b border-[#681C2B]/30 bg-[#170B0F] px-5 pt-3 gap-2">
+        <div className="flex items-center border-b border-[#770000]/30 bg-[#170B0F] px-5 pt-3 gap-2">
           <button
             type="button"
             onClick={() => setActiveTab('edit')}
@@ -234,7 +234,7 @@ export function AboutEditModal({
         {activeTab === 'edit' && (
           <>
             {/* Box Navigation Tabs Bar */}
-            <div className="border-b border-[#681C2B]/30 bg-[#1a0c11] px-4 py-2.5 sm:px-6">
+            <div className="border-b border-[#770000]/30 bg-[#1a0c11] px-4 py-2.5 sm:px-6">
               <div className="flex items-center justify-between mb-2">
                 <span className="text-[11px] font-semibold uppercase tracking-wider text-[#DCC9B6]">
                   Select Box to Edit:
@@ -261,7 +261,7 @@ export function AboutEditModal({
                       onClick={() => setSelectedBoxIndex(idx)}
                       className={`group relative flex-shrink-0 flex flex-col items-center justify-center rounded-xl px-3 py-1.5 min-w-[75px] text-center transition-all cursor-pointer ${
                         isSelected
-                          ? 'border-2 border-[#DCC9B6] bg-[#681C2B] text-white shadow-lg ring-1 ring-[#DCC9B6]/60 scale-[1.02]'
+                          ? 'border-2 border-[#DCC9B6] bg-[#770000] text-white shadow-lg ring-1 ring-[#DCC9B6]/60 scale-[1.02]'
                           : 'border border-white/10 bg-black/40 text-zinc-400 hover:border-white/20 hover:bg-black/60 hover:text-white'
                       }`}
                     >
@@ -285,7 +285,7 @@ export function AboutEditModal({
               {/* Active Box Indicator & Actions */}
               <div className="flex flex-wrap items-center justify-between gap-2 border-b border-white/10 pb-2.5">
                 <div className="flex items-center gap-2">
-                  <span className="flex h-6 w-6 items-center justify-center rounded-full bg-[#681C2B] text-xs font-bold text-white">
+                  <span className="flex h-6 w-6 items-center justify-center rounded-full bg-[#770000] text-xs font-bold text-white">
                     {selectedBoxIndex + 1}
                   </span>
                   <span className="text-sm font-semibold text-[#FAF6F0]">
@@ -402,7 +402,7 @@ export function AboutEditModal({
                               setFormData((prev) => ({ ...prev, src: customUrl.trim() }));
                             }
                           }}
-                          className="rounded-xl bg-[#681C2B] px-3 py-1.5 text-xs font-semibold text-white hover:bg-[#852538] transition-colors cursor-pointer"
+                          className="rounded-xl bg-[#770000] px-3 py-1.5 text-xs font-semibold text-white hover:bg-[#852538] transition-colors cursor-pointer"
                         >
                           Apply
                         </button>
@@ -458,7 +458,7 @@ export function AboutEditModal({
             </div>
 
             {/* Footer Actions */}
-            <div className="flex items-center justify-between border-t border-[#681C2B]/40 bg-[#1D0F13] px-5 py-4 sm:px-6">
+            <div className="flex items-center justify-between border-t border-[#770000]/40 bg-[#1D0F13] px-5 py-4 sm:px-6">
               <div className="flex items-center gap-2">
                 {savedSuccess && (
                   <span className="flex items-center gap-1.5 text-xs font-semibold text-emerald-400 animate-fade-in">
@@ -480,7 +480,7 @@ export function AboutEditModal({
                   type="button"
                   onClick={handleSave}
                   disabled={saving}
-                  className="flex items-center gap-1.5 rounded-xl bg-[#681C2B] px-5 py-2 text-xs font-bold uppercase tracking-wider text-white shadow-lg transition-all hover:bg-[#852538] hover:scale-105 disabled:opacity-50 cursor-pointer"
+                  className="flex items-center gap-1.5 rounded-xl bg-[#770000] px-5 py-2 text-xs font-bold uppercase tracking-wider text-white shadow-lg transition-all hover:bg-[#852538] hover:scale-105 disabled:opacity-50 cursor-pointer"
                 >
                   {saving ? (
                     <span>Saving...</span>
@@ -588,7 +588,7 @@ export function AboutEditModal({
                               setNewCardData((prev) => ({ ...prev, src: newCustomUrl.trim() }));
                             }
                           }}
-                          className="rounded-xl bg-[#681C2B] px-3 py-1.5 text-xs font-semibold text-white hover:bg-[#852538] transition-colors cursor-pointer"
+                          className="rounded-xl bg-[#770000] px-3 py-1.5 text-xs font-semibold text-white hover:bg-[#852538] transition-colors cursor-pointer"
                         >
                           Apply
                         </button>
@@ -644,7 +644,7 @@ export function AboutEditModal({
             </div>
 
             {/* Footer Actions for Add */}
-            <div className="flex items-center justify-between border-t border-[#681C2B]/40 bg-[#1D0F13] px-5 py-4 sm:px-6">
+            <div className="flex items-center justify-between border-t border-[#770000]/40 bg-[#1D0F13] px-5 py-4 sm:px-6">
               <button
                 type="button"
                 onClick={() => setActiveTab('edit')}

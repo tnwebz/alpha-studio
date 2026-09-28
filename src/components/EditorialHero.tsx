@@ -166,11 +166,11 @@ function ShieldAdminButton({ className }: { className?: string }) {
       >
         <Shield
           className={`h-4 w-4 transition-colors ${
-            isAdmin ? "text-[#681C2B]" : "text-zinc-400 hover:text-white"
+            isAdmin ? "text-[#770000]" : "text-zinc-400 hover:text-white"
           }`}
         />
         {isAdmin && (
-          <span className="absolute -right-1 -top-1 h-2 w-2 rounded-full bg-[#681C2B]" />
+          <span className="absolute -right-1 -top-1 h-2 w-2 rounded-full bg-[#770000]" />
         )}
       </button>
 
@@ -196,7 +196,7 @@ function ShieldAdminButton({ className }: { className?: string }) {
               onClick={(e) => e.stopPropagation()}
             >
               <div className="mb-6 flex items-center gap-3">
-                <Shield className="h-5 w-5 text-[#681C2B]" />
+                <Shield className="h-5 w-5 text-[#770000]" />
                 <h3 className="font-serif text-lg font-bold text-[#241F20]">Admin Access</h3>
               </div>
               <input
@@ -205,7 +205,7 @@ function ShieldAdminButton({ className }: { className?: string }) {
                 onChange={(e) => setPassword(e.target.value)}
                 onKeyDown={(e) => e.key === "Enter" && handlePasswordSubmit()}
                 placeholder="Enter password"
-                className="w-full rounded-lg border border-[#DCC9B6] bg-white px-4 py-3 text-sm text-[#241F20] placeholder:text-[#746A67] focus:border-[#681C2B] focus:outline-none focus:ring-1 focus:ring-[#681C2B]"
+                className="w-full rounded-lg border border-[#DCC9B6] bg-white px-4 py-3 text-sm text-[#241F20] placeholder:text-[#746A67] focus:border-[#770000] focus:outline-none focus:ring-1 focus:ring-[#770000]"
                 autoFocus
               />
               <div className="mt-4 flex gap-3">
@@ -222,7 +222,7 @@ function ShieldAdminButton({ className }: { className?: string }) {
                 <button
                   type="button"
                   onClick={handlePasswordSubmit}
-                  className="flex-1 rounded-lg bg-[#681C2B] px-4 py-2.5 text-xs font-semibold uppercase tracking-wider text-white transition-colors hover:bg-[#3D111B]"
+                  className="flex-1 rounded-lg bg-[#770000] px-4 py-2.5 text-xs font-semibold uppercase tracking-wider text-white transition-colors hover:bg-[#770000]"
                 >
                   Unlock
                 </button>
@@ -328,7 +328,7 @@ export function EditorialHero() {
 
       {/* Admin Change Hero Slide Toolbar with Direct Slide Selector & Pause Button */}
       {isAdmin && (
-        <div className="absolute top-20 right-3 sm:right-8 z-40 flex flex-wrap items-center gap-1.5 rounded-2xl border border-[#681C2B]/60 bg-[#3D111B]/95 p-1.5 sm:p-2 text-white shadow-2xl backdrop-blur-md">
+        <div className="absolute top-20 right-3 sm:right-8 z-40 flex flex-wrap items-center gap-1.5 rounded-2xl border border-[#770000]/60 bg-[#770000]/95 p-1.5 sm:p-2 text-white shadow-2xl backdrop-blur-md">
           {/* Pause / Play Toggle */}
           <button
             type="button"
@@ -352,7 +352,7 @@ export function EditorialHero() {
                 onClick={() => handleOpenSlideModal(idx)}
                 className={`flex items-center gap-1 rounded-lg px-2.5 py-1 text-[11px] font-semibold transition-all ${
                   currentSlide === idx
-                    ? "bg-[#681C2B] text-white shadow-md border border-[#DCC9B6]/40 ring-1 ring-[#DCC9B6]/50"
+                    ? "bg-[#770000] text-white shadow-md border border-[#DCC9B6]/40 ring-1 ring-[#DCC9B6]/50"
                     : "bg-white/5 text-zinc-300 hover:bg-white/15 hover:text-white"
                 }`}
                 title={`Select and Change Slide ${idx + 1} Image`}
@@ -386,7 +386,7 @@ export function EditorialHero() {
       <button
         type="button"
         onClick={handlePrevSlide}
-        className="pointer-events-auto absolute left-3 top-1/2 -translate-y-1/2 z-30 flex h-10 w-10 sm:h-12 sm:w-12 items-center justify-center rounded-full border border-white/20 bg-black/40 text-white backdrop-blur-md transition-all hover:bg-[#681C2B] hover:scale-110 active:scale-95 shadow-xl"
+        className="pointer-events-auto absolute left-3 top-1/2 -translate-y-1/2 z-30 flex h-10 w-10 sm:h-12 sm:w-12 items-center justify-center rounded-full border border-white/20 bg-black/40 text-white backdrop-blur-md transition-all hover:bg-[#770000] hover:scale-110 active:scale-95 shadow-xl"
         aria-label="Previous slide"
       >
         <ChevronLeft className="h-6 w-6" />
@@ -394,15 +394,15 @@ export function EditorialHero() {
       <button
         type="button"
         onClick={handleNextSlide}
-        className="pointer-events-auto absolute right-3 top-1/2 -translate-y-1/2 z-30 flex h-10 w-10 sm:h-12 sm:w-12 items-center justify-center rounded-full border border-white/20 bg-black/40 text-white backdrop-blur-md transition-all hover:bg-[#681C2B] hover:scale-110 active:scale-95 shadow-xl"
+        className="pointer-events-auto absolute right-3 top-1/2 -translate-y-1/2 z-30 flex h-10 w-10 sm:h-12 sm:w-12 items-center justify-center rounded-full border border-white/20 bg-black/40 text-white backdrop-blur-md transition-all hover:bg-[#770000] hover:scale-110 active:scale-95 shadow-xl"
         aria-label="Next slide"
       >
         <ChevronRight className="h-6 w-6" />
       </button>
 
       <div className="relative z-10 flex min-h-[100dvh] flex-col">
-        {/* ── Sticky Dark Maroon (#3D111B) Navbar ── */}
-        <header className="sticky top-0 z-50 border-b border-[#681C2B]/30 bg-[#3D111B]/95 shadow-md backdrop-blur-lg overflow-visible">
+        {/* ── Sticky Dark Maroon (#770000) Navbar ── */}
+        <header className="sticky top-0 z-50 border-b border-[#770000]/30 bg-[#770000]/95 shadow-md backdrop-blur-lg overflow-visible">
           <div className="relative mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-1 sm:px-8 sm:py-1.5 lg:px-14 overflow-visible">
             {/* Golden Hanging Knot Ornaments (Framing extreme left & right) */}
             <GoldenNavOrnament side="left" />
@@ -445,7 +445,7 @@ export function EditorialHero() {
             <div className="hidden items-center gap-3 md:flex">
               <a
                 href="#contact"
-                className="shrink-0 rounded-full bg-[#681C2B] px-5 py-2.5 text-[10px] font-semibold uppercase tracking-[0.15em] text-white border border-[#DCC9B6]/30 transition-all hover:bg-[#681C2B]/80 hover:shadow-lg sm:text-xs"
+                className="shrink-0 rounded-full bg-[#770000] px-5 py-2.5 text-[10px] font-semibold uppercase tracking-[0.15em] text-white border border-[#DCC9B6]/30 transition-all hover:bg-[#770000]/80 hover:shadow-lg sm:text-xs"
               >
                 Get in touch
               </a>
@@ -454,7 +454,7 @@ export function EditorialHero() {
             {/* Mobile: Hamburger toggle */}
             <button
               type="button"
-              className="flex h-9 w-9 items-center justify-center rounded-md border border-[#681C2B]/40 bg-[#3D111B] text-[#FAF6F0] md:hidden"
+              className="flex h-9 w-9 items-center justify-center rounded-md border border-[#770000]/40 bg-[#770000] text-[#FAF6F0] md:hidden"
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               aria-label="Toggle mobile menu"
             >
@@ -474,14 +474,14 @@ export function EditorialHero() {
                 animate={{ opacity: 1, height: "auto" }}
                 exit={{ opacity: 0, height: 0 }}
                 transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
-                className="overflow-hidden border-t border-[#681C2B]/30 bg-[#3D111B]/98 text-white backdrop-blur-lg md:hidden"
+                className="overflow-hidden border-t border-[#770000]/30 bg-[#770000]/98 text-white backdrop-blur-lg md:hidden"
               >
                 <div className="mx-auto flex max-w-7xl flex-col gap-1 px-5 py-4">
                   {NAV_LINKS.map((link) => (
                     <a
                       key={link.href}
                       href={link.href}
-                      className="rounded-lg px-3 py-2.5 text-sm font-medium text-[#FAF6F0] transition-colors hover:bg-[#681C2B]/40 hover:text-white"
+                      className="rounded-lg px-3 py-2.5 text-sm font-medium text-[#FAF6F0] transition-colors hover:bg-[#770000]/40 hover:text-white"
                       onClick={() => setMobileMenuOpen(false)}
                     >
                       {link.label}
@@ -489,13 +489,13 @@ export function EditorialHero() {
                   ))}
                   <a
                     href="#contact"
-                    className="mt-2 rounded-full bg-[#681C2B] px-5 py-2.5 text-center text-xs font-semibold uppercase tracking-wider text-white border border-[#DCC9B6]/30"
+                    className="mt-2 rounded-full bg-[#770000] px-5 py-2.5 text-center text-xs font-semibold uppercase tracking-wider text-white border border-[#DCC9B6]/30"
                     onClick={() => setMobileMenuOpen(false)}
                   >
                     Get in touch
                   </a>
                   {/* Shield icon — hidden admin trigger */}
-                  <div className="mt-2 border-t border-[#681C2B]/30 pt-3">
+                  <div className="mt-2 border-t border-[#770000]/30 pt-3">
                     <div className="flex items-center gap-2 px-3">
                       <ShieldAdminButton />
                     </div>
@@ -541,7 +541,7 @@ export function EditorialHero() {
             <button
               type="button"
               onClick={handleNextSlide}
-              className="flex h-7 w-7 items-center justify-center rounded-full border border-white/30 bg-black/40 text-white backdrop-blur-sm transition-all hover:bg-[#681C2B] hover:text-white hover:scale-110 active:scale-95 sm:h-8 sm:w-8"
+              className="flex h-7 w-7 items-center justify-center rounded-full border border-white/30 bg-black/40 text-white backdrop-blur-sm transition-all hover:bg-[#770000] hover:text-white hover:scale-110 active:scale-95 sm:h-8 sm:w-8"
               aria-label="Next slide"
             >
               <ChevronRight className="h-4 w-4" />

@@ -732,8 +732,8 @@ export function IntroLoader() {
                   y2="100%"
                 >
                   <stop offset="0%" stopColor="#4A1420" />
-                  <stop offset="40%" stopColor="#681C2B" />
-                  <stop offset="100%" stopColor="#3D111B" />
+                  <stop offset="40%" stopColor="#770000" />
+                  <stop offset="100%" stopColor="#770000" />
                 </linearGradient>
                 <linearGradient
                   id="beigeSceneSilk2"
@@ -753,8 +753,8 @@ export function IntroLoader() {
                   x2="100%"
                   y2="100%"
                 >
-                  <stop offset="0%" stopColor="#681C2B" />
-                  <stop offset="70%" stopColor="#3D111B" />
+                  <stop offset="0%" stopColor="#770000" />
+                  <stop offset="70%" stopColor="#770000" />
                   <stop offset="100%" stopColor="#240A10" />
                 </linearGradient>
               </defs>
@@ -812,7 +812,7 @@ export function IntroLoader() {
 
             {/* ALPHA STORIES Wordmark */}
             <motion.h1
-              className="font-serif uppercase text-[#681C2B] font-semibold text-2xl sm:text-3xl md:text-4xl tracking-[0.16em] sm:tracking-[0.20em]"
+              className="font-serif uppercase text-[#770000] font-semibold text-2xl sm:text-3xl md:text-4xl tracking-[0.16em] sm:tracking-[0.20em]"
               initial={{ opacity: 0, y: 8 }}
               animate={{
                 opacity:
@@ -862,7 +862,7 @@ export function IntroLoader() {
           className="absolute inset-0 w-full h-full flex flex-col items-center justify-center overflow-hidden"
           style={{
             background:
-              "radial-gradient(circle at 50% 45%, #681C2B 0%, #3D111B 65%, #240A10 100%)",
+              "radial-gradient(circle at 50% 45%, #770000 0%, #770000 65%, #240A10 100%)",
           }}
           initial={{ opacity: 1, y: "0%" }}
           animate={{
@@ -943,7 +943,7 @@ export function IntroLoader() {
                   y2="100%"
                 >
                   <stop offset="0%" stopColor="#4A1420" />
-                  <stop offset="50%" stopColor="#681C2B" />
+                  <stop offset="50%" stopColor="#770000" />
                   <stop offset="100%" stopColor="#2A0B12" />
                 </linearGradient>
               </defs>
@@ -983,8 +983,8 @@ export function IntroLoader() {
                   y2="50%"
                 >
                   <stop offset="0%" stopColor="#8B263E" stopOpacity="0.8" />
-                  <stop offset="45%" stopColor="#681C2B" stopOpacity="0.9" />
-                  <stop offset="100%" stopColor="#3D111B" stopOpacity="0.7" />
+                  <stop offset="45%" stopColor="#770000" stopOpacity="0.9" />
+                  <stop offset="100%" stopColor="#770000" stopOpacity="0.7" />
                 </linearGradient>
               </defs>
             </motion.svg>
@@ -1027,8 +1027,8 @@ export function IntroLoader() {
                   x2="100%"
                   y2="100%"
                 >
-                  <stop offset="0%" stopColor="#681C2B" />
-                  <stop offset="60%" stopColor="#3D111B" />
+                  <stop offset="0%" stopColor="#770000" />
+                  <stop offset="60%" stopColor="#770000" />
                   <stop offset="100%" stopColor="#20060C" />
                 </linearGradient>
                 <linearGradient

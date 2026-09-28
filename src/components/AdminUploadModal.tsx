@@ -94,7 +94,7 @@ function ReorderPanel({
           type="button"
           onClick={handleSave}
           disabled={saving}
-          className="rounded-full bg-[#681C2B] px-3 py-1 text-[11px] font-bold text-white transition-all hover:bg-[#3D111B] disabled:opacity-60 cursor-pointer"
+          className="rounded-full bg-[#770000] px-3 py-1 text-[11px] font-bold text-white transition-all hover:bg-[#770000] disabled:opacity-60 cursor-pointer"
         >
           {saving ? "Saving…" : "Save Order"}
         </button>
@@ -111,7 +111,7 @@ function ReorderPanel({
             onDragOver={(e) => e.preventDefault()}
             className={`flex items-center gap-2.5 rounded-xl border px-3 py-2 cursor-grab active:cursor-grabbing transition-all select-none ${
               draggingIdx === idx
-                ? "border-[#DCC9B6] bg-[#681C2B]/60 scale-[1.02] shadow-lg"
+                ? "border-[#DCC9B6] bg-[#770000]/60 scale-[1.02] shadow-lg"
                 : "border-white/10 bg-black/40 hover:border-white/20"
             }`}
           >
@@ -293,7 +293,7 @@ function CreateCatalogPanel({
           type="button"
           onClick={handleCreate}
           disabled={saving}
-          className="mt-1 flex items-center justify-center gap-2 rounded-full bg-[#681C2B] px-4 py-2.5 text-sm font-bold text-white transition-all hover:bg-[#3D111B] disabled:opacity-60 cursor-pointer"
+          className="mt-1 flex items-center justify-center gap-2 rounded-full bg-[#770000] px-4 py-2.5 text-sm font-bold text-white transition-all hover:bg-[#770000] disabled:opacity-60 cursor-pointer"
         >
           <Plus className="h-4 w-4" />
           {saving ? "Creating…" : "Create Catalog"}
@@ -376,13 +376,13 @@ export function AdminUploadModal({
     >
       {/* Modal card — stops click-through */}
       <div
-        className="relative w-full max-w-md rounded-2xl border border-[#681C2B]/50 bg-[#3D111B] text-[#FAF6F0] shadow-2xl my-auto"
+        className="relative w-full max-w-md rounded-2xl border border-[#770000]/50 bg-[#770000] text-[#FAF6F0] shadow-2xl my-auto"
         onClick={(e) => e.stopPropagation()}
       >
         {/* ── STICKY HEADER (close button always visible) ── */}
-        <div className="sticky top-0 z-10 flex items-start justify-between gap-3 rounded-t-2xl border-b border-[#681C2B]/30 bg-[#3D111B] px-5 pt-5 pb-4">
+        <div className="sticky top-0 z-10 flex items-start justify-between gap-3 rounded-t-2xl border-b border-[#770000]/30 bg-[#770000] px-5 pt-5 pb-4">
           <div className="min-w-0 flex-1">
-            <span className="rounded-full bg-[#681C2B]/50 px-2.5 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-[#DCC9B6]">
+            <span className="rounded-full bg-[#770000]/50 px-2.5 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-[#DCC9B6]">
               Admin Manager
             </span>
             <h3 className="mt-1.5 font-serif text-lg font-bold text-[#FAF6F0] leading-tight">
@@ -405,7 +405,7 @@ export function AdminUploadModal({
         </div>
 
         {/* ── TAB BAR ── */}
-        <div className="flex border-b border-[#681C2B]/20 bg-black/20 px-5">
+        <div className="flex border-b border-[#770000]/20 bg-black/20 px-5">
           {(
             [
               { key: "cover", label: "Change Cover" },
@@ -456,7 +456,7 @@ export function AdminUploadModal({
                             onClick={() => onSelectSlide(s.index)}
                             className={`w-full flex flex-col items-center gap-1 rounded-xl p-1.5 border transition-all ${
                               isSelected
-                                ? "border-[#DCC9B6] bg-[#681C2B] text-white shadow-lg ring-2 ring-[#DCC9B6]/60 scale-[1.03]"
+                                ? "border-[#DCC9B6] bg-[#770000] text-white shadow-lg ring-2 ring-[#DCC9B6]/60 scale-[1.03]"
                                 : "border-white/10 bg-black/40 text-zinc-300 hover:border-white/30 hover:bg-black/60"
                             }`}
                           >
@@ -563,7 +563,7 @@ export function AdminUploadModal({
                       type="button"
                       onClick={handleSaveDescription}
                       disabled={savingDesc}
-                      className="self-end rounded-full bg-[#681C2B] px-4 py-1.5 text-[11px] font-bold text-white transition-all hover:bg-[#3D111B] disabled:opacity-60 cursor-pointer"
+                      className="self-end rounded-full bg-[#770000] px-4 py-1.5 text-[11px] font-bold text-white transition-all hover:bg-[#770000] disabled:opacity-60 cursor-pointer"
                     >
                       {savingDesc ? "Saving…" : "Save Details"}
                     </button>
@@ -608,7 +608,7 @@ export function AdminUploadModal({
 
               {/* Reset / Cancel */}
               {onResetToDefault && (
-                <div className="mt-4 flex justify-between items-center pt-3 border-t border-[#681C2B]/30">
+                <div className="mt-4 flex justify-between items-center pt-3 border-t border-[#770000]/30">
                   <button
                     type="button"
                     onClick={handleReset}

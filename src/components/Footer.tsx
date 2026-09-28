@@ -2,7 +2,7 @@ import { Mail, MapPin, MessageSquare } from "lucide-react";
 
 export function Footer() {
   return (
-    <footer className="bg-[#3D111B] py-12 sm:py-16 px-4 sm:px-8 text-[#FAF6F0] border-t border-[#681C2B]/50">
+    <footer className="bg-[#770000] py-12 sm:py-16 px-4 sm:px-8 text-[#FAF6F0] border-t border-[#770000]/50">
       <div className="mx-auto max-w-7xl grid grid-cols-1 md:grid-cols-2 lg:grid-cols-[1.3fr_1.1fr_1fr_1fr] gap-8 lg:gap-10">
         
         {/* Brand & Contact Person */}
@@ -140,7 +140,7 @@ export function Footer() {
 
       </div>
 
-      <div className="mt-12 border-t border-[#681C2B]/40 pt-6 flex flex-col items-center gap-2 text-center">
+      <div className="mt-12 border-t border-[#770000]/40 pt-6 flex flex-col items-center gap-2 text-center">
         <div className="text-sm text-[#DCC9B6]/80 font-medium">
           &copy; {new Date().getFullYear()} Alpha stories studio. All rights reserved.
         </div>

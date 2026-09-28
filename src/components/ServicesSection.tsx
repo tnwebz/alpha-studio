@@ -297,7 +297,7 @@ export function ServicesSection() {
         {/* Section Top Header */}
         <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-6">
           <div className="min-w-0 max-w-2xl">
-            <div className="inline-flex items-center gap-2 rounded-full border border-[#681C2B]/20 bg-[#681C2B]/5 px-3.5 py-1 text-xs font-semibold uppercase tracking-[0.25em] text-[#681C2B]">
+            <div className="inline-flex items-center gap-2 rounded-full border border-[#770000]/20 bg-[#770000]/5 px-3.5 py-1 text-xs font-semibold uppercase tracking-[0.25em] text-[#770000]">
               <span>Our Services</span>
             </div>
             <h2 className="mt-3 font-serif text-3xl font-bold tracking-tight text-[#241F20] sm:text-4xl lg:text-5xl">
@@ -321,7 +321,7 @@ export function ServicesSection() {
                       : desktopActiveIndex,
                   )
                 }
-                className="flex items-center gap-1.5 rounded-full border border-[#681C2B]/40 bg-[#3D111B] px-4 py-2 text-xs font-semibold text-white shadow-md transition-all hover:bg-[#681C2B] hover:scale-105 cursor-pointer"
+                className="flex items-center gap-1.5 rounded-full border border-[#770000]/40 bg-[#770000] px-4 py-2 text-xs font-semibold text-white shadow-md transition-all hover:bg-[#770000] hover:scale-105 cursor-pointer"
               >
                 <Camera className="h-3.5 w-3.5 text-[#DCC9B6]" />
                 <span>Admin: Change Covers</span>
@@ -378,7 +378,7 @@ export function ServicesSection() {
               <div className="mt-6 flex flex-wrap items-center gap-3.5">
                 <Link
                   to={`/collections/${desktopCurrentSlug}`}
-                  className="group inline-flex items-center gap-2.5 rounded-full bg-[#681C2B] px-6 py-3.5 text-xs sm:text-sm font-bold uppercase tracking-wider text-white shadow-lg transition-all duration-300 hover:bg-[#3D111B] hover:scale-105 hover:shadow-xl cursor-pointer"
+                  className="group inline-flex items-center gap-2.5 rounded-full bg-[#770000] px-6 py-3.5 text-xs sm:text-sm font-bold uppercase tracking-wider text-white shadow-lg transition-all duration-300 hover:bg-[#770000] hover:scale-105 hover:shadow-xl cursor-pointer"
                 >
                   <span>View Collection</span>
                   <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
@@ -396,7 +396,7 @@ export function ServicesSection() {
                       e.stopPropagation();
                       spinRef.current?.(-1);
                     }}
-                    className="flex h-11 w-11 items-center justify-center rounded-full border border-[#681C2B] bg-[#681C2B] text-white transition-all hover:bg-[#3D111B] hover:border-[#3D111B] shadow-sm cursor-pointer active:scale-95"
+                    className="flex h-11 w-11 items-center justify-center rounded-full border border-[#770000] bg-[#770000] text-white transition-all hover:bg-[#770000] hover:border-[#770000] shadow-sm cursor-pointer active:scale-95"
                     aria-label="Previous service"
                   >
                     <ChevronLeft className="h-5 w-5" />
@@ -407,7 +407,7 @@ export function ServicesSection() {
                       e.stopPropagation();
                       spinRef.current?.(1);
                     }}
-                    className="flex h-11 w-11 items-center justify-center rounded-full border border-[#681C2B] bg-[#681C2B] text-white transition-all hover:bg-[#3D111B] hover:border-[#3D111B] shadow-sm cursor-pointer active:scale-95"
+                    className="flex h-11 w-11 items-center justify-center rounded-full border border-[#770000] bg-[#770000] text-white transition-all hover:bg-[#770000] hover:border-[#770000] shadow-sm cursor-pointer active:scale-95"
                     aria-label="Next service"
                   >
                     <ChevronRight className="h-5 w-5" />
@@ -418,7 +418,7 @@ export function ServicesSection() {
                   <button
                     type="button"
                     onClick={() => setEditingServiceIndex(desktopActiveIndex)}
-                    className="inline-flex items-center gap-2 rounded-full border border-[#681C2B]/40 bg-white/95 px-4 py-3 text-xs font-semibold text-[#681C2B] shadow-md transition-all hover:bg-[#681C2B] hover:text-white cursor-pointer"
+                    className="inline-flex items-center gap-2 rounded-full border border-[#770000]/40 bg-white/95 px-4 py-3 text-xs font-semibold text-[#770000] shadow-md transition-all hover:bg-[#770000] hover:text-white cursor-pointer"
                   >
                     <Camera className="h-3.5 w-3.5" />
                     <span>Change Cover</span>
@@ -504,7 +504,7 @@ export function ServicesSection() {
                       initial={{ opacity: 0, y: 6 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ duration: 0.3, delay: 0.08 }}
-                      className="mt-2.5 inline-flex items-center gap-1.5 rounded-full bg-[#681C2B] border border-[#DCC9B6]/40 px-3.5 py-1.5 text-[11px] font-bold uppercase tracking-wider text-white shadow-lg w-fit backdrop-blur-sm group-hover:bg-[#3D111B] transition-colors"
+                      className="mt-2.5 inline-flex items-center gap-1.5 rounded-full bg-[#770000] border border-[#DCC9B6]/40 px-3.5 py-1.5 text-[11px] font-bold uppercase tracking-wider text-white shadow-lg w-fit backdrop-blur-sm group-hover:bg-[#770000] transition-colors"
                     >
                       <span>View Collection</span>
                       <span>→</span>
@@ -525,7 +525,7 @@ export function ServicesSection() {
           {/* Bottom-Right Corner Navigation Controls */}
           <div className="absolute bottom-3 right-3 sm:bottom-5 sm:right-6 z-40 flex items-center gap-2">
             <div className="flex items-center gap-1 rounded-full bg-[#FAF6F0]/95 px-2.5 py-1.5 shadow-md border border-[#DCC9B6]/60 backdrop-blur-sm">
-              <span className="text-[11px] font-bold text-[#681C2B]">
+              <span className="text-[11px] font-bold text-[#770000]">
                 {mobileIndex + 1}
               </span>
               <span className="text-[10px] text-[#746A67]">/</span>
@@ -537,7 +537,7 @@ export function ServicesSection() {
             <button
               type="button"
               onClick={handleMobilePrev}
-              className="flex h-10 w-10 sm:h-11 sm:w-11 items-center justify-center rounded-full bg-[#681C2B] text-white shadow-lg border border-[#DCC9B6]/30 active:scale-90 transition-transform cursor-pointer"
+              className="flex h-10 w-10 sm:h-11 sm:w-11 items-center justify-center rounded-full bg-[#770000] text-white shadow-lg border border-[#DCC9B6]/30 active:scale-90 transition-transform cursor-pointer"
               aria-label="Previous service"
             >
               <ChevronLeft className="h-5 w-5" />
@@ -546,7 +546,7 @@ export function ServicesSection() {
             <button
               type="button"
               onClick={handleMobileNext}
-              className="flex h-10 w-10 sm:h-11 sm:w-11 items-center justify-center rounded-full bg-[#681C2B] text-white shadow-lg border border-[#DCC9B6]/30 active:scale-90 transition-transform cursor-pointer"
+              className="flex h-10 w-10 sm:h-11 sm:w-11 items-center justify-center rounded-full bg-[#770000] text-white shadow-lg border border-[#DCC9B6]/30 active:scale-90 transition-transform cursor-pointer"
               aria-label="Next service"
             >
               <ChevronRight className="h-5 w-5" />

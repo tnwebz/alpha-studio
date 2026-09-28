@@ -26,7 +26,7 @@ export function ShootSection() {
           decoding="async"
         />
         {/* Subtle Dark Maroon Gradient & Contrast Mask focused on left side */}
-        <div className="absolute inset-0 bg-gradient-to-r from-[#3D111B]/90 via-black/70 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-r from-[#770000]/90 via-black/70 to-transparent" />
       </div>
 
       {/* Admin Change Background Button */}
@@ -35,7 +35,7 @@ export function ShootSection() {
           <button
             type="button"
             onClick={() => setModalOpen(true)}
-            className="flex items-center gap-2 rounded-full border border-[#681C2B]/60 bg-[#3D111B]/90 px-4 py-2 text-xs font-semibold text-white shadow-xl backdrop-blur-md transition-all hover:bg-[#681C2B] hover:scale-105"
+            className="flex items-center gap-2 rounded-full border border-[#770000]/60 bg-[#770000]/90 px-4 py-2 text-xs font-semibold text-white shadow-xl backdrop-blur-md transition-all hover:bg-[#770000] hover:scale-105"
           >
             <Camera className="h-3.5 w-3.5 text-[#DCC9B6]" />
             <span>Admin: Change Background (Cloudinary)</span>
@@ -76,7 +76,7 @@ export function ShootSection() {
           <div className="mt-8 sm:mt-10">
             <a
               href="#contact"
-              className="inline-block border border-[#DCC9B6] bg-[#681C2B]/90 px-7 py-3 text-xs font-semibold uppercase tracking-[0.2em] text-white shadow-lg transition-all duration-300 hover:bg-[#681C2B] hover:border-white hover:scale-105 sm:text-sm"
+              className="inline-block border border-[#DCC9B6] bg-[#770000]/90 px-7 py-3 text-xs font-semibold uppercase tracking-[0.2em] text-white shadow-lg transition-all duration-300 hover:bg-[#770000] hover:border-white hover:scale-105 sm:text-sm"
             >
               CONTACT US
             </a>
