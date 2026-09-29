@@ -26,12 +26,12 @@ export function CategoryGalleryPage() {
   }, [slug]);
 
   return (
-    <div className="min-h-screen overflow-x-hidden bg-[#F3E9DC]">
-      <header className="sticky top-0 z-40 border-b border-[#770000]/30 bg-[#770000]/95 text-white px-4 py-3 backdrop-blur sm:px-8 sm:py-4 shadow-md">
+    <div className="min-h-screen overflow-x-hidden bg-[#dbbc80]">
+      <header className="sticky top-0 z-40 border-b border-[#530000]/30 bg-[#530000]/95 text-white px-4 py-3 backdrop-blur sm:px-8 sm:py-4 shadow-md">
         <div className="mx-auto flex max-w-7xl items-center justify-between gap-3">
           <Link
             to="/"
-            className="shrink-0 rounded-full border border-[#DCC9B6]/30 bg-[#770000] px-4 py-2 text-[10px] font-semibold uppercase tracking-[0.15em] text-white transition-colors hover:bg-[#770000] sm:text-xs sm:tracking-[0.2em]"
+            className="shrink-0 rounded-full border border-[#dbbc80]/30 bg-[#530000] px-4 py-2 text-[10px] font-semibold uppercase tracking-[0.15em] text-white transition-colors hover:bg-[#530000] sm:text-xs sm:tracking-[0.2em]"
           >
             ← Back to Home
           </Link>

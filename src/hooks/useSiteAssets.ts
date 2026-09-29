@@ -57,9 +57,45 @@ export interface CustomService {
   image: string;
 }
 
+export interface HeroSlideText {
+  headlineTop: string;
+  headlineBottom: string;
+  subtext: string;
+}
+
+export const DEFAULT_HERO_SLIDES_TEXT: Record<number, HeroSlideText> = {
+  0: {
+    headlineTop: "Capture your",
+    headlineBottom: "memories",
+    subtext:
+      "There is no such thing as a perfect love story or a perfect wedding. For exactly this reason, we love doing what we do.",
+  },
+  1: {
+    headlineTop: "Timeless",
+    headlineBottom: "emotions",
+    subtext:
+      "Every couple holds a unique rhythm and unspoken warmth. We frame authentic elegance so your moments never fade.",
+  },
+  2: {
+    headlineTop: "Cinematic",
+    headlineBottom: "stories",
+    subtext:
+      "Lighting, atmosphere, and intimate expressions crafted together into an enduring visual legacy of your grand celebration.",
+  },
+  3: {
+    headlineTop: "Cherished",
+    headlineBottom: "chapters",
+    subtext:
+      "Preserving every laughter, every touch, and every tear with refined artistry for generations to come.",
+  },
+};
+
 export interface SiteAssets {
-  heroSlides?: string[]; // Array of Cloudinary URLs for the 4 slides
-  shootBackground?: string; // Cloudinary URL for ShootSection
+  heroSlides?: string[]; // Array of Cloudinary URLs for desktop slides (Landscape)
+  heroSlidesMobile?: string[]; // Array of Cloudinary URLs for mobile slides (Portrait)
+  heroSlidesText?: Record<number, HeroSlideText>; // slideIndex -> { headlineTop, headlineBottom, subtext }
+  shootBackground?: string; // Cloudinary URL for ShootSection (Desktop Landscape)
+  shootBackgroundMobile?: string; // Cloudinary URL for ShootSection (Mobile Portrait)
   contactBackground?: string; // Cloudinary URL for ContactSection
   serviceCovers?: Record<string, string>; // category slug -> Cloudinary URL
   galleryCovers?: Record<string, string>; // category key -> Cloudinary URL
@@ -108,16 +144,28 @@ export function useSiteAssets() {
     return () => unsubscribe();
   }, []);
 
-  const updateHeroSlide = useCallback(async (index: number, url: string) => {
-    const currentSlides = [...(assets.heroSlides || [])];
-    currentSlides[index] = url;
-    await setDoc(ASSETS_DOC_REF, { heroSlides: currentSlides }, { merge: true });
-    setAssets((prev) => ({ ...prev, heroSlides: currentSlides }));
-  }, [assets.heroSlides]);
+  const updateHeroSlide = useCallback(async (index: number, url: string, isMobile = false) => {
+    if (isMobile) {
+      const currentMobileSlides = [...(assets.heroSlidesMobile || [])];
+      currentMobileSlides[index] = url;
+      await setDoc(ASSETS_DOC_REF, { heroSlidesMobile: currentMobileSlides }, { merge: true });
+      setAssets((prev) => ({ ...prev, heroSlidesMobile: currentMobileSlides }));
+    } else {
+      const currentSlides = [...(assets.heroSlides || [])];
+      currentSlides[index] = url;
+      await setDoc(ASSETS_DOC_REF, { heroSlides: currentSlides }, { merge: true });
+      setAssets((prev) => ({ ...prev, heroSlides: currentSlides }));
+    }
+  }, [assets.heroSlides, assets.heroSlidesMobile]);
 
-  const updateShootBackground = useCallback(async (url: string) => {
-    await setDoc(ASSETS_DOC_REF, { shootBackground: url }, { merge: true });
-    setAssets((prev) => ({ ...prev, shootBackground: url }));
+  const updateShootBackground = useCallback(async (url: string, isMobile = false) => {
+    if (isMobile) {
+      await setDoc(ASSETS_DOC_REF, { shootBackgroundMobile: url }, { merge: true });
+      setAssets((prev) => ({ ...prev, shootBackgroundMobile: url }));
+    } else {
+      await setDoc(ASSETS_DOC_REF, { shootBackground: url }, { merge: true });
+      setAssets((prev) => ({ ...prev, shootBackground: url }));
+    }
   }, []);
 
   const updateContactBackground = useCallback(async (url: string) => {
@@ -237,8 +285,8 @@ export function useSiteAssets() {
       await setDoc(ASSETS_DOC_REF, { aboutCards: current }, { merge: true });
       setAssets((prev) => ({ ...prev, aboutCards: current }));
     } else if (field === 'shootBackground') {
-      await setDoc(ASSETS_DOC_REF, { shootBackground: '' }, { merge: true });
-      setAssets((prev) => ({ ...prev, shootBackground: undefined }));
+      await setDoc(ASSETS_DOC_REF, { shootBackground: '', shootBackgroundMobile: '' }, { merge: true });
+      setAssets((prev) => ({ ...prev, shootBackground: undefined, shootBackgroundMobile: undefined }));
     } else if (field === 'contactBackground') {
       await setDoc(ASSETS_DOC_REF, { contactBackground: '' }, { merge: true });
       setAssets((prev) => ({ ...prev, contactBackground: undefined }));
@@ -288,10 +336,41 @@ export function useSiteAssets() {
     setAssets((prev) => ({ ...prev, serviceOrder: newOrder }));
   }, [assets.customServices, assets.serviceOrder]);
 
+  const updateHeroSlideText = useCallback(async (index: number, text: HeroSlideText) => {
+    const updated = { ...(assets.heroSlidesText || {}), [index]: text };
+    await setDoc(ASSETS_DOC_REF, { heroSlidesText: updated }, { merge: true });
+    setAssets((prev) => ({ ...prev, heroSlidesText: updated }));
+    try {
+      const cached = localStorage.getItem(STORAGE_KEY);
+      const data = cached ? JSON.parse(cached) : {};
+      data.heroSlidesText = updated;
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+    } catch (e) {
+      console.warn('Storage cache error:', e);
+    }
+  }, [assets.heroSlidesText]);
+
+  const resetHeroSlideText = useCallback(async (index: number) => {
+    const updated = { ...(assets.heroSlidesText || {}) };
+    delete updated[index];
+    await setDoc(ASSETS_DOC_REF, { heroSlidesText: updated }, { merge: true });
+    setAssets((prev) => ({ ...prev, heroSlidesText: updated }));
+    try {
+      const cached = localStorage.getItem(STORAGE_KEY);
+      const data = cached ? JSON.parse(cached) : {};
+      data.heroSlidesText = updated;
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+    } catch (e) {
+      console.warn('Storage cache error:', e);
+    }
+  }, [assets.heroSlidesText]);
+
   return {
     assets,
     loading,
     updateHeroSlide,
+    updateHeroSlideText,
+    resetHeroSlideText,
     updateShootBackground,
     updateContactBackground,
     updateServiceCover,

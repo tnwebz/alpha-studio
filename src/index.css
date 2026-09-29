@@ -1,18 +1,18 @@
 @import "tailwindcss";
 
 @theme {
-  --color-maroon-primary: #770000;
-  --color-maroon-dark: #770000;
-  --color-beige-main: #F3E9DC;
+  --color-maroon-primary: #530000;
+  --color-maroon-dark: #530000;
+  --color-beige-main: #dbbc80;
   --color-beige-light: #FAF6F0;
-  --color-beige-warm: #DCC9B6;
+  --color-beige-warm: #dbbc80;
   --color-charcoal: #241F20;
   --color-text-muted: #746A67;
 }
 
 @layer base {
   :root {
-    --background: #F3E9DC; /* Main Beige */
+    --background: #dbbc80; /* Main Beige */
     --foreground: #241F20; /* Charcoal */
     
     --card: #FAF6F0; /* Light Beige */
@@ -21,30 +21,30 @@
     --popover: #FAF6F0;
     --popover-foreground: #241F20;
     
-    --primary: #770000; /* Primary Maroon */
+    --primary: #530000; /* Primary Maroon */
     --primary-foreground: #FFFFFF;
     
-    --secondary: #DCC9B6; /* Warm Beige */
+    --secondary: #dbbc80; /* Warm Beige */
     --secondary-foreground: #241F20;
     
     --muted: #FAF6F0;
     --muted-foreground: #746A67; /* Warm Gray */
     
-    --accent: #770000;
+    --accent: #530000;
     --accent-foreground: #FFFFFF;
     
     --destructive: #991b1b;
     --destructive-foreground: #FFFFFF;
 
-    --border: #DCC9B6; /* Warm Beige */
-    --input: #DCC9B6;
-    --ring: #770000;
+    --border: #dbbc80; /* Warm Beige */
+    --input: #dbbc80;
+    --ring: #530000;
     
     --radius: 0.5rem;
   }
 
   .dark {
-    --background: #770000;
+    --background: #530000;
     --foreground: #FAF6F0;
   }
 }
@@ -57,7 +57,7 @@
   body {
     background-color: var(--background);
     color: var(--foreground);
-    @apply antialiased selection:bg-[#770000] selection:text-white overflow-x-hidden;
+    @apply antialiased selection:bg-[#530000] selection:text-white overflow-x-hidden;
     font-family: 'Inter', sans-serif;
   }
 

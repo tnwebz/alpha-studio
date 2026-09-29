@@ -73,7 +73,7 @@ export function ContactSection() {
         className="absolute inset-0 bg-cover bg-center transition-all duration-700"
         style={{ backgroundImage: `url('${bgImage}')` }}
       >
-        <div className="absolute inset-0 bg-gradient-to-br from-[#770000]/85 via-black/75 to-black/85" />
+        <div className="absolute inset-0 bg-gradient-to-br from-[#530000]/85 via-black/75 to-black/85" />
 
       {/* Admin Change Background Button */}
       {isAdmin && (
@@ -81,9 +81,9 @@ export function ContactSection() {
           <button
             type="button"
             onClick={() => setModalOpen(true)}
-            className="flex items-center gap-2 rounded-full border border-[#770000]/60 bg-[#770000]/90 px-4 py-2 text-xs font-semibold text-white shadow-xl backdrop-blur-md transition-all hover:bg-[#770000] hover:scale-105"
+            className="flex items-center gap-2 rounded-full border border-[#530000]/60 bg-[#530000]/90 px-4 py-2 text-xs font-semibold text-white shadow-xl backdrop-blur-md transition-all hover:bg-[#530000] hover:scale-105"
           >
-            <Camera className="h-3.5 w-3.5 text-[#DCC9B6]" />
+            <Camera className="h-3.5 w-3.5 text-[#dbbc80]" />
             <span>Admin: Change Background (Cloudinary)</span>
           </button>
         </div>
@@ -109,37 +109,37 @@ export function ContactSection() {
       <div className="relative z-10 mx-auto grid min-h-screen max-w-7xl grid-cols-1 gap-6 px-4 py-12 sm:gap-8 sm:px-8 sm:py-16 lg:grid-cols-2 lg:items-center lg:gap-8 lg:px-14 lg:py-20">
         <div className="flex flex-col justify-center p-2 sm:p-4 lg:p-8 text-white space-y-6">
           <div>
-            <span className="text-xs font-semibold uppercase tracking-[0.2em] text-[#DCC9B6]">Alpha stories studio</span>
+            <span className="text-xs font-semibold uppercase tracking-[0.2em] text-[#dbbc80]">Alpha stories studio</span>
             <h2 className="mt-2 font-serif text-[clamp(1.75rem,5vw,3.5rem)] leading-tight text-[#FAF6F0] drop-shadow-lg">
               Turning Moments Into Timeless Art
             </h2>
-            <p className="mt-2 text-sm text-[#DCC9B6]">Contact: <strong className="text-white">Alwin.E</strong></p>
+            <p className="mt-2 text-sm text-[#dbbc80]">Contact: <strong className="text-white">Alwin.E</strong></p>
           </div>
 
-          <div className="space-y-4 rounded-2xl bg-[#770000]/60 backdrop-blur-md p-5 sm:p-6 border border-[#DCC9B6]/30 text-sm shadow-xl">
+          <div className="space-y-4 rounded-2xl bg-[#530000]/60 backdrop-blur-md p-5 sm:p-6 border border-[#dbbc80]/30 text-sm shadow-xl">
             <div>
-              <p className="text-xs uppercase font-semibold text-[#DCC9B6] tracking-wider">Studio Address</p>
+              <p className="text-xs uppercase font-semibold text-[#dbbc80] tracking-wider">Studio Address</p>
               <p className="text-[#FAF6F0] mt-1 font-medium">Name: Alwin.E</p>
               <p className="text-zinc-200">NO: 45/1108/D Thimmavaram,</p>
               <p className="text-zinc-200">Kanchipuram high road,</p>
               <p className="text-zinc-200">Chengalpattu - 603 001</p>
-              <p className="text-xs text-[#DCC9B6] mt-1.5 font-medium">Landmark: Near VAO office thimmavaram</p>
+              <p className="text-xs text-[#dbbc80] mt-1.5 font-medium">Landmark: Near VAO office thimmavaram</p>
             </div>
-            <hr className="border-[#DCC9B6]/20" />
+            <hr className="border-[#dbbc80]/20" />
             <div className="flex flex-wrap gap-x-6 gap-y-2 text-xs">
               <div>
-                <span className="text-[#DCC9B6]">Email: </span>
+                <span className="text-[#dbbc80]">Email: </span>
                 <a href="mailto:alphastoriesstudio@gmail.com" className="text-white hover:underline">alphastoriesstudio@gmail.com</a>
               </div>
               <div>
-                <span className="text-[#DCC9B6]">WhatsApp / Call: </span>
+                <span className="text-[#dbbc80]">WhatsApp / Call: </span>
                 <a href="https://wa.me/919629238744" target="_blank" rel="noreferrer" className="text-emerald-400 hover:underline">+91 96292 38744</a>
               </div>
             </div>
           </div>
         </div>
 
-        <div className="rounded-2xl border border-[#DCC9B6] bg-[#FAF6F0] p-5 shadow-2xl sm:p-6 md:p-8">
+        <div className="rounded-2xl border border-[#dbbc80] bg-[#FAF6F0] p-5 shadow-2xl sm:p-6 md:p-8">
           <h3 className="text-xl font-bold text-[#241F20] sm:text-2xl font-serif">
             Get in touch
           </h3>
@@ -148,14 +148,14 @@ export function ContactSection() {
             <p className="mb-1 text-sm text-[#746A67]">Mail us at</p>
             <a
               href="mailto:alphastoriesstudio@gmail.com"
-              className="font-medium text-[#770000] hover:text-[#770000] hover:underline"
+              className="font-medium text-[#530000] hover:text-[#530000] hover:underline"
             >
               alphastoriesstudio@gmail.com
             </a>
             <div className="mt-4 flex flex-wrap items-center gap-2 sm:gap-3">
               <span className="text-sm text-[#746A67]">OR</span>
               {defaultSocialLinks.map((link) => (
-                <Button key={link.id} variant="outline" size="default" className="border-[#DCC9B6] bg-white text-[#241F20] hover:bg-[#DCC9B6]/30 hover:text-[#770000]" asChild>
+                <Button key={link.id} variant="outline" size="default" className="border-[#dbbc80] bg-white text-[#241F20] hover:bg-[#dbbc80]/30 hover:text-[#530000]" asChild>
                   <a href={link.href} target="_blank" rel="noreferrer">
                     {link.name}
                   </a>
@@ -164,7 +164,7 @@ export function ContactSection() {
             </div>
           </div>
 
-          <hr className="my-6 border-[#DCC9B6]/40" />
+          <hr className="my-6 border-[#dbbc80]/40" />
 
           <form onSubmit={handleSubmit} className="space-y-5">
             <p className="text-sm text-[#746A67]">Leave us a brief message</p>
@@ -177,7 +177,7 @@ export function ContactSection() {
                   value={formData.name}
                   onChange={handleChange}
                   required
-                  className="border-[#DCC9B6] bg-white text-[#241F20] focus:ring-[#770000] focus:border-[#770000]"
+                  className="border-[#dbbc80] bg-white text-[#241F20] focus:ring-[#530000] focus:border-[#530000]"
                 />
               </div>
               <div className="space-y-2">
@@ -189,7 +189,7 @@ export function ContactSection() {
                   value={formData.email}
                   onChange={handleChange}
                   required
-                  className="border-[#DCC9B6] bg-white text-[#241F20] focus:ring-[#770000] focus:border-[#770000]"
+                  className="border-[#dbbc80] bg-white text-[#241F20] focus:ring-[#530000] focus:border-[#530000]"
                 />
               </div>
             </div>
@@ -199,7 +199,7 @@ export function ContactSection() {
               <Textarea
                 id="message"
                 name="message"
-                className="min-h-[100px] border-[#DCC9B6] bg-white text-[#241F20] focus:ring-[#770000] focus:border-[#770000]"
+                className="min-h-[100px] border-[#dbbc80] bg-white text-[#241F20] focus:ring-[#530000] focus:border-[#530000]"
                 value={formData.message}
                 onChange={handleChange}
                 required
@@ -217,7 +217,7 @@ export function ContactSection() {
                       onCheckedChange={(checked) =>
                         handleCheckboxChange(option, checked)
                       }
-                      className="border-[#DCC9B6] data-[state=checked]:bg-[#770000] data-[state=checked]:border-[#770000]"
+                      className="border-[#dbbc80] data-[state=checked]:bg-[#530000] data-[state=checked]:border-[#530000]"
                     />
                     <Label htmlFor={option} className="text-xs font-normal text-[#241F20]">
                       {option}
@@ -227,7 +227,7 @@ export function ContactSection() {
               </div>
             </div>
 
-            <Button type="submit" className="w-full bg-[#770000] hover:bg-[#770000] text-white shadow-lg shadow-[#770000]/20 py-2.5 font-semibold uppercase tracking-wider">
+            <Button type="submit" className="w-full bg-[#530000] hover:bg-[#530000] text-white shadow-lg shadow-[#530000]/20 py-2.5 font-semibold uppercase tracking-wider">
               Send a message
             </Button>
           </form>

@@ -651,7 +651,7 @@ export function IntroLoader() {
           className="absolute inset-0 w-full h-full flex flex-col items-center justify-center"
           style={{
             background:
-              "radial-gradient(circle at 50% 42%, #FAF6F0 0%, #F3E9DC 65%, #EADBCA 100%)",
+              "radial-gradient(circle at 50% 42%, #FAF6F0 0%, #dbbc80 65%, #EADBCA 100%)",
           }}
         >
           {/* Subtle warm luxury grain overlay */}
@@ -681,7 +681,7 @@ export function IntroLoader() {
                 x2="100%"
                 y2="100%"
               >
-                <stop offset="0%" stopColor="#DCC9B6" stopOpacity="0.6" />
+                <stop offset="0%" stopColor="#dbbc80" stopOpacity="0.6" />
                 <stop offset="100%" stopColor="#FAF6F0" stopOpacity="0.1" />
               </linearGradient>
             </defs>
@@ -732,8 +732,8 @@ export function IntroLoader() {
                   y2="100%"
                 >
                   <stop offset="0%" stopColor="#4A1420" />
-                  <stop offset="40%" stopColor="#770000" />
-                  <stop offset="100%" stopColor="#770000" />
+                  <stop offset="40%" stopColor="#530000" />
+                  <stop offset="100%" stopColor="#530000" />
                 </linearGradient>
                 <linearGradient
                   id="beigeSceneSilk2"
@@ -742,9 +742,9 @@ export function IntroLoader() {
                   x2="100%"
                   y2="0%"
                 >
-                  <stop offset="0%" stopColor="#DCC9B6" stopOpacity="0.8" />
+                  <stop offset="0%" stopColor="#dbbc80" stopOpacity="0.8" />
                   <stop offset="50%" stopColor="#FAF6F0" stopOpacity="0.4" />
-                  <stop offset="100%" stopColor="#DCC9B6" stopOpacity="0.2" />
+                  <stop offset="100%" stopColor="#dbbc80" stopOpacity="0.2" />
                 </linearGradient>
                 <linearGradient
                   id="beigeSceneSilk3"
@@ -753,8 +753,8 @@ export function IntroLoader() {
                   x2="100%"
                   y2="100%"
                 >
-                  <stop offset="0%" stopColor="#770000" />
-                  <stop offset="70%" stopColor="#770000" />
+                  <stop offset="0%" stopColor="#530000" />
+                  <stop offset="70%" stopColor="#530000" />
                   <stop offset="100%" stopColor="#240A10" />
                 </linearGradient>
               </defs>
@@ -798,7 +798,7 @@ export function IntroLoader() {
                 className="absolute inset-0 -m-8 rounded-full blur-2xl pointer-events-none opacity-50"
                 style={{
                   background:
-                    "radial-gradient(circle, #FAF6F0 0%, #DCC9B6 55%, transparent 75%)",
+                    "radial-gradient(circle, #FAF6F0 0%, #dbbc80 55%, transparent 75%)",
                 }}
               />
 
@@ -812,7 +812,7 @@ export function IntroLoader() {
 
             {/* ALPHA STORIES Wordmark */}
             <motion.h1
-              className="font-serif uppercase text-[#770000] font-semibold text-2xl sm:text-3xl md:text-4xl tracking-[0.16em] sm:tracking-[0.20em]"
+              className="font-serif uppercase text-[#530000] font-semibold text-2xl sm:text-3xl md:text-4xl tracking-[0.16em] sm:tracking-[0.20em]"
               initial={{ opacity: 0, y: 8 }}
               animate={{
                 opacity:
@@ -845,11 +845,11 @@ export function IntroLoader() {
                 delay: prefersReducedMotion ? 0.2 : 0.4,
               }}
             >
-              <span className="w-6 sm:w-10 h-[1px] bg-[#DCC9B6]/80" />
+              <span className="w-6 sm:w-10 h-[1px] bg-[#dbbc80]/80" />
               <span className="text-[10px] sm:text-xs text-[#746A67] tracking-[0.45em] sm:tracking-[0.55em] uppercase font-medium pl-1">
                 Studio
               </span>
-              <span className="w-6 sm:w-10 h-[1px] bg-[#DCC9B6]/80" />
+              <span className="w-6 sm:w-10 h-[1px] bg-[#dbbc80]/80" />
             </motion.div>
           </div>
         </div>
@@ -862,7 +862,7 @@ export function IntroLoader() {
           className="absolute inset-0 w-full h-full flex flex-col items-center justify-center overflow-hidden"
           style={{
             background:
-              "radial-gradient(circle at 50% 45%, #770000 0%, #770000 65%, #240A10 100%)",
+              "radial-gradient(circle at 50% 45%, #530000 0%, #530000 65%, #240A10 100%)",
           }}
           initial={{ opacity: 1, y: "0%" }}
           animate={{
@@ -943,7 +943,7 @@ export function IntroLoader() {
                   y2="100%"
                 >
                   <stop offset="0%" stopColor="#4A1420" />
-                  <stop offset="50%" stopColor="#770000" />
+                  <stop offset="50%" stopColor="#530000" />
                   <stop offset="100%" stopColor="#2A0B12" />
                 </linearGradient>
               </defs>
@@ -983,8 +983,8 @@ export function IntroLoader() {
                   y2="50%"
                 >
                   <stop offset="0%" stopColor="#8B263E" stopOpacity="0.8" />
-                  <stop offset="45%" stopColor="#770000" stopOpacity="0.9" />
-                  <stop offset="100%" stopColor="#770000" stopOpacity="0.7" />
+                  <stop offset="45%" stopColor="#530000" stopOpacity="0.9" />
+                  <stop offset="100%" stopColor="#530000" stopOpacity="0.7" />
                 </linearGradient>
               </defs>
             </motion.svg>
@@ -1027,8 +1027,8 @@ export function IntroLoader() {
                   x2="100%"
                   y2="100%"
                 >
-                  <stop offset="0%" stopColor="#770000" />
-                  <stop offset="60%" stopColor="#770000" />
+                  <stop offset="0%" stopColor="#530000" />
+                  <stop offset="60%" stopColor="#530000" />
                   <stop offset="100%" stopColor="#20060C" />
                 </linearGradient>
                 <linearGradient
@@ -1038,9 +1038,9 @@ export function IntroLoader() {
                   x2="100%"
                   y2="0%"
                 >
-                  <stop offset="0%" stopColor="#DCC9B6" stopOpacity="0.2" />
+                  <stop offset="0%" stopColor="#dbbc80" stopOpacity="0.2" />
                   <stop offset="40%" stopColor="#FAF6F0" stopOpacity="0.7" />
-                  <stop offset="100%" stopColor="#DCC9B6" stopOpacity="0.1" />
+                  <stop offset="100%" stopColor="#dbbc80" stopOpacity="0.1" />
                 </linearGradient>
               </defs>
             </motion.svg>
@@ -1066,7 +1066,7 @@ export function IntroLoader() {
                 delay: 0.2,
               }}
             >
-              <h2 className="font-serif uppercase text-[#F3E9DC] font-normal text-base sm:text-lg md:text-xl lg:text-[22px] tracking-[0.32em] sm:tracking-[0.40em] leading-[1.8] sm:leading-[1.9] drop-shadow-[0_2px_12px_rgba(0,0,0,0.5)]">
+              <h2 className="font-serif uppercase text-[#dbbc80] font-normal text-base sm:text-lg md:text-xl lg:text-[22px] tracking-[0.32em] sm:tracking-[0.40em] leading-[1.8] sm:leading-[1.9] drop-shadow-[0_2px_12px_rgba(0,0,0,0.5)]">
                 Every Frame
                 <br />
                 Has A Story

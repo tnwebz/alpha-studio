@@ -111,8 +111,8 @@ export const AnimatedTestimonials = ({
                       }}
                     />
                   ) : (
-                    <div className="flex h-full w-full flex-col items-center justify-center rounded-3xl border-2 border-dashed border-[#DCC9B6] bg-[#FAF6F0] p-6 shadow-2xl transition-all">
-                      <div className="flex h-16 w-16 items-center justify-center rounded-full bg-[#E5D7C5]/70 text-[#770000] mb-3 shadow-inner">
+                    <div className="flex h-full w-full flex-col items-center justify-center rounded-3xl border-2 border-dashed border-[#dbbc80] bg-[#FAF6F0] p-6 shadow-2xl transition-all">
+                      <div className="flex h-16 w-16 items-center justify-center rounded-full bg-[#E5D7C5]/70 text-[#530000] mb-3 shadow-inner">
                         <Camera className="h-7 w-7 stroke-[1.5]" />
                       </div>
                       <span className="font-serif text-base font-bold text-[#241F20]">
@@ -136,7 +136,7 @@ export const AnimatedTestimonials = ({
               <button
                 type="button"
                 onClick={onEditBox}
-                className="flex items-center gap-1.5 rounded-full border border-[#770000]/40 bg-white/95 px-3.5 py-2 text-xs font-semibold text-[#770000] shadow-sm transition-all hover:bg-[#770000] hover:text-white cursor-pointer"
+                className="flex items-center gap-1.5 rounded-full border border-[#530000]/40 bg-white/95 px-3.5 py-2 text-xs font-semibold text-[#530000] shadow-sm transition-all hover:bg-[#530000] hover:text-white cursor-pointer"
               >
                 <Edit3 className="h-3.5 w-3.5" />
                 <span>Admin: Edit Box {active + 1} Content & Photo</span>
@@ -182,7 +182,7 @@ export const AnimatedTestimonials = ({
                   {activeCard.name ||
                     (isAdmin ? `Box ${active + 1} (Empty)` : "Coming Soon")}
                 </h3>
-                <p className="mt-2 text-xs sm:text-sm font-semibold uppercase tracking-[0.2em] text-[#770000]">
+                <p className="mt-2 text-xs sm:text-sm font-semibold uppercase tracking-[0.2em] text-[#530000]">
                   {activeCard.designation ||
                     (isAdmin ? "No Designation Set" : "Alpha Stories")}
                 </p>
@@ -203,14 +203,14 @@ export const AnimatedTestimonials = ({
               <button
                 onClick={handlePrev}
                 aria-label="Previous box"
-                className="group flex h-11 w-11 items-center justify-center rounded-full border border-[#DCC9B6] bg-white text-[#241F20] shadow-sm transition-all duration-300 hover:bg-[#770000] hover:border-[#770000] hover:text-white focus:outline-none cursor-pointer"
+                className="group flex h-11 w-11 items-center justify-center rounded-full border border-[#dbbc80] bg-white text-[#241F20] shadow-sm transition-all duration-300 hover:bg-[#530000] hover:border-[#530000] hover:text-white focus:outline-none cursor-pointer"
               >
                 <ArrowLeft className="h-5 w-5 transition-transform duration-300 group-hover:-translate-x-1" />
               </button>
               <button
                 onClick={handleNext}
                 aria-label="Next box"
-                className="group flex h-11 w-11 items-center justify-center rounded-full border border-[#DCC9B6] bg-white text-[#241F20] shadow-sm transition-all duration-300 hover:bg-[#770000] hover:border-[#770000] hover:text-white focus:outline-none cursor-pointer"
+                className="group flex h-11 w-11 items-center justify-center rounded-full border border-[#dbbc80] bg-white text-[#241F20] shadow-sm transition-all duration-300 hover:bg-[#530000] hover:border-[#530000] hover:text-white focus:outline-none cursor-pointer"
               >
                 <ArrowRight className="h-5 w-5 transition-transform duration-300 group-hover:translate-x-1" />
               </button>
@@ -225,8 +225,8 @@ export const AnimatedTestimonials = ({
                   onClick={() => setActive(i)}
                   className={`h-2.5 rounded-full transition-all duration-300 cursor-pointer ${
                     i === active
-                      ? "w-7 bg-[#770000]"
-                      : "w-2.5 bg-[#DCC9B6] hover:bg-[#770000]/50"
+                      ? "w-7 bg-[#530000]"
+                      : "w-2.5 bg-[#dbbc80] hover:bg-[#530000]/50"
                   }`}
                   aria-label={`Go to slide ${i + 1}`}
                 />
@@ -239,7 +239,7 @@ export const AnimatedTestimonials = ({
                 <button
                   type="button"
                   onClick={onEditBox}
-                  className="flex items-center gap-1.5 rounded-full border border-[#770000]/30 bg-white/80 px-3.5 py-1.5 text-xs font-semibold text-[#770000] shadow-sm transition-all hover:bg-[#770000] hover:text-white cursor-pointer"
+                  className="flex items-center gap-1.5 rounded-full border border-[#530000]/30 bg-white/80 px-3.5 py-1.5 text-xs font-semibold text-[#530000] shadow-sm transition-all hover:bg-[#530000] hover:text-white cursor-pointer"
                 >
                   <Edit3 className="h-3 w-3" />
                   <span>Edit Content</span>
@@ -337,7 +337,7 @@ export function AboutSection() {
   return (
     <section
       id="about"
-      className="relative z-20 overflow-hidden bg-[#FAF6F0] px-4 py-16 sm:px-8 sm:py-24 lg:px-12 lg:py-28 border-t border-[#DCC9B6]/40"
+      className="relative z-20 overflow-hidden bg-[#FAF6F0] px-4 py-16 sm:px-8 sm:py-24 lg:px-12 lg:py-28 border-t border-[#dbbc80]/40"
     >
       {/* Animated grid background with subtle opacity */}
       <style>

@@ -72,7 +72,7 @@ export function ImageGallery({ images, loading = false, embedded = false, isAdmi
   if (images.length === 0) {
     return (
       <div className="flex flex-col w-full items-center justify-center py-20 px-4 text-center">
-        <div className="flex h-14 w-14 items-center justify-center rounded-full bg-[#E5D7C5]/60 text-[#770000] mb-3">
+        <div className="flex h-14 w-14 items-center justify-center rounded-full bg-[#E5D7C5]/60 text-[#530000] mb-3">
           <Camera className="h-6 w-6 stroke-[1.5]" />
         </div>
         <p className="font-serif text-base font-semibold text-[#241F20]">No Photos in This Collection Yet</p>
@@ -107,7 +107,7 @@ export function ImageGallery({ images, loading = false, embedded = false, isAdmi
       <div
         className={cn(
           'relative flex w-full flex-col items-center justify-center px-3 sm:px-4',
-          embedded ? 'bg-transparent py-2 sm:py-4' : 'min-h-0 bg-[#F3E9DC] py-10 sm:min-h-screen sm:py-16',
+          embedded ? 'bg-transparent py-2 sm:py-4' : 'min-h-0 bg-[#dbbc80] py-10 sm:min-h-screen sm:py-16',
         )}
       >
         <div className="mx-auto w-full max-w-5xl columns-2 gap-4 space-y-4 sm:gap-6 sm:space-y-6 lg:columns-3">
@@ -151,7 +151,7 @@ export function ImageGallery({ images, loading = false, embedded = false, isAdmi
           <div className="mt-8 flex justify-center pb-8">
             <button
               onClick={handleLoadMore}
-              className="flex items-center gap-2 rounded-full border border-[#770000] bg-[#770000] px-6 py-3 text-xs font-semibold uppercase tracking-wider text-white shadow-md transition-all hover:bg-[#770000] hover:border-[#770000] cursor-pointer"
+              className="flex items-center gap-2 rounded-full border border-[#530000] bg-[#530000] px-6 py-3 text-xs font-semibold uppercase tracking-wider text-white shadow-md transition-all hover:bg-[#530000] hover:border-[#530000] cursor-pointer"
             >
               <span>Load More ({visibleCount} of {images.length})</span>
             </button>

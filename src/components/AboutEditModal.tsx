@@ -173,20 +173,20 @@ export function AboutEditModal({
   return (
     <div className="fixed inset-0 z-[10000] flex items-center justify-center bg-black/80 p-3 sm:p-4 backdrop-blur-md animate-fade-in">
       <div
-        className="relative flex flex-col w-full max-w-2xl max-h-[92vh] overflow-hidden rounded-2xl border border-[#770000]/50 bg-[#241318] text-[#FAF6F0] shadow-2xl"
+        className="relative flex flex-col w-full max-w-2xl max-h-[92vh] overflow-hidden rounded-2xl border border-[#530000]/50 bg-[#241318] text-[#FAF6F0] shadow-2xl"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
-        <div className="flex items-start justify-between gap-3 border-b border-[#770000]/40 bg-[#1D0F13] px-5 py-4 sm:px-6">
+        <div className="flex items-start justify-between gap-3 border-b border-[#530000]/40 bg-[#1D0F13] px-5 py-4 sm:px-6">
           <div>
-            <div className="inline-flex items-center gap-1.5 rounded-full bg-[#770000]/60 px-2.5 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-[#DCC9B6]">
-              <Sparkles className="h-3 w-3 text-[#DCC9B6]" />
+            <div className="inline-flex items-center gap-1.5 rounded-full bg-[#530000]/60 px-2.5 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-[#dbbc80]">
+              <Sparkles className="h-3 w-3 text-[#dbbc80]" />
               <span>Admin About Us Manager</span>
             </div>
             <h3 className="mt-1 font-serif text-lg font-bold text-[#FAF6F0] sm:text-xl">
               Team & Visionary Boxes
             </h3>
-            <p className="text-xs text-[#DCC9B6]/70 mt-0.5">
+            <p className="text-xs text-[#dbbc80]/70 mt-0.5">
               Add new team profile boxes, delete boxes, or upload photos & edit stories.
             </p>
           </div>
@@ -202,17 +202,17 @@ export function AboutEditModal({
         </div>
 
         {/* Mode Switcher Tabs */}
-        <div className="flex items-center border-b border-[#770000]/30 bg-[#170B0F] px-5 pt-3 gap-2">
+        <div className="flex items-center border-b border-[#530000]/30 bg-[#170B0F] px-5 pt-3 gap-2">
           <button
             type="button"
             onClick={() => setActiveTab('edit')}
             className={`flex items-center gap-1.5 px-4 py-2.5 text-xs font-semibold rounded-t-xl transition-all cursor-pointer ${
               activeTab === 'edit'
-                ? 'bg-[#241318] text-[#FAF6F0] border-t-2 border-[#DCC9B6] shadow-sm'
-                : 'text-[#DCC9B6]/70 hover:text-white hover:bg-white/5'
+                ? 'bg-[#241318] text-[#FAF6F0] border-t-2 border-[#dbbc80] shadow-sm'
+                : 'text-[#dbbc80]/70 hover:text-white hover:bg-white/5'
             }`}
           >
-            <Edit3 className="h-3.5 w-3.5 text-[#DCC9B6]" />
+            <Edit3 className="h-3.5 w-3.5 text-[#dbbc80]" />
             <span>Edit Boxes ({cards.length})</span>
           </button>
 
@@ -221,8 +221,8 @@ export function AboutEditModal({
             onClick={() => setActiveTab('add')}
             className={`flex items-center gap-1.5 px-4 py-2.5 text-xs font-semibold rounded-t-xl transition-all cursor-pointer ${
               activeTab === 'add'
-                ? 'bg-[#241318] text-[#FAF6F0] border-t-2 border-[#DCC9B6] shadow-sm'
-                : 'text-[#DCC9B6]/70 hover:text-white hover:bg-white/5'
+                ? 'bg-[#241318] text-[#FAF6F0] border-t-2 border-[#dbbc80] shadow-sm'
+                : 'text-[#dbbc80]/70 hover:text-white hover:bg-white/5'
             }`}
           >
             <Plus className="h-3.5 w-3.5 text-emerald-400" />
@@ -234,9 +234,9 @@ export function AboutEditModal({
         {activeTab === 'edit' && (
           <>
             {/* Box Navigation Tabs Bar */}
-            <div className="border-b border-[#770000]/30 bg-[#1a0c11] px-4 py-2.5 sm:px-6">
+            <div className="border-b border-[#530000]/30 bg-[#1a0c11] px-4 py-2.5 sm:px-6">
               <div className="flex items-center justify-between mb-2">
-                <span className="text-[11px] font-semibold uppercase tracking-wider text-[#DCC9B6]">
+                <span className="text-[11px] font-semibold uppercase tracking-wider text-[#dbbc80]">
                   Select Box to Edit:
                 </span>
                 <button
@@ -261,7 +261,7 @@ export function AboutEditModal({
                       onClick={() => setSelectedBoxIndex(idx)}
                       className={`group relative flex-shrink-0 flex flex-col items-center justify-center rounded-xl px-3 py-1.5 min-w-[75px] text-center transition-all cursor-pointer ${
                         isSelected
-                          ? 'border-2 border-[#DCC9B6] bg-[#770000] text-white shadow-lg ring-1 ring-[#DCC9B6]/60 scale-[1.02]'
+                          ? 'border-2 border-[#dbbc80] bg-[#530000] text-white shadow-lg ring-1 ring-[#dbbc80]/60 scale-[1.02]'
                           : 'border border-white/10 bg-black/40 text-zinc-400 hover:border-white/20 hover:bg-black/60 hover:text-white'
                       }`}
                     >
@@ -285,7 +285,7 @@ export function AboutEditModal({
               {/* Active Box Indicator & Actions */}
               <div className="flex flex-wrap items-center justify-between gap-2 border-b border-white/10 pb-2.5">
                 <div className="flex items-center gap-2">
-                  <span className="flex h-6 w-6 items-center justify-center rounded-full bg-[#770000] text-xs font-bold text-white">
+                  <span className="flex h-6 w-6 items-center justify-center rounded-full bg-[#530000] text-xs font-bold text-white">
                     {selectedBoxIndex + 1}
                   </span>
                   <span className="text-sm font-semibold text-[#FAF6F0]">
@@ -323,14 +323,14 @@ export function AboutEditModal({
 
               {/* Photo Section */}
               <div className="rounded-xl border border-white/10 bg-black/30 p-4">
-                <label className="block text-xs font-semibold uppercase tracking-wider text-[#DCC9B6] mb-3">
+                <label className="block text-xs font-semibold uppercase tracking-wider text-[#dbbc80] mb-3">
                   Portrait / Photograph
                 </label>
 
                 <div className="grid grid-cols-1 sm:grid-cols-12 gap-4 items-center">
                   {/* Photo Preview */}
                   <div className="sm:col-span-4 flex flex-col items-center">
-                    <div className="relative h-44 w-36 overflow-hidden rounded-2xl border-2 border-[#DCC9B6]/40 bg-black/60 shadow-lg flex items-center justify-center">
+                    <div className="relative h-44 w-36 overflow-hidden rounded-2xl border-2 border-[#dbbc80]/40 bg-black/60 shadow-lg flex items-center justify-center">
                       {formData.src ? (
                         <img
                           src={getOptimizedCloudinaryUrl(formData.src, 'THUMBNAIL')}
@@ -340,7 +340,7 @@ export function AboutEditModal({
                         />
                       ) : (
                         <div className="flex flex-col items-center justify-center p-3 text-center text-zinc-400">
-                          <Camera className="h-8 w-8 mb-2 stroke-[1.5] text-[#DCC9B6]/60" />
+                          <Camera className="h-8 w-8 mb-2 stroke-[1.5] text-[#dbbc80]/60" />
                           <span className="text-[11px] font-medium">No Photo</span>
                           <span className="text-[9px] text-zinc-400 mt-0.5">Empty Box</span>
                         </div>
@@ -378,6 +378,7 @@ export function AboutEditModal({
                         }}
                         maxFiles={1}
                         buttonText="Upload New Portrait"
+                        aspectRatioConstraint="portrait-only"
                         compact={true}
                       />
                     </div>
@@ -393,7 +394,7 @@ export function AboutEditModal({
                           value={customUrl}
                           onChange={(e) => setCustomUrl(e.target.value)}
                           placeholder="https://... or /photo1.png"
-                          className="flex-1 rounded-xl border border-white/15 bg-black/50 px-3 py-1.5 text-xs text-white placeholder-zinc-500 focus:border-[#DCC9B6] focus:outline-none"
+                          className="flex-1 rounded-xl border border-white/15 bg-black/50 px-3 py-1.5 text-xs text-white placeholder-zinc-500 focus:border-[#dbbc80] focus:outline-none"
                         />
                         <button
                           type="button"
@@ -402,7 +403,7 @@ export function AboutEditModal({
                               setFormData((prev) => ({ ...prev, src: customUrl.trim() }));
                             }
                           }}
-                          className="rounded-xl bg-[#770000] px-3 py-1.5 text-xs font-semibold text-white hover:bg-[#852538] transition-colors cursor-pointer"
+                          className="rounded-xl bg-[#530000] px-3 py-1.5 text-xs font-semibold text-white hover:bg-[#852538] transition-colors cursor-pointer"
                         >
                           Apply
                         </button>
@@ -414,7 +415,7 @@ export function AboutEditModal({
 
               {/* Name Field */}
               <div>
-                <label className="block text-xs font-semibold uppercase tracking-wider text-[#DCC9B6] mb-1.5">
+                <label className="block text-xs font-semibold uppercase tracking-wider text-[#dbbc80] mb-1.5">
                   Full Name / Title
                 </label>
                 <input
@@ -422,13 +423,13 @@ export function AboutEditModal({
                   value={formData.name}
                   onChange={(e) => setFormData((prev) => ({ ...prev, name: e.target.value }))}
                   placeholder="e.g. Mr. Alwin, John Doe, or Team Member"
-                  className="w-full rounded-xl border border-white/15 bg-black/40 px-3.5 py-2.5 text-sm text-[#FAF6F0] placeholder-zinc-500 focus:border-[#DCC9B6] focus:outline-none focus:ring-1 focus:ring-[#DCC9B6]"
+                  className="w-full rounded-xl border border-white/15 bg-black/40 px-3.5 py-2.5 text-sm text-[#FAF6F0] placeholder-zinc-500 focus:border-[#dbbc80] focus:outline-none focus:ring-1 focus:ring-[#dbbc80]"
                 />
               </div>
 
               {/* Designation / Role Field */}
               <div>
-                <label className="block text-xs font-semibold uppercase tracking-wider text-[#DCC9B6] mb-1.5">
+                <label className="block text-xs font-semibold uppercase tracking-wider text-[#dbbc80] mb-1.5">
                   Designation / Role
                 </label>
                 <input
@@ -438,13 +439,13 @@ export function AboutEditModal({
                     setFormData((prev) => ({ ...prev, designation: e.target.value }))
                   }
                   placeholder="e.g. PROPRIETOR & LEAD STORYTELLER, Creative Director"
-                  className="w-full rounded-xl border border-white/15 bg-black/40 px-3.5 py-2.5 text-sm text-[#FAF6F0] placeholder-zinc-500 focus:border-[#DCC9B6] focus:outline-none focus:ring-1 focus:ring-[#DCC9B6]"
+                  className="w-full rounded-xl border border-white/15 bg-black/40 px-3.5 py-2.5 text-sm text-[#FAF6F0] placeholder-zinc-500 focus:border-[#dbbc80] focus:outline-none focus:ring-1 focus:ring-[#dbbc80]"
                 />
               </div>
 
               {/* Bio / Quote Field */}
               <div>
-                <label className="block text-xs font-semibold uppercase tracking-wider text-[#DCC9B6] mb-1.5">
+                <label className="block text-xs font-semibold uppercase tracking-wider text-[#dbbc80] mb-1.5">
                   Bio, Story or Quote
                 </label>
                 <textarea
@@ -452,13 +453,13 @@ export function AboutEditModal({
                   value={formData.quote}
                   onChange={(e) => setFormData((prev) => ({ ...prev, quote: e.target.value }))}
                   placeholder="Write their artistic statement, biographical background, or story here..."
-                  className="w-full rounded-xl border border-white/15 bg-black/40 px-3.5 py-2.5 text-sm text-[#FAF6F0] placeholder-zinc-500 focus:border-[#DCC9B6] focus:outline-none focus:ring-1 focus:ring-[#DCC9B6] leading-relaxed resize-y"
+                  className="w-full rounded-xl border border-white/15 bg-black/40 px-3.5 py-2.5 text-sm text-[#FAF6F0] placeholder-zinc-500 focus:border-[#dbbc80] focus:outline-none focus:ring-1 focus:ring-[#dbbc80] leading-relaxed resize-y"
                 />
               </div>
             </div>
 
             {/* Footer Actions */}
-            <div className="flex items-center justify-between border-t border-[#770000]/40 bg-[#1D0F13] px-5 py-4 sm:px-6">
+            <div className="flex items-center justify-between border-t border-[#530000]/40 bg-[#1D0F13] px-5 py-4 sm:px-6">
               <div className="flex items-center gap-2">
                 {savedSuccess && (
                   <span className="flex items-center gap-1.5 text-xs font-semibold text-emerald-400 animate-fade-in">
@@ -480,7 +481,7 @@ export function AboutEditModal({
                   type="button"
                   onClick={handleSave}
                   disabled={saving}
-                  className="flex items-center gap-1.5 rounded-xl bg-[#770000] px-5 py-2 text-xs font-bold uppercase tracking-wider text-white shadow-lg transition-all hover:bg-[#852538] hover:scale-105 disabled:opacity-50 cursor-pointer"
+                  className="flex items-center gap-1.5 rounded-xl bg-[#530000] px-5 py-2 text-xs font-bold uppercase tracking-wider text-white shadow-lg transition-all hover:bg-[#852538] hover:scale-105 disabled:opacity-50 cursor-pointer"
                 >
                   {saving ? (
                     <span>Saving...</span>
@@ -504,21 +505,21 @@ export function AboutEditModal({
                 <h4 className="font-serif text-base font-bold text-[#FAF6F0]">
                   Create a New Team Member Box
                 </h4>
-                <p className="text-xs text-[#DCC9B6]/70 mt-0.5">
+                <p className="text-xs text-[#dbbc80]/70 mt-0.5">
                   Add a new portrait, name, role, and story to display in the About Us carousel.
                 </p>
               </div>
 
               {/* Photo Upload Area */}
               <div className="rounded-xl border border-white/10 bg-black/30 p-4">
-                <label className="block text-xs font-semibold uppercase tracking-wider text-[#DCC9B6] mb-3">
+                <label className="block text-xs font-semibold uppercase tracking-wider text-[#dbbc80] mb-3">
                   Portrait / Photograph
                 </label>
 
                 <div className="grid grid-cols-1 sm:grid-cols-12 gap-4 items-center">
                   {/* Photo Preview */}
                   <div className="sm:col-span-4 flex flex-col items-center">
-                    <div className="relative h-44 w-36 overflow-hidden rounded-2xl border-2 border-[#DCC9B6]/40 bg-black/60 shadow-lg flex items-center justify-center">
+                    <div className="relative h-44 w-36 overflow-hidden rounded-2xl border-2 border-[#dbbc80]/40 bg-black/60 shadow-lg flex items-center justify-center">
                       {newCardData.src ? (
                         <img
                           src={getOptimizedCloudinaryUrl(newCardData.src, 'THUMBNAIL')}
@@ -528,7 +529,7 @@ export function AboutEditModal({
                         />
                       ) : (
                         <div className="flex flex-col items-center justify-center p-3 text-center text-zinc-400">
-                          <ImageIcon className="h-8 w-8 mb-2 stroke-[1.5] text-[#DCC9B6]/60" />
+                          <ImageIcon className="h-8 w-8 mb-2 stroke-[1.5] text-[#dbbc80]/60" />
                           <span className="text-[11px] font-medium">No Photo</span>
                           <span className="text-[9px] text-zinc-400 mt-0.5">Optional</span>
                         </div>
@@ -565,6 +566,7 @@ export function AboutEditModal({
                         }}
                         maxFiles={1}
                         buttonText="Upload New Portrait"
+                        aspectRatioConstraint="portrait-only"
                         compact={true}
                       />
                     </div>
@@ -579,7 +581,7 @@ export function AboutEditModal({
                           value={newCustomUrl}
                           onChange={(e) => setNewCustomUrl(e.target.value)}
                           placeholder="https://... or /photo.png"
-                          className="flex-1 rounded-xl border border-white/15 bg-black/50 px-3 py-1.5 text-xs text-white placeholder-zinc-500 focus:border-[#DCC9B6] focus:outline-none"
+                          className="flex-1 rounded-xl border border-white/15 bg-black/50 px-3 py-1.5 text-xs text-white placeholder-zinc-500 focus:border-[#dbbc80] focus:outline-none"
                         />
                         <button
                           type="button"
@@ -588,7 +590,7 @@ export function AboutEditModal({
                               setNewCardData((prev) => ({ ...prev, src: newCustomUrl.trim() }));
                             }
                           }}
-                          className="rounded-xl bg-[#770000] px-3 py-1.5 text-xs font-semibold text-white hover:bg-[#852538] transition-colors cursor-pointer"
+                          className="rounded-xl bg-[#530000] px-3 py-1.5 text-xs font-semibold text-white hover:bg-[#852538] transition-colors cursor-pointer"
                         >
                           Apply
                         </button>
@@ -600,7 +602,7 @@ export function AboutEditModal({
 
               {/* Name Field */}
               <div>
-                <label className="block text-xs font-semibold uppercase tracking-wider text-[#DCC9B6] mb-1.5">
+                <label className="block text-xs font-semibold uppercase tracking-wider text-[#dbbc80] mb-1.5">
                   Full Name / Title <span className="text-red-400">*</span>
                 </label>
                 <input
@@ -608,13 +610,13 @@ export function AboutEditModal({
                   value={newCardData.name}
                   onChange={(e) => setNewCardData((prev) => ({ ...prev, name: e.target.value }))}
                   placeholder="e.g. Sarah Jenkins, Michael Scott"
-                  className="w-full rounded-xl border border-white/15 bg-black/40 px-3.5 py-2.5 text-sm text-[#FAF6F0] placeholder-zinc-500 focus:border-[#DCC9B6] focus:outline-none focus:ring-1 focus:ring-[#DCC9B6]"
+                  className="w-full rounded-xl border border-white/15 bg-black/40 px-3.5 py-2.5 text-sm text-[#FAF6F0] placeholder-zinc-500 focus:border-[#dbbc80] focus:outline-none focus:ring-1 focus:ring-[#dbbc80]"
                 />
               </div>
 
               {/* Designation / Role Field */}
               <div>
-                <label className="block text-xs font-semibold uppercase tracking-wider text-[#DCC9B6] mb-1.5">
+                <label className="block text-xs font-semibold uppercase tracking-wider text-[#dbbc80] mb-1.5">
                   Designation / Role
                 </label>
                 <input
@@ -624,13 +626,13 @@ export function AboutEditModal({
                     setNewCardData((prev) => ({ ...prev, designation: e.target.value }))
                   }
                   placeholder="e.g. LEAD CINEMATOGRAPHER & COLORIST"
-                  className="w-full rounded-xl border border-white/15 bg-black/40 px-3.5 py-2.5 text-sm text-[#FAF6F0] placeholder-zinc-500 focus:border-[#DCC9B6] focus:outline-none focus:ring-1 focus:ring-[#DCC9B6]"
+                  className="w-full rounded-xl border border-white/15 bg-black/40 px-3.5 py-2.5 text-sm text-[#FAF6F0] placeholder-zinc-500 focus:border-[#dbbc80] focus:outline-none focus:ring-1 focus:ring-[#dbbc80]"
                 />
               </div>
 
               {/* Bio / Story / Quote Field */}
               <div>
-                <label className="block text-xs font-semibold uppercase tracking-wider text-[#DCC9B6] mb-1.5">
+                <label className="block text-xs font-semibold uppercase tracking-wider text-[#dbbc80] mb-1.5">
                   Bio, Story or Quote
                 </label>
                 <textarea
@@ -638,13 +640,13 @@ export function AboutEditModal({
                   value={newCardData.quote}
                   onChange={(e) => setNewCardData((prev) => ({ ...prev, quote: e.target.value }))}
                   placeholder="Share their artistic philosophy, experience, or message to clients..."
-                  className="w-full rounded-xl border border-white/15 bg-black/40 px-3.5 py-2.5 text-sm text-[#FAF6F0] placeholder-zinc-500 focus:border-[#DCC9B6] focus:outline-none focus:ring-1 focus:ring-[#DCC9B6] leading-relaxed resize-y"
+                  className="w-full rounded-xl border border-white/15 bg-black/40 px-3.5 py-2.5 text-sm text-[#FAF6F0] placeholder-zinc-500 focus:border-[#dbbc80] focus:outline-none focus:ring-1 focus:ring-[#dbbc80] leading-relaxed resize-y"
                 />
               </div>
             </div>
 
             {/* Footer Actions for Add */}
-            <div className="flex items-center justify-between border-t border-[#770000]/40 bg-[#1D0F13] px-5 py-4 sm:px-6">
+            <div className="flex items-center justify-between border-t border-[#530000]/40 bg-[#1D0F13] px-5 py-4 sm:px-6">
               <button
                 type="button"
                 onClick={() => setActiveTab('edit')}

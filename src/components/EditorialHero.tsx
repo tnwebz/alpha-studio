@@ -1,11 +1,12 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { useEffect, useState, useRef, useCallback } from "react";
-import { Shield, Menu, X, ChevronLeft, ChevronRight, Camera, Play, Pause } from "lucide-react";
+import { Shield, Menu, X, ChevronLeft, ChevronRight, Camera, Play, Pause, Type } from "lucide-react";
 import { useAdmin } from "@/hooks/useAdmin";
-import { useSiteAssets } from "@/hooks/useSiteAssets";
+import { useSiteAssets, DEFAULT_HERO_SLIDES_TEXT } from "@/hooks/useSiteAssets";
 import { getOptimizedCloudinaryUrl } from "@/lib/cloudinary";
 import { AdminUploadModal } from "./AdminUploadModal";
 import { GoldenNavOrnament } from "./GoldenNavOrnament";
+import { HeroTextEditModal } from "./HeroTextEditModal";
 
 const HERO_SLIDES = [
   { desktopSrc: "/her1.jpg", mobileSrc: "/mer1.jpg", alt: "Photography showcase 1" },
@@ -26,7 +27,7 @@ const NAV_LINKS = [
   { href: "#contact", label: "Contact" },
 ];
 
-function useTypewriter(text: string, speed = 26) {
+function useTypewriter(text: string, speed = 24) {
   const [displayed, setDisplayed] = useState("");
   const [done, setDone] = useState(false);
 
@@ -49,14 +50,15 @@ function useTypewriter(text: string, speed = 26) {
   return { displayed, done };
 }
 
-function CaptureYourHeadline() {
+function CaptureYourHeadline({ text, slideKey }: { text: string; slideKey: number }) {
   return (
     <motion.h1
-      className="font-serif text-[clamp(2.25rem,11vw,5.5rem)] font-normal leading-[0.95] tracking-tight text-white"
-      initial={{ opacity: 0, y: 20 }}
+      key={`headline-top-${slideKey}-${text}`}
+      className="text-left font-serif text-[clamp(2.1rem,9.5vw,5.5rem)] font-normal leading-[0.95] tracking-tight text-white drop-shadow-[0_2px_14px_rgba(0,0,0,0.85)]"
+      initial={{ opacity: 0, y: 15 }}
       animate={{
-        opacity: [0, 1, 1, 0.4, 1],
-        y: [20, 0, 0, 0, 0],
+        opacity: [0, 1, 1, 0.6, 1],
+        y: [15, 0, 0, 0, 0],
       }}
       transition={{
         duration: 5,
@@ -65,19 +67,20 @@ function CaptureYourHeadline() {
         ease: "easeInOut",
       }}
     >
-      Capture your
+      {text}
     </motion.h1>
   );
 }
 
-function MemoriesHeadline() {
+function MemoriesHeadline({ text, slideKey }: { text: string; slideKey: number }) {
   return (
     <motion.span
-      className="font-serif text-[clamp(2rem,9vw,4.75rem)] font-normal leading-[0.9] tracking-tight text-white"
-      initial={{ opacity: 0, y: 16 }}
+      key={`headline-bot-${slideKey}-${text}`}
+      className="text-left font-serif text-[clamp(1.85rem,8.5vw,4.75rem)] font-normal leading-[0.9] tracking-tight text-white drop-shadow-[0_2px_14px_rgba(0,0,0,0.85)] inline-block"
+      initial={{ opacity: 0, y: 12 }}
       animate={{
-        opacity: [0, 1, 1, 0.4, 1],
-        y: [16, 0, 0, 0, 0],
+        opacity: [0, 1, 1, 0.6, 1],
+        y: [12, 0, 0, 0, 0],
       }}
       transition={{
         duration: 5,
@@ -87,27 +90,35 @@ function MemoriesHeadline() {
         ease: "easeInOut",
       }}
     >
-      memories
+      {text}
     </motion.span>
   );
 }
 
-function TypewriterBlock() {
-  const { displayed, done } = useTypewriter(SUBTEXT, 26);
+function TypewriterBlock({
+  subtext,
+  headlineBottom,
+  slideKey,
+}: {
+  subtext: string;
+  headlineBottom: string;
+  slideKey: number;
+}) {
+  const { displayed, done } = useTypewriter(subtext, 24);
 
   return (
-    <div className="mt-5 flex flex-col gap-4 sm:mt-6 md:mt-8 lg:grid lg:grid-cols-[minmax(0,1fr)_auto] lg:items-start lg:gap-10">
-      <p className="max-w-full text-sm leading-relaxed text-zinc-200 sm:max-w-md sm:text-[15px]">
+    <div className="mt-3.5 flex flex-col gap-3 sm:mt-6 md:mt-8 lg:grid lg:grid-cols-[minmax(0,1fr)_auto] lg:items-start lg:gap-10 text-left">
+      <p className="max-w-full text-xs leading-relaxed text-zinc-100 sm:max-w-md sm:text-[15px] drop-shadow-[0_1px_8px_rgba(0,0,0,0.9)]">
         {displayed}
         <span
-          className={`ml-0.5 inline-block h-[1.1em] w-[2px] translate-y-[2px] bg-zinc-400 ${
+          className={`ml-0.5 inline-block h-[1.1em] w-[2px] translate-y-[2px] bg-zinc-300 ${
             done ? "animate-blink" : ""
           }`}
           aria-hidden="true"
         />
       </p>
-      <div className="lg:pt-[0.2em]">
-        <MemoriesHeadline />
+      <div className="pt-0.5 lg:pt-[0.2em] text-left">
+        <MemoriesHeadline text={headlineBottom} slideKey={slideKey} />
       </div>
     </div>
   );
@@ -166,11 +177,11 @@ function ShieldAdminButton({ className }: { className?: string }) {
       >
         <Shield
           className={`h-4 w-4 transition-colors ${
-            isAdmin ? "text-[#770000]" : "text-zinc-400 hover:text-white"
+            isAdmin ? "text-[#530000]" : "text-zinc-400 hover:text-white"
           }`}
         />
         {isAdmin && (
-          <span className="absolute -right-1 -top-1 h-2 w-2 rounded-full bg-[#770000]" />
+          <span className="absolute -right-1 -top-1 h-2 w-2 rounded-full bg-[#530000]" />
         )}
       </button>
 
@@ -188,7 +199,7 @@ function ShieldAdminButton({ className }: { className?: string }) {
             }}
           >
             <motion.div
-              className="mx-4 w-full max-w-sm rounded-xl bg-[#FAF6F0] border border-[#DCC9B6] p-8 shadow-2xl"
+              className="mx-4 w-full max-w-sm rounded-xl bg-[#FAF6F0] border border-[#dbbc80] p-8 shadow-2xl"
               initial={{ scale: 0.9, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.9, opacity: 0 }}
@@ -196,7 +207,7 @@ function ShieldAdminButton({ className }: { className?: string }) {
               onClick={(e) => e.stopPropagation()}
             >
               <div className="mb-6 flex items-center gap-3">
-                <Shield className="h-5 w-5 text-[#770000]" />
+                <Shield className="h-5 w-5 text-[#530000]" />
                 <h3 className="font-serif text-lg font-bold text-[#241F20]">Admin Access</h3>
               </div>
               <input
@@ -205,7 +216,7 @@ function ShieldAdminButton({ className }: { className?: string }) {
                 onChange={(e) => setPassword(e.target.value)}
                 onKeyDown={(e) => e.key === "Enter" && handlePasswordSubmit()}
                 placeholder="Enter password"
-                className="w-full rounded-lg border border-[#DCC9B6] bg-white px-4 py-3 text-sm text-[#241F20] placeholder:text-[#746A67] focus:border-[#770000] focus:outline-none focus:ring-1 focus:ring-[#770000]"
+                className="w-full rounded-lg border border-[#dbbc80] bg-white px-4 py-3 text-sm text-[#241F20] placeholder:text-[#746A67] focus:border-[#530000] focus:outline-none focus:ring-1 focus:ring-[#530000]"
                 autoFocus
               />
               <div className="mt-4 flex gap-3">
@@ -215,14 +226,14 @@ function ShieldAdminButton({ className }: { className?: string }) {
                     setShowPasswordInput(false);
                     setPassword("");
                   }}
-                  className="flex-1 rounded-lg border border-[#DCC9B6] px-4 py-2.5 text-xs font-semibold uppercase tracking-wider text-[#746A67] transition-colors hover:bg-white"
+                  className="flex-1 rounded-lg border border-[#dbbc80] px-4 py-2.5 text-xs font-semibold uppercase tracking-wider text-[#746A67] transition-colors hover:bg-white"
                 >
                   Cancel
                 </button>
                 <button
                   type="button"
                   onClick={handlePasswordSubmit}
-                  className="flex-1 rounded-lg bg-[#770000] px-4 py-2.5 text-xs font-semibold uppercase tracking-wider text-white transition-colors hover:bg-[#770000]"
+                  className="flex-1 rounded-lg bg-[#530000] px-4 py-2.5 text-xs font-semibold uppercase tracking-wider text-white transition-colors hover:bg-[#530000]"
                 >
                   Unlock
                 </button>
@@ -240,20 +251,21 @@ export function EditorialHero() {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [editSlideIndex, setEditSlideIndex] = useState(0);
   const [slideModalOpen, setSlideModalOpen] = useState(false);
+  const [textModalOpen, setTextModalOpen] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
   const { isAdmin } = useAdmin();
-  const { assets, updateHeroSlide, resetAsset } = useSiteAssets();
+  const { assets, updateHeroSlide, updateHeroSlideText, resetHeroSlideText, resetAsset } = useSiteAssets();
 
   // Auto-advance slideshow (freezes completely when modal is open or admin pauses)
   useEffect(() => {
-    if (slideModalOpen || isPaused) return;
+    if (slideModalOpen || textModalOpen || isPaused) return;
 
     const timer = window.setInterval(() => {
       setCurrentSlide((prev) => (prev + 1) % HERO_SLIDES.length);
     }, SLIDE_DURATION);
 
     return () => window.clearInterval(timer);
-  }, [slideModalOpen, isPaused]);
+  }, [slideModalOpen, textModalOpen, isPaused]);
 
   const handlePrevSlide = () => {
     setCurrentSlide((prev) => (prev - 1 + HERO_SLIDES.length) % HERO_SLIDES.length);
@@ -286,15 +298,43 @@ export function EditorialHero() {
   const activeDesktopSrc = getOptimizedCloudinaryUrl(rawDesktopSrc, 'FULLSCREEN');
   const activeMobileSrc = getOptimizedCloudinaryUrl(rawMobileSrc, { width: 768 });
 
+  // Compute active text for current slide
+  const currentSlideText =
+    assets.heroSlidesText?.[currentSlide] ||
+    DEFAULT_HERO_SLIDES_TEXT[currentSlide] ||
+    DEFAULT_HERO_SLIDES_TEXT[0];
+
+  const headlineTop = currentSlideText.headlineTop || "Capture your";
+  const headlineBottom = currentSlideText.headlineBottom || "memories";
+  const subtext = currentSlideText.subtext || SUBTEXT;
+
+  const [isMobileScreen, setIsMobileScreen] = useState(false);
+
+  useEffect(() => {
+    const updateSize = () => {
+      setIsMobileScreen(window.innerWidth < 640);
+    };
+    updateSize();
+    window.addEventListener("resize", updateSize);
+    return () => window.removeEventListener("resize", updateSize);
+  }, []);
+
   // Prepare slides list with current images for the selection modal
   const heroSlideItems = HERO_SLIDES.map((slide, idx) => ({
     index: idx,
     slug: `slide_${idx + 1}`,
     label: `Slide ${idx + 1}`,
-    imageUrl: getOptimizedCloudinaryUrl(assets.heroSlides?.[idx] || slide.desktopSrc, 'THUMBNAIL'),
+    imageUrl: getOptimizedCloudinaryUrl(
+      isMobileScreen
+        ? assets.heroSlidesMobile?.[idx] || assets.heroSlides?.[idx] || slide.mobileSrc
+        : assets.heroSlides?.[idx] || slide.desktopSrc,
+      'THUMBNAIL'
+    ),
   }));
 
-  const editingSlideImg = assets.heroSlides?.[editSlideIndex] || HERO_SLIDES[editSlideIndex]?.desktopSrc;
+  const editingSlideImg = isMobileScreen
+    ? assets.heroSlidesMobile?.[editSlideIndex] || assets.heroSlides?.[editSlideIndex] || HERO_SLIDES[editSlideIndex]?.mobileSrc
+    : assets.heroSlides?.[editSlideIndex] || HERO_SLIDES[editSlideIndex]?.desktopSrc;
 
   return (
     <section className="relative min-h-[100dvh] overflow-hidden">
@@ -326,14 +366,14 @@ export function EditorialHero() {
         </motion.div>
       </AnimatePresence>
 
-      {/* Admin Change Hero Slide Toolbar with Direct Slide Selector & Pause Button */}
+      {/* Admin Change Hero Slide Toolbar with Direct Slide Selector, Pause Button & Edit Text Button */}
       {isAdmin && (
         <div className="absolute top-20 right-3 sm:right-8 z-40 flex flex-wrap items-center gap-1.5 rounded-2xl border border-[#770000]/60 bg-[#770000]/95 p-1.5 sm:p-2 text-white shadow-2xl backdrop-blur-md">
           {/* Pause / Play Toggle */}
           <button
             type="button"
             onClick={() => setIsPaused((prev) => !prev)}
-            className="flex h-8 w-8 items-center justify-center rounded-xl bg-white/10 text-[#DCC9B6] hover:bg-white/20 hover:text-white transition-colors"
+            className="flex h-8 w-8 items-center justify-center rounded-xl bg-white/10 text-[#DCC9B6] hover:bg-white/20 hover:text-white transition-colors cursor-pointer"
             title={isPaused ? "Resume auto slideshow" : "Pause slideshow to edit"}
           >
             {isPaused ? (
@@ -350,18 +390,32 @@ export function EditorialHero() {
                 key={idx}
                 type="button"
                 onClick={() => handleOpenSlideModal(idx)}
-                className={`flex items-center gap-1 rounded-lg px-2.5 py-1 text-[11px] font-semibold transition-all ${
+                className={`flex items-center gap-1 rounded-lg px-2.5 py-1 text-[11px] font-semibold transition-all cursor-pointer ${
                   currentSlide === idx
                     ? "bg-[#770000] text-white shadow-md border border-[#DCC9B6]/40 ring-1 ring-[#DCC9B6]/50"
                     : "bg-white/5 text-zinc-300 hover:bg-white/15 hover:text-white"
                 }`}
-                title={`Select and Change Slide ${idx + 1} Image`}
+                title={`Select and Change Slide ${idx + 1} Image (${isMobileScreen ? 'Portrait' : 'Landscape'})`}
               >
                 <span>Slide {idx + 1}</span>
                 <Camera className="h-2.5 w-2.5 text-[#DCC9B6]" />
               </button>
             ))}
           </div>
+
+          {/* Dedicated Edit Slide Text Button */}
+          <button
+            type="button"
+            onClick={() => {
+              setIsPaused(true);
+              setTextModalOpen(true);
+            }}
+            className="flex items-center gap-1 rounded-lg bg-[#FAF6F0] px-3 py-1 text-[11px] font-bold text-[#770000] hover:bg-white transition-all shadow-md cursor-pointer ml-1"
+            title="Customize text/headline for each slide"
+          >
+            <Type className="h-3 w-3 text-[#770000]" />
+            <span>Edit Text</span>
+          </button>
         </div>
       )}
 
@@ -369,40 +423,58 @@ export function EditorialHero() {
       <AdminUploadModal
         isOpen={slideModalOpen}
         onClose={() => setSlideModalOpen(false)}
-        title={`Change Hero Slide ${editSlideIndex + 1} Image`}
-        subtitle="Select any slide number below and upload a replacement photo via Cloudinary"
+        title={`Change Hero Slide ${editSlideIndex + 1} (${isMobileScreen ? 'Mobile Portrait' : 'Desktop Landscape'})`}
+        subtitle={
+          isMobileScreen
+            ? "Mobile View: Upload a vertical (portrait) photo (Height > Width)."
+            : "Desktop View: Upload a horizontal (landscape) photo (Width > Height)."
+        }
         currentImageUrl={editingSlideImg}
         slides={heroSlideItems}
         currentSlideIndex={editSlideIndex}
+        aspectRatioConstraint={isMobileScreen ? 'portrait-only' : 'landscape-only'}
         onSelectSlide={handleSelectSlideInModal}
-        onUploadSuccess={(url) => updateHeroSlide(editSlideIndex, url)}
+        onUploadSuccess={(url) => updateHeroSlide(editSlideIndex, url, isMobileScreen)}
         onResetToDefault={() => resetAsset('heroSlides', editSlideIndex)}
       />
 
-      {/* Light subtle overlay for maximum image clarity & text contrast */}
-      <div className="pointer-events-none absolute inset-0 z-[1] bg-gradient-to-t from-black/50 via-black/20 to-black/10" aria-hidden="true" />
+      {/* Hero Slide Text Customization Modal */}
+      <HeroTextEditModal
+        isOpen={textModalOpen}
+        onClose={() => setTextModalOpen(false)}
+        currentSlideIndex={currentSlide}
+        slidesCount={HERO_SLIDES.length}
+        slidesText={assets.heroSlidesText}
+        defaultSlidesText={DEFAULT_HERO_SLIDES_TEXT}
+        onSelectSlide={(idx) => setCurrentSlide(idx)}
+        onSave={(idx, text) => updateHeroSlideText(idx, text)}
+        onReset={(idx) => resetHeroSlideText(idx)}
+      />
+
+      {/* Light subtle overlay for maximum image clarity & text contrast (with mobile bottom gradient enhancement) */}
+      <div className="pointer-events-none absolute inset-0 z-[1] bg-gradient-to-t from-black/85 via-black/35 to-black/10 sm:from-black/50 sm:via-black/20 sm:to-black/10" aria-hidden="true" />
 
       {/* Floating Side Arrow Controls for Hero Carousel */}
       <button
         type="button"
         onClick={handlePrevSlide}
-        className="pointer-events-auto absolute left-3 top-1/2 -translate-y-1/2 z-30 flex h-10 w-10 sm:h-12 sm:w-12 items-center justify-center rounded-full border border-white/20 bg-black/40 text-white backdrop-blur-md transition-all hover:bg-[#770000] hover:scale-110 active:scale-95 shadow-xl"
+        className="pointer-events-auto absolute left-2 sm:left-3 top-1/2 -translate-y-1/2 z-30 flex h-8 w-8 sm:h-12 sm:w-12 items-center justify-center rounded-full border border-white/20 bg-black/40 text-white backdrop-blur-md transition-all hover:bg-[#530000] hover:scale-110 active:scale-95 shadow-xl"
         aria-label="Previous slide"
       >
-        <ChevronLeft className="h-6 w-6" />
+        <ChevronLeft className="h-4 w-4 sm:h-6 sm:w-6" />
       </button>
       <button
         type="button"
         onClick={handleNextSlide}
-        className="pointer-events-auto absolute right-3 top-1/2 -translate-y-1/2 z-30 flex h-10 w-10 sm:h-12 sm:w-12 items-center justify-center rounded-full border border-white/20 bg-black/40 text-white backdrop-blur-md transition-all hover:bg-[#770000] hover:scale-110 active:scale-95 shadow-xl"
+        className="pointer-events-auto absolute right-2 sm:right-3 top-1/2 -translate-y-1/2 z-30 flex h-8 w-8 sm:h-12 sm:w-12 items-center justify-center rounded-full border border-white/20 bg-black/40 text-white backdrop-blur-md transition-all hover:bg-[#530000] hover:scale-110 active:scale-95 shadow-xl"
         aria-label="Next slide"
       >
-        <ChevronRight className="h-6 w-6" />
+        <ChevronRight className="h-4 w-4 sm:h-6 sm:w-6" />
       </button>
 
       <div className="relative z-10 flex min-h-[100dvh] flex-col">
-        {/* ── Sticky Dark Maroon (#770000) Navbar ── */}
-        <header className="sticky top-0 z-50 border-b border-[#770000]/30 bg-[#770000]/95 shadow-md backdrop-blur-lg overflow-visible">
+        {/* ── Sticky Dark Maroon (#530000) Navbar ── */}
+        <header className="sticky top-0 z-50 border-b border-[#530000]/30 bg-[#530000]/95 shadow-md backdrop-blur-lg overflow-visible">
           <div className="relative mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-1 sm:px-8 sm:py-1.5 lg:px-14 overflow-visible">
             {/* Golden Hanging Knot Ornaments (Framing extreme left & right) */}
             <GoldenNavOrnament side="left" />
@@ -429,7 +501,7 @@ export function EditorialHero() {
             </div>
 
             {/* Desktop nav links — centered */}
-            <nav className="hidden items-center gap-8 text-xs font-medium uppercase tracking-[0.15em] text-[#DCC9B6] md:flex">
+            <nav className="hidden items-center gap-8 text-xs font-medium uppercase tracking-[0.15em] text-[#dbbc80] md:flex">
               {NAV_LINKS.map((link) => (
                 <a
                   key={link.href}
@@ -445,7 +517,7 @@ export function EditorialHero() {
             <div className="hidden items-center gap-3 md:flex">
               <a
                 href="#contact"
-                className="shrink-0 rounded-full bg-[#770000] px-5 py-2.5 text-[10px] font-semibold uppercase tracking-[0.15em] text-white border border-[#DCC9B6]/30 transition-all hover:bg-[#770000]/80 hover:shadow-lg sm:text-xs"
+                className="shrink-0 rounded-full bg-[#530000] px-5 py-2.5 text-[10px] font-semibold uppercase tracking-[0.15em] text-white border border-[#dbbc80]/30 transition-all hover:bg-[#530000]/80 hover:shadow-lg sm:text-xs"
               >
                 Get in touch
               </a>
@@ -454,7 +526,7 @@ export function EditorialHero() {
             {/* Mobile: Hamburger toggle */}
             <button
               type="button"
-              className="flex h-9 w-9 items-center justify-center rounded-md border border-[#770000]/40 bg-[#770000] text-[#FAF6F0] md:hidden"
+              className="flex h-9 w-9 items-center justify-center rounded-md border border-[#530000]/40 bg-[#530000] text-[#FAF6F0] md:hidden"
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               aria-label="Toggle mobile menu"
             >
@@ -474,14 +546,14 @@ export function EditorialHero() {
                 animate={{ opacity: 1, height: "auto" }}
                 exit={{ opacity: 0, height: 0 }}
                 transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
-                className="overflow-hidden border-t border-[#770000]/30 bg-[#770000]/98 text-white backdrop-blur-lg md:hidden"
+                className="overflow-hidden border-t border-[#530000]/30 bg-[#530000]/98 text-white backdrop-blur-lg md:hidden"
               >
                 <div className="mx-auto flex max-w-7xl flex-col gap-1 px-5 py-4">
                   {NAV_LINKS.map((link) => (
                     <a
                       key={link.href}
                       href={link.href}
-                      className="rounded-lg px-3 py-2.5 text-sm font-medium text-[#FAF6F0] transition-colors hover:bg-[#770000]/40 hover:text-white"
+                      className="rounded-lg px-3 py-2.5 text-sm font-medium text-[#FAF6F0] transition-colors hover:bg-[#530000]/40 hover:text-white"
                       onClick={() => setMobileMenuOpen(false)}
                     >
                       {link.label}
@@ -489,13 +561,13 @@ export function EditorialHero() {
                   ))}
                   <a
                     href="#contact"
-                    className="mt-2 rounded-full bg-[#770000] px-5 py-2.5 text-center text-xs font-semibold uppercase tracking-wider text-white border border-[#DCC9B6]/30"
+                    className="mt-2 rounded-full bg-[#530000] px-5 py-2.5 text-center text-xs font-semibold uppercase tracking-wider text-white border border-[#dbbc80]/30"
                     onClick={() => setMobileMenuOpen(false)}
                   >
                     Get in touch
                   </a>
                   {/* Shield icon — hidden admin trigger */}
-                  <div className="mt-2 border-t border-[#770000]/30 pt-3">
+                  <div className="mt-2 border-t border-[#530000]/30 pt-3">
                     <div className="flex items-center gap-2 px-3">
                       <ShieldAdminButton />
                     </div>
@@ -506,10 +578,15 @@ export function EditorialHero() {
           </AnimatePresence>
         </header>
 
-        <div className="flex flex-1 flex-col justify-center gap-8 px-4 py-12 sm:gap-10 sm:px-8 sm:py-16 lg:px-14 lg:py-24">
-          <div className="mx-auto w-full max-w-7xl">
-            <CaptureYourHeadline />
-            <TypewriterBlock />
+        {/* ── Main Hero Text Container: Mobile Bottom-Left Aligned, Desktop Centered ── */}
+        <div className="flex flex-1 flex-col justify-end pb-8 pt-16 sm:justify-center sm:py-16 sm:pb-16 lg:px-14 lg:py-24 px-4 sm:px-8">
+          <div className="mx-auto w-full max-w-7xl text-left">
+            <CaptureYourHeadline text={headlineTop} slideKey={currentSlide} />
+            <TypewriterBlock
+              subtext={subtext}
+              headlineBottom={headlineBottom}
+              slideKey={currentSlide}
+            />
           </div>
         </div>
 
@@ -541,7 +618,7 @@ export function EditorialHero() {
             <button
               type="button"
               onClick={handleNextSlide}
-              className="flex h-7 w-7 items-center justify-center rounded-full border border-white/30 bg-black/40 text-white backdrop-blur-sm transition-all hover:bg-[#770000] hover:text-white hover:scale-110 active:scale-95 sm:h-8 sm:w-8"
+              className="flex h-7 w-7 items-center justify-center rounded-full border border-white/30 bg-black/40 text-white backdrop-blur-sm transition-all hover:bg-[#530000] hover:text-white hover:scale-110 active:scale-95 sm:h-8 sm:w-8"
               aria-label="Next slide"
             >
               <ChevronRight className="h-4 w-4" />
@@ -558,7 +635,7 @@ export function EditorialHero() {
                 href="https://www.facebook.com/velan.shan"
                 target="_blank"
                 rel="noreferrer"
-                className="hover:text-[#DCC9B6] transition-colors"
+                className="hover:text-[#dbbc80] transition-colors"
               >
                 Facebook
               </a>
@@ -566,7 +643,7 @@ export function EditorialHero() {
                 href="https://www.instagram.com/stories_by_alpha?stkn=MW0zMGY5eXUweDYwYg%3D%3D&utm_source=qr"
                 target="_blank"
                 rel="noreferrer"
-                className="hover:text-[#DCC9B6] transition-colors"
+                className="hover:text-[#dbbc80] transition-colors"
               >
                 Instagram
               </a>
@@ -574,7 +651,7 @@ export function EditorialHero() {
                 href="https://jsdl.in/DT-99IIIAYQA6Q"
                 target="_blank"
                 rel="noreferrer"
-                className="hover:text-white text-[#DCC9B6] transition-colors"
+                className="hover:text-white text-[#dbbc80] transition-colors"
               >
                 Justdial
               </a>

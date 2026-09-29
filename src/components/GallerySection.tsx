@@ -162,13 +162,13 @@ export function GallerySection() {
   return (
     <section
       id="gallery"
-      className="relative z-20 rounded-t-2xl bg-[#FAF6F0] px-4 pb-16 pt-12 shadow-[0_-16px_40px_rgba(0,0,0,0.04)] border-t border-[#DCC9B6]/40 sm:rounded-t-[2.5rem] sm:px-8 sm:pb-24 sm:pt-16 sm:shadow-[0_-24px_48px_rgba(0,0,0,0.06)] lg:px-12 lg:pt-20 overflow-hidden"
+      className="relative z-20 rounded-t-2xl bg-[#FAF6F0] px-4 pb-16 pt-12 shadow-[0_-16px_40px_rgba(0,0,0,0.04)] border-t border-[#dbbc80]/40 sm:rounded-t-[2.5rem] sm:px-8 sm:pb-24 sm:pt-16 sm:shadow-[0_-24px_48px_rgba(0,0,0,0.06)] lg:px-12 lg:pt-20 overflow-hidden"
     >
       <div className="mx-auto max-w-7xl">
         {/* Section Header */}
         <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4">
           <div>
-            <p className="text-xs font-semibold uppercase tracking-[0.25em] text-[#770000]">
+            <p className="text-xs font-semibold uppercase tracking-[0.25em] text-[#530000]">
               Portfolio
             </p>
             <h2 className="mt-2 font-serif text-3xl font-bold tracking-tight text-[#241F20] sm:text-4xl lg:text-5xl">
@@ -186,9 +186,9 @@ export function GallerySection() {
             <button
               type="button"
               onClick={() => setShowAdminPanel((prev) => !prev)}
-              className="flex items-center gap-2 self-start sm:self-auto rounded-full border border-[#DCC9B6] bg-white px-4 py-2 text-xs font-semibold text-[#770000] shadow-sm transition-all hover:bg-[#FAF6F0] hover:border-[#770000]/50"
+              className="flex items-center gap-2 self-start sm:self-auto rounded-full border border-[#dbbc80] bg-white px-4 py-2 text-xs font-semibold text-[#530000] shadow-sm transition-all hover:bg-[#FAF6F0] hover:border-[#530000]/50"
             >
-              <UploadCloud className="h-4 w-4 text-[#770000]" />
+              <UploadCloud className="h-4 w-4 text-[#530000]" />
               <span>Admin: Cloudinary Upload</span>
               {showAdminPanel ? (
                 <ChevronUp className="h-3.5 w-3.5" />
@@ -201,8 +201,8 @@ export function GallerySection() {
 
         {/* Collapsible Admin Cloudinary Upload Panel */}
         {isAdmin && showAdminPanel && (
-          <div className="mt-8 mx-auto max-w-xl rounded-2xl border border-[#DCC9B6] bg-white p-6 shadow-xl animate-fade-in">
-            <div className="flex items-center justify-between pb-4 border-b border-[#DCC9B6]/40 mb-5">
+          <div className="mt-8 mx-auto max-w-xl rounded-2xl border border-[#dbbc80] bg-white p-6 shadow-xl animate-fade-in">
+            <div className="flex items-center justify-between pb-4 border-b border-[#dbbc80]/40 mb-5">
               <div>
                 <h3 className="font-serif text-base font-bold text-[#241F20]">
                   Cloudinary Upload Studio
@@ -211,7 +211,7 @@ export function GallerySection() {
                   Upload new photos or video directly into any collection
                 </p>
               </div>
-              <span className="rounded-full bg-[#770000]/10 px-2.5 py-1 text-[11px] font-semibold text-[#770000]">
+              <span className="rounded-full bg-[#530000]/10 px-2.5 py-1 text-[11px] font-semibold text-[#530000]">
                 Admin Mode
               </span>
             </div>
@@ -238,8 +238,8 @@ export function GallerySection() {
                     onClick={() => setAdminUploadCategory(cat.key)}
                     className={`rounded-lg px-3 py-2 text-xs font-medium transition-all ${
                       adminUploadCategory === cat.key
-                        ? "bg-[#770000] text-white shadow-sm"
-                        : "bg-[#FAF6F0] text-[#241F20] border border-[#DCC9B6]/60 hover:bg-[#DCC9B6]/30"
+                        ? "bg-[#530000] text-white shadow-sm"
+                        : "bg-[#FAF6F0] text-[#241F20] border border-[#dbbc80]/60 hover:bg-[#dbbc80]/30"
                     }`}
                   >
                     {cat.label}
@@ -249,7 +249,7 @@ export function GallerySection() {
             </div>
 
             {/* Quick Change Box Cover for selected category */}
-            <div className="mb-4 pt-2 border-t border-[#DCC9B6]/40 flex items-center justify-between">
+            <div className="mb-4 pt-2 border-t border-[#dbbc80]/40 flex items-center justify-between">
               <span className="text-xs text-[#746A67]">
                 Want to change just the 3D card cover image?
               </span>
@@ -270,9 +270,9 @@ export function GallerySection() {
                     });
                   }
                 }}
-                className="flex items-center gap-1.5 rounded-lg border border-[#770000]/40 bg-[#FAF6F0] px-3 py-1.5 text-xs font-semibold text-[#770000] hover:bg-[#770000]/10 transition-colors"
+                className="flex items-center gap-1.5 rounded-lg border border-[#530000]/40 bg-[#FAF6F0] px-3 py-1.5 text-xs font-semibold text-[#530000] hover:bg-[#530000]/10 transition-colors"
               >
-                <Camera className="h-3.5 w-3.5 text-[#770000]" />
+                <Camera className="h-3.5 w-3.5 text-[#530000]" />
                 <span>
                   Change "
                   {CATEGORIES.find((c) => c.key === adminUploadCategory)?.label}
@@ -314,8 +314,9 @@ export function GallerySection() {
           isOpen={Boolean(editingGalleryCover)}
           onClose={() => setEditingGalleryCover(null)}
           title={`Change "${editingGalleryCover.label}" Box Cover`}
-          subtitle="Upload a replacement 3D gallery card cover image via Cloudinary"
+          subtitle="Upload a vertical replacement photo (Portrait required: Height > Width) for this 3D gallery card"
           currentImageUrl={editingGalleryCover.currentImage}
+          aspectRatioConstraint="portrait-only"
           onUploadSuccess={(url) =>
             updateGalleryCover(editingGalleryCover.key, url)
           }

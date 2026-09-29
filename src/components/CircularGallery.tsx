@@ -270,7 +270,7 @@ const CircularGallery = React.forwardRef<HTMLDivElement, CircularGalleryProps>(
                       "relative w-full h-full rounded-2xl overflow-hidden group shadow-2xl transition-all duration-300",
                       "border border-white/50 bg-zinc-900",
                       isFront
-                        ? "ring-2 ring-[#770000] shadow-[0_20px_60px_rgba(61,17,27,0.35)] scale-[1.02]"
+                        ? "ring-2 ring-[#530000] shadow-[0_20px_60px_rgba(61,17,27,0.35)] scale-[1.02]"
                         : "ring-1 ring-black/10 hover:ring-white/40"
                     )}
                   >
@@ -312,15 +312,15 @@ const CircularGallery = React.forwardRef<HTMLDivElement, CircularGalleryProps>(
                               e.stopPropagation();
                               onEditCover(item.key!);
                             }}
-                            className="pointer-events-auto flex items-center gap-1 rounded-full bg-[#770000]/90 px-2.5 py-1 text-[10px] font-semibold text-white shadow-lg backdrop-blur-md border border-[#770000]/50 transition-all hover:bg-[#770000] hover:scale-105"
+                            className="pointer-events-auto flex items-center gap-1 rounded-full bg-[#530000]/90 px-2.5 py-1 text-[10px] font-semibold text-white shadow-lg backdrop-blur-md border border-[#530000]/50 transition-all hover:bg-[#530000] hover:scale-105"
                           >
-                            <Camera className="h-3 w-3 text-[#DCC9B6]" />
+                            <Camera className="h-3 w-3 text-[#dbbc80]" />
                             <span>Change Cover</span>
                           </button>
                         )}
 
                         {item.isVideo && (
-                          <span className="flex h-8 w-8 items-center justify-center rounded-full bg-[#770000]/80 text-white backdrop-blur-md border border-white/20 shadow">
+                          <span className="flex h-8 w-8 items-center justify-center rounded-full bg-[#530000]/80 text-white backdrop-blur-md border border-white/20 shadow">
                             <Play className="h-3.5 w-3.5 fill-white ml-0.5" />
                           </span>
                         )}
@@ -334,16 +334,16 @@ const CircularGallery = React.forwardRef<HTMLDivElement, CircularGalleryProps>(
                       </em>
 
                       {/* Signature Action Badge */}
-                      <div className="flex items-stretch rounded-xl overflow-hidden shadow-lg border border-[#DCC9B6]/40 group/btn transition-transform group-hover:translate-y-[-2px]">
+                      <div className="flex items-stretch rounded-xl overflow-hidden shadow-lg border border-[#dbbc80]/40 group/btn transition-transform group-hover:translate-y-[-2px]">
                         <div className="bg-[#FAF6F0]/95 backdrop-blur-md px-3.5 py-2 sm:px-4 sm:py-2.5 flex-1 flex flex-col justify-center">
-                          <p className="text-xs sm:text-sm font-bold text-[#241F20] tracking-tight leading-tight group-hover/btn:text-[#770000] transition-colors">
+                          <p className="text-xs sm:text-sm font-bold text-[#241F20] tracking-tight leading-tight group-hover/btn:text-[#530000] transition-colors">
                             {item.common}
                           </p>
                           <p className="text-[9px] sm:text-[10px] text-[#746A67] font-medium tracking-tight">
                             View Collection →
                           </p>
                         </div>
-                        <div className="flex w-9 sm:w-11 items-center justify-center bg-[#770000] transition-colors group-hover/btn:bg-[#770000] shrink-0">
+                        <div className="flex w-9 sm:w-11 items-center justify-center bg-[#530000] transition-colors group-hover/btn:bg-[#530000] shrink-0">
                           <span className="flex h-6 w-6 sm:h-7 sm:w-7 items-center justify-center rounded-full border border-white/80 transition-transform group-hover/btn:scale-110">
                             <ArrowUpRight className="h-3 w-3 sm:h-3.5 sm:w-3.5 text-white stroke-[2.5]" />
                           </span>
@@ -364,7 +364,7 @@ const CircularGallery = React.forwardRef<HTMLDivElement, CircularGalleryProps>(
             <button
               type="button"
               onClick={rotatePrev}
-              className="flex h-10 w-10 items-center justify-center rounded-full border border-[#DCC9B6] bg-[#FAF6F0] text-[#241F20] shadow-sm transition-all hover:bg-white hover:border-[#770000]/50 hover:scale-105 active:scale-95"
+              className="flex h-10 w-10 items-center justify-center rounded-full border border-[#dbbc80] bg-[#FAF6F0] text-[#241F20] shadow-sm transition-all hover:bg-white hover:border-[#530000]/50 hover:scale-105 active:scale-95"
               aria-label="Previous Gallery Item"
             >
               <ChevronLeft className="h-5 w-5" />
@@ -377,7 +377,7 @@ const CircularGallery = React.forwardRef<HTMLDivElement, CircularGalleryProps>(
             <button
               type="button"
               onClick={rotateNext}
-              className="flex h-10 w-10 items-center justify-center rounded-full border border-[#DCC9B6] bg-[#FAF6F0] text-[#241F20] shadow-sm transition-all hover:bg-white hover:border-[#770000]/50 hover:scale-105 active:scale-95"
+              className="flex h-10 w-10 items-center justify-center rounded-full border border-[#dbbc80] bg-[#FAF6F0] text-[#241F20] shadow-sm transition-all hover:bg-white hover:border-[#530000]/50 hover:scale-105 active:scale-95"
               aria-label="Next Gallery Item"
             >
               <ChevronRight className="h-5 w-5" />
@@ -396,8 +396,8 @@ const CircularGallery = React.forwardRef<HTMLDivElement, CircularGalleryProps>(
                   className={cn(
                     "rounded-full px-3 py-1.5 text-xs font-semibold transition-all",
                     isActive
-                      ? "bg-[#770000] text-white shadow-md scale-105 ring-2 ring-[#770000]/40"
-                      : "bg-[#FAF6F0] text-[#746A67] hover:bg-white hover:text-[#241F20] border border-[#DCC9B6]"
+                      ? "bg-[#530000] text-white shadow-md scale-105 ring-2 ring-[#530000]/40"
+                      : "bg-[#FAF6F0] text-[#746A67] hover:bg-white hover:text-[#241F20] border border-[#dbbc80]"
                   )}
                 >
                   {item.common}

@@ -109,7 +109,7 @@ export function TestimonialsSection() {
             href="https://g.page/r/CaKfehPxRGXTEBM/review"
             target="_blank"
             rel="noreferrer"
-            className="inline-flex items-center gap-2 rounded-full bg-[#770000] px-8 py-3 text-sm font-semibold uppercase tracking-wider text-white shadow-lg shadow-[#770000]/25 transition-all hover:-translate-y-0.5 hover:bg-[#770000] hover:shadow-xl hover:shadow-[#770000]/30"
+            className="inline-flex items-center gap-2 rounded-full bg-[#530000] px-8 py-3 text-sm font-semibold uppercase tracking-wider text-white shadow-lg shadow-[#530000]/25 transition-all hover:-translate-y-0.5 hover:bg-[#530000] hover:shadow-xl hover:shadow-[#530000]/30"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"

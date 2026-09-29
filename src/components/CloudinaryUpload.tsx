@@ -1,7 +1,9 @@
 import { useState, useRef } from 'react';
-import { Loader2, CheckCircle2, AlertCircle } from 'lucide-react';
-import { validateUploadFile, compressImageForUpload } from '@/lib/imageOptimizer';
+import { Loader2, CheckCircle2, AlertCircle, Smartphone, Monitor } from 'lucide-react';
+import { validateUploadFile, compressImageForUpload, getImageDimensions } from '@/lib/imageOptimizer';
 import { getOptimizedCloudinaryUrl } from '@/lib/cloudinary';
+
+export type AspectRatioConstraint = 'portrait-only' | 'landscape-only' | 'any';
 
 export type CloudinaryUploadProps = {
   onUploadSuccess: (urls: string[]) => void;
@@ -9,6 +11,8 @@ export type CloudinaryUploadProps = {
   title?: string;
   buttonText?: string;
   compact?: boolean;
+  aspectRatioConstraint?: AspectRatioConstraint;
+  customErrorMessage?: string;
 };
 
 const CLOUD_NAME = import.meta.env.VITE_CLOUDINARY_CLOUD_NAME || 'ddu0tdvh';
@@ -21,12 +25,61 @@ export function CloudinaryUpload({
   title,
   buttonText,
   compact = false,
+  aspectRatioConstraint = 'any',
+  customErrorMessage,
 }: CloudinaryUploadProps) {
   const [uploading, setUploading] = useState(false);
   const [statusMessage, setStatusMessage] = useState<string>('');
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [previews, setPreviews] = useState<string[]>([]);
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  // Validate orientation for a file
+  const checkOrientation = async (file: File): Promise<{ valid: boolean; error?: string }> => {
+    if (aspectRatioConstraint === 'any' || !file.type.startsWith('image/')) {
+      return { valid: true };
+    }
+
+    try {
+      const { width, height } = await getImageDimensions(file);
+      if (aspectRatioConstraint === 'portrait-only' && width > height) {
+        return {
+          valid: false,
+          error:
+            customErrorMessage ||
+            `⚠️ Portrait photo required (Height must be greater than Width). The selected photo "${file.name}" is Landscape (${width}×${height}px). Please select a vertical portrait photo to fit this card perfectly.`,
+        };
+      }
+      if (aspectRatioConstraint === 'landscape-only' && height > width) {
+        return {
+          valid: false,
+          error:
+            customErrorMessage ||
+            `⚠️ Landscape photo required (Width must be greater than Height). The selected photo "${file.name}" is Portrait (${width}×${height}px). Please select a wide horizontal photo.`,
+        };
+      }
+      return { valid: true };
+    } catch {
+      return { valid: false, error: 'Could not read image dimensions. Please select a valid photo.' };
+    }
+  };
+
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    setErrorMessage(null);
+    const files = Array.from(e.target.files || []);
+    if (files.length === 0) return;
+
+    if (aspectRatioConstraint !== 'any') {
+      for (const file of files) {
+        const check = await checkOrientation(file);
+        if (!check.valid) {
+          setErrorMessage(check.error || 'Invalid photo aspect ratio.');
+          if (fileInputRef.current) fileInputRef.current.value = '';
+          return;
+        }
+      }
+    }
+  };
 
   const handleUpload = async () => {
     setErrorMessage(null);
@@ -45,12 +98,17 @@ export function CloudinaryUpload({
     setUploading(true);
 
     try {
-      // Step 1: Pre-upload validation
-      setStatusMessage('Validating files...');
+      // Step 1: Pre-upload validation (Format, Size & Aspect Ratio check)
+      setStatusMessage('Validating files & orientation...');
       for (const file of files) {
         const validation = await validateUploadFile(file);
         if (!validation.valid) {
           throw new Error(validation.error || 'Validation failed for one or more files.');
+        }
+
+        const orientationCheck = await checkOrientation(file);
+        if (!orientationCheck.valid) {
+          throw new Error(orientationCheck.error || 'Orientation requirement not met.');
         }
       }
 
@@ -112,10 +170,25 @@ export function CloudinaryUpload({
   const displayButtonText = buttonText || (uploading ? (statusMessage || 'Processing...') : maxFiles === 1 ? 'Upload Image' : 'Upload Photos');
 
   return (
-    <div className={`flex flex-col items-center gap-3 rounded-xl border border-[#DCC9B6] bg-[#FAF6F0] ${compact ? 'p-3' : 'p-6'} shadow-sm`}>
+    <div className={`flex flex-col items-center gap-3 rounded-xl border border-[#DCC9B6] bg-[#FAF6F0] ${compact ? 'p-3' : 'p-6'} shadow-sm w-full`}>
       <h3 className="font-serif text-sm sm:text-base font-semibold text-[#241F20] text-center">
         {displayTitle}
       </h3>
+
+      {/* Orientation Requirement Guidance Badge */}
+      {aspectRatioConstraint === 'portrait-only' && (
+        <div className="flex items-center gap-1.5 rounded-full border border-amber-500/30 bg-amber-500/10 px-3 py-1 text-[11px] font-semibold text-amber-800">
+          <Smartphone className="h-3.5 w-3.5 text-amber-600" />
+          <span>Portrait Photo Required (Vertical: Height &gt; Width)</span>
+        </div>
+      )}
+
+      {aspectRatioConstraint === 'landscape-only' && (
+        <div className="flex items-center gap-1.5 rounded-full border border-blue-500/30 bg-blue-500/10 px-3 py-1 text-[11px] font-semibold text-blue-800">
+          <Monitor className="h-3.5 w-3.5 text-blue-600" />
+          <span>Landscape Photo Required (Horizontal: Width &gt; Height)</span>
+        </div>
+      )}
 
       <div className="w-full max-w-sm space-y-1.5">
         <input
@@ -123,20 +196,21 @@ export function CloudinaryUpload({
           accept="image/*,video/*"
           multiple={maxFiles > 1}
           ref={fileInputRef}
+          onChange={handleFileChange}
           disabled={uploading}
           className="w-full rounded border border-[#DCC9B6] bg-white px-3 py-1.5 text-xs sm:text-sm text-[#241F20] focus:border-[#770000] focus:outline-none file:mr-2 file:rounded-md file:border-0 file:bg-[#770000]/10 file:px-2.5 file:py-1 file:text-xs file:font-semibold file:text-[#770000] hover:file:bg-[#770000]/20 cursor-pointer disabled:opacity-50"
         />
 
         {/* Informative compression badge */}
         <p className="text-[10px] text-zinc-500 text-center">
-          Photos automatically optimized to ~300 KB before upload to protect storage & speed.
+          Photos automatically optimized before upload for crisp display & instant loading.
         </p>
       </div>
 
       {/* Error Notice */}
       {errorMessage && (
-        <div className="flex items-center gap-1.5 text-xs font-medium text-red-600 bg-red-50 border border-red-200 rounded-lg px-3 py-1.5 max-w-sm w-full animate-fade-in">
-          <AlertCircle className="h-4 w-4 shrink-0 text-red-500" />
+        <div className="flex items-start gap-2 text-xs font-medium text-red-700 bg-red-50 border border-red-200 rounded-lg p-2.5 max-w-sm w-full animate-fade-in leading-relaxed">
+          <AlertCircle className="h-4 w-4 shrink-0 text-red-600 mt-0.5" />
           <span>{errorMessage}</span>
         </div>
       )}
@@ -161,7 +235,7 @@ export function CloudinaryUpload({
         type="button"
         onClick={handleUpload}
         disabled={uploading}
-        className="flex items-center justify-center gap-2 rounded-lg bg-[#770000] px-5 py-2 text-xs sm:text-sm font-semibold text-white transition-all hover:bg-[#770000] disabled:opacity-50 shadow-sm cursor-pointer hover:scale-[1.02] active:scale-[0.98]"
+        className="flex items-center justify-center gap-2 rounded-lg bg-[#770000] px-5 py-2 text-xs sm:text-sm font-semibold text-white transition-all hover:bg-[#880000] disabled:opacity-50 shadow-sm cursor-pointer hover:scale-[1.02] active:scale-[0.98]"
       >
         {uploading && <Loader2 className="h-3.5 w-3.5 animate-spin" />}
         <span>{displayButtonText}</span>
